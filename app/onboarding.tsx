@@ -1,41 +1,12 @@
-import { Text, View, Image } from "react-native";
-import { Button } from '@rneui/themed';
+import { View, Text } from 'react-native'
 import tw from 'twrnc';
 import Onboarding from 'react-native-onboarding-swiper';
-import { useFonts } from 'expo-font';
-// import OnboardingImg1 from "@/assets/images/svg/car_select.svg"
 
-export default function Index() {
-  //   const [fontsLoaded, fontError] = useFonts({
-  //   'Raleway-Black': require('./assets/fonts/Raleway-Black.ttf'),
-  //   'Raleway-Regular': require('./assets/fonts/Raleway-Regular.ttf'),
-  //   'Raleway-Medium': require('./assets/fonts/Raleway-Medium.ttf'),
-  //   'Raleway-Bold': require('./assets/fonts/Raleway-Bold.ttf'),
-  //   'Raleway-Light': require('./assets/fonts/Raleway-Light.ttf'),
-  //   'Raleway-Italic': require('./assets/fonts/Raleway-Italic.ttf'),
-  // });
 
-  // const onLayoutRootView = useCallback(async () => {
-  //   if (fontsLoaded || fontError) {
-  //     await SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, fontError]);
-
-  // if (!fontsLoaded && !fontError) {
-  //   return null;
-  // }
-
-  // if (!fontsLoaded) {
-  //   return null;
-  // }
-
-  return (
-    <View style = {tw`bg-red-200 flex-1`} >
-      <Onboarding
-        bottomBarColor = "white"
-        // SkipButtonComponent = {()=> <Text>jkfjk</Text>}
-        onSkip = {()=> console.log("Skipped...")}
-        showDone = {false}
+const OnboardingFlow = () => {
+	return (
+		<View>
+		  <Onboarding
         pages={[
           {
             backgroundColor: 'white',
@@ -75,6 +46,8 @@ export default function Index() {
           },
         ]}
       />
-    </View>
-  );
+		</View>
+	)
 }
+
+export default OnboardingFlow;
