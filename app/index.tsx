@@ -3,6 +3,9 @@ import { Button } from '@rneui/themed';
 import tw from 'twrnc';
 import Onboarding from 'react-native-onboarding-swiper';
 import { useFonts } from 'expo-font';
+import { Link, useRouter } from "expo-router"
+
+
 // import OnboardingImg1 from "@/assets/images/svg/car_select.svg"
 
 export default function Index() {
@@ -29,20 +32,27 @@ export default function Index() {
   //   return null;
   // }
 
+  const router = useRouter();
+
+  const navigateToHome = () => {
+    console.log("inside func")
+    router.push('/onboarding'); // Use 'push' to navigate to a new screen
+  };
+
   return (
     <View style = {tw`bg-red-200 flex-1`} >
       <Onboarding
         bottomBarColor = "white"
         // SkipButtonComponent = {()=> <Text>jkfjk</Text>}
         onSkip = {()=> console.log("Skipped...")}
-        showDone = {false}
+        showDone = {true}
+        onDone = {()=> router.push('/auth') }
         pages={[
           {
             backgroundColor: 'white',
-            // image: <OnboardingImg1 />,
             image: <Image source={require('../assets/images/onboarding/carpool.png')}
               style = {tw`h-[200px] w-[200px]`}
-             />,
+             />, 
             title: 'Anywhere you are',
             subtitle: 'We provide you with seamless ride-sharing service regardless of your location. Join and travel hassle-free',
           },
