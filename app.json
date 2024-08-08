@@ -38,8 +38,15 @@
         "origin": false
       },
       "eas": {
-        "projectId": "7e01990c-7c50-4d84-a3bd-fb643ded2467"
+        "projectId": "b9318fa1-14fe-4d40-95ce-060e81abba7d"
       }
-    }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/b9318fa1-14fe-4d40-95ce-060e81abba7d"
+    },
+    "owner": "sparklesix"
   }
 }
