@@ -3,12 +3,12 @@ import { View, Text } from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context"
 
 
-const Activity = () => {
+const History = () => {
 	return (
 		<SafeAreaView>
-			<Text>Activity</Text>
+			<Text>History</Text>
 		</SafeAreaView>
 	)
 }
 
-export default Activity
+export default History

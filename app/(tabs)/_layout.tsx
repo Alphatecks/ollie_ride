@@ -34,11 +34,11 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         // tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        tabBarActiveTintColor: "#ff9900",
+        tabBarActiveTintColor: "blue",
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: false,
-        tabBarLabelStyle: { fontFamily: "Inter_400Regular", fontSize: 12, },
+        tabBarLabelStyle: { fontFamily: "Poppins_400Regular", fontSize: 12, },
         tabBarStyle: tw`elevation-0 border-t-0 h-14 dark:bg-black`
       }}>
       <Tabs.Screen
@@ -49,13 +49,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="trades"
-        options={{
-          title: 'Trades',
-          tabBarIcon: ({ color }) => <FontAwesome5 name="hands-helping" size={22} color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="wallet"
         options={{
           title: 'Wallet',
@@ -63,16 +56,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="activity"
+        name="history"
         options={{
-          title: 'Activity',
+          title: 'History',
           tabBarIcon: ({ color }) => <MaterialIcons name="local-activity" size={28} color={color} />,
         }}
       />
       <Tabs.Screen
-        name="messages"
+        name="notifications"
         options={{
-          title: 'Messages',
+          title: 'Notifications',
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="message-processing" size={24} color={color}  />,
         }}
       />

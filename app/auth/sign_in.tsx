@@ -6,6 +6,7 @@ import { Link, useRouter } from "expo-router"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 
+import ButtonLoader from "@/components/general/ButtonLoader"
 // const db = getFirestore();
 
                                                                                         
@@ -14,11 +15,13 @@ const SignIn = () => {
 	const router = useRouter()
 
 	const [email, setEmail] = useState('')                                                 
+    const [loading, setLoading] = useState(false)                                                 
 	const [password, setPassword] = useState('')                                           
 	const [error, setError] = useState('')                                                 
                                                                                         
 	const handleSignIn = async () => {
 	    try {
+            setLoading(true)
             const auth = getAuth()
 
 	        const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -27,9 +30,12 @@ const SignIn = () => {
             const userId = user.uid
             console.log("Signed in: : ", userId)
 
-            router.push("(tabs)");
+            setLoading(false)
+
+            router.replace("(tabs)");
 	        // Handle successful sign-up (e.g., navigate to home screen)
 	    } catch (error) {
+            setLoading(false)
 	        setError(error.message);
             console.log(error)
 	    }
@@ -60,13 +66,18 @@ const SignIn = () => {
              style={tw`mb-6`}
              inter  
              rounded                                                         
-         />                                                                             
-         <Button label="Sign In" 
-         inter
-         onPress={handleSignIn} 
-         style={tw`btn`}
-         disabled = {!email || !password ? true: false}
-          />             
+         />  
+         {loading ? 
+             <ButtonLoader />
+            :
+             <Button label="Sign In" 
+             inter
+             onPress={handleSignIn} 
+             style={tw`btn`}
+             disabled = {!email || !password ? true: false}
+              /> 
+        }
+                
          {error ? <Text style={tw`text-red-500`}>{error}</Text> : null}  
 
          <Text interMedium style={tw`text-gateway-base py-4`} >Forgot Password?</Text>

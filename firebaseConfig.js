@@ -13,13 +13,13 @@ import { collection, addDoc } from "firebase/firestore";
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA2Ay-gmWCt450WAZNNDlh5u4z0bz172vk",
-  authDomain: "gateway-92417.firebaseapp.com",
-  projectId: "gateway-92417",
-  storageBucket: "gateway-92417.appspot.com",
-  messagingSenderId: "67296266863",
-  appId: "1:67296266863:web:2c60abfdceb36fe16d5b9a",
-  measurementId: "G-DBMK2DJFLH"
+  apiKey: "AIzaSyDyYIgmy9Vt_z6ydTfzq-Y4M0A9ygEtBC4",
+  authDomain: "ollie-ride-7abb8.firebaseapp.com",
+  projectId: "ollie-ride-7abb8",
+  storageBucket: "ollie-ride-7abb8.appspot.com",
+  messagingSenderId: "460810931103",
+  appId: "1:460810931103:web:3ba78182dadce210598baa",
+  measurementId: "G-QTVFPQTSYQ"
 };
 
 // Initialize Firebase

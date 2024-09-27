@@ -14,7 +14,7 @@ module.exports = {
           400: '#ffa333',
           450: '#ff981a',
           500: '#ff8c00',
-          base: '#fa8a00',
+          base: '#0C3569',
           600: '#e67e00',
           650: '#cc7000',
           700: '#b36200',
@@ -32,8 +32,10 @@ module.exports = {
     plugin(({ addUtilities }) => {
       addUtilities({
         // 😎 similar to `@apply`
-        '.btn': `p-4 rounded-md my-3 text-white`,
+        '.btn': `p-4 text-white rounded-md`,
         '.btn-secondary': `p-4 rounded-md my-3 text-white`,
+        '.outline': `border-[#008955] p-4 w-full border-blue-800`,
+        '.input': `mb-3`
       });
     }),
   ],

@@ -10,20 +10,29 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#FF8D00"
+      "backgroundColor": "#0C3569"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+       "infoPlist": {
+          "NSLocationWhenInUseUsageDescription": "This app needs access to your location to show your current position on the map.",
+          "NSLocationAlwaysUsageDescription": "This app needs access to your location even when the app is running in the background."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.sparklesix.ollieridedriver"
+      "package": "com.sparklesix.ollieridedriver",
+      "config": {
+      "googleMaps": {
+        "apiKey": "$GOOGLE_MAPS_API_KEY"
+        }
+      }
     },
     "web": {
       "bundler": "metro",
@@ -32,7 +41,13 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+       [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Ollie Ride to access your location."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

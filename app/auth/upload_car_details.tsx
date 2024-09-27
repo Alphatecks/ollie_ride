@@ -1,12 +1,12 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 
-const Messages = () => {
+const UploadCarDetails = () => {
 	return (
 		<View>
-			<Text>Messages</Text>
+			<Text>UploadCarDetails</Text>
 		</View>
 	)
 }
 
-export default Messages
+export default UploadCarDetails

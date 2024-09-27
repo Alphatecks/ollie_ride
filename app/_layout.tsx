@@ -12,10 +12,10 @@ import {
 } from 'react-native-ui-lib';
 
 import { useColorScheme } from '@/components/useColorScheme';
-import { Inter_100Thin, Inter_200ExtraLight, Inter_300Light, Inter_400Regular, Inter_500Medium, Inter_600SemiBold,
-Inter_700Bold,
-Inter_800ExtraBold,
-Inter_900Black } from '@expo-google-fonts/inter'
+import { Poppins_100Thin, Poppins_200ExtraLight, Poppins_300Light, Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold,
+Poppins_700Bold,
+Poppins_800ExtraBold,
+Poppins_900Black } from '@expo-google-fonts/poppins'
 
 export {
   ErrorBoundary,
@@ -33,8 +33,10 @@ SplashScreen.preventAutoHideAsync();
 
 // Setup RNUILIB
 
+Colors.loadDesignTokens({primaryColor: '#1e3a8a' });
+
 Colors.loadColors({
-  primaryColor: '#fa8a00',
+  primaryColor: '#1e3a8a',
   secondaryColor: '#C1BBE2',
   textColor: '##414141',
   errorColor: '#E63B2E',
@@ -51,13 +53,16 @@ Typography.loadTypographies({
   right: { textAlign: "right" },
   left: { textAlign: "left" },
   authText: { fontSize: 30, color: "#08633D" },
-  inter: { fontFamily: 'Inter_400Regular' },
-  interBold: { fontFamily: 'Inter_700Bold' },
-  interLight: { fontFamily: 'Inter_300Light' },
-  interThin: { fontFamily: 'Inter_100Thin' },
-  interMedium: { fontFamily: 'Inter_500Medium' }
+  poppins: { fontFamily: 'Poppins_400Regular' },
+  poppinsBold: { fontFamily: 'Poppins_700Bold' },
+  poppinsLight: { fontFamily: 'Poppins_300Light' },
+  poppinsThin: { fontFamily: 'Poppins_100Thin' },
+  poppinsMedium: { fontFamily: 'Poppins_500Medium' }
 });
+  
+const btnStyle = tw`bg-blue-900 rounded-md py-5 my-10 text-white`
 
+console.log(btnStyle)
   // Loading custom themes
 ThemeManager.setComponentTheme('Button', (props, context) => {
     if (props.square) {
@@ -90,10 +95,18 @@ ThemeManager.setComponentTheme('Button', (props, context) => {
         borderColor: '#1D0BBB',
       };
     }
-
-    return {
-      backgroundColor: "#fa8a00"
+    if (props.default) {
+      return {
+        borderRadius: 0,
+        padding: 70,
+        paddingBottom: 100,
+        width: "100%",
+        height: 100,
+        marginVertical: 10,
+        backgroundColor: props.outline ? '#014D3D' : '#e67e00',
+      }
     }
+
   });
 
   const TextFieldStyle = tw`border-[1px] border-[#B3B3B3] p-3 w-full rounded-md`;
@@ -108,10 +121,10 @@ ThemeManager.setComponentTheme('Button', (props, context) => {
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    Inter_100Thin, Inter_200ExtraLight, Inter_300Light, Inter_400Regular, Inter_500Medium, Inter_600SemiBold,
-    Inter_700Bold,
-    Inter_800ExtraBold,
-    Inter_900Black 
+    Poppins_100Thin, Poppins_200ExtraLight, Poppins_300Light, Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold,
+    Poppins_700Bold,
+    Poppins_800ExtraBold,
+    Poppins_900Black 
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
@@ -142,7 +155,6 @@ function RootLayoutNav() {
     // <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="home" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="auth" options={{ headerShown: false }} />
       </Stack>
