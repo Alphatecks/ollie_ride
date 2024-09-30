@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, ActivityIndicator } from 'react-native'
-
+import tw from "@/tailwind"
 const ButtonLoader = () => {
 	return (
          <View style={tw`bg-gray-300 p-2 rounded-md my-2`} >
