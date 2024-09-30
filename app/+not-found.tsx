@@ -3,7 +3,10 @@ import { StyleSheet } from 'react-native';
 
 import { Text, View } from '@/components/Themed';
 
+
 export default function NotFoundScreen() {
+
+
   return (
     <>
       <Stack.Screen options={{ title: 'Oops!' }} />

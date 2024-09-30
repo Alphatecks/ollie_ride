@@ -43,7 +43,8 @@
     "react-native-ui-lib": "^7.30.0",
     "react-native-web": "~0.19.6",
     "react-phone-number-input": "^3.4.8",
-    "twrnc": "^4.5.1"
+    "twrnc": "^4.5.1",
+    "expo-image-picker": "~15.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

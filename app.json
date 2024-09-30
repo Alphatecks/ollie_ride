@@ -47,7 +47,13 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow Ollie Ride to access your location."
         }
-      ]
+      ],
+     [
+      "expo-image-picker",
+      {
+        "photosPermission": "Allow Ollie Ride access to your photos"
+      }
+    ]
     ],
     "experiments": {
       "typedRoutes": true

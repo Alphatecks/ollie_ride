@@ -52,21 +52,21 @@ export default function TabLayout() {
         name="wallet"
         options={{
           title: 'Wallet',
-          tabBarIcon: ({ color }) => <FontAwesome5 name="wallet" size={22} color={color} />,
+          tabBarIcon: ({ color }) => <MaterialIcons name="wallet" size={22} color={color} />,
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
           title: 'History',
-          tabBarIcon: ({ color }) => <MaterialIcons name="local-activity" size={28} color={color} />,
+          tabBarIcon: ({ color }) => <MaterialIcons name="history" size={28} color={color} />,
         }}
       />
       <Tabs.Screen
         name="notifications"
         options={{
           title: 'Notifications',
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="message-processing" size={24} color={color}  />,
+          tabBarIcon: ({ color }) => <MaterialIcons name="notifications" size={24} color={color}  />,
         }}
       />
     </Tabs>
