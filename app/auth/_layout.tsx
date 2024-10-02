@@ -26,6 +26,12 @@ const Layout = () => {
 				title: "",
 				headerStyle: {elevation: 0, border: 0},
 			}} 
+			/>	
+			<Stack.Screen name="forgot_password" options = {{ 
+				headerShown: true, 
+				title: "",
+				headerStyle: {elevation: 0, border: 0},
+			}} 
 			/>			
 			<Stack.Screen name="upload_car_details" options = {{ 
 				headerShown: true, 

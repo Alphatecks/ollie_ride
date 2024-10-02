@@ -45,7 +45,10 @@ const SignIn = () => {
  return (                                                                               
      <View style={tw`bg-white flex-1 p-6`}> 
         <View style={tw`mb-4`} >
-             <Text style={tw`text-2xl mb-6`} interMedium >Sign In to your account</Text>   
+             <Link asChild href="auth/upload_car_details">
+                 <Text style={tw`text-2xl mb-6`} interMedium >Sign In to your account</Text>   
+             </Link>
+             
              <Text inter style={tw`text-gray-500`} >Please sign in to continue</Text>    
         </View>                                                            
          <TextField                                                                     
@@ -80,7 +83,9 @@ const SignIn = () => {
                 
          {error ? <Text style={tw`text-red-500`}>{error}</Text> : null}  
 
-         <Text interMedium style={tw`text-gateway-base py-4`} >Forgot Password?</Text>
+         <Link asChild href="auth/forgot_password">
+             <Text interMedium style={tw`text-gateway-base py-4`} >Forgot Password?</Text>
+         </Link>
 
          <Text interMedium style={tw`py-3`}>
                 Don't an account?

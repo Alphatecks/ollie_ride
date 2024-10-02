@@ -7,6 +7,8 @@ import { useEffect } from 'react';
 import tw from "twrnc"
 import { useDeviceContext } from 'twrnc';
 
+import Toast from 'react-native-toast-message';
+
 import {
   Colors, Typography, ThemeManager
 } from 'react-native-ui-lib';
@@ -153,11 +155,14 @@ function RootLayoutNav() {
 
   return (
     // <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="auth" options={{ headerShown: false }} />
       </Stack>
+      <Toast />
+    </>
     // </ThemeProvider>
   );
 }

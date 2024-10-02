@@ -15,9 +15,10 @@ import { auth } from "@/firebaseConfig"
 const Index = () => {
 	const router = useRouter()
 
+    
 	// useEffect(()=>{
 	// 	if (auth.currentUser) return router.replace("(tabs)")
-	// }, [])
+	// }, [auth.currentUser])
 
 	return (
 		 <SafeAreaView style={tw`flex-1 bg-white px-6 py-10 justify-between`} >
@@ -42,7 +43,7 @@ const Index = () => {
        		</Link>  
             <Link asChild href="/auth/sign_in">
                 <Button
-                label ="Log In"  
+                label ="Sign In"  
                 backgroundColor = "1e3a8a"
                 style={tw`outline`}
                 labelStyle = {tw`text-blue-800`}

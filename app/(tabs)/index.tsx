@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Text, View, Avatar, Badge } from 'react-native-ui-lib';
+import { Text, View, Avatar, Badge, Button, Image } from 'react-native-ui-lib';
 import { ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -59,7 +59,7 @@ export default function Index() {
   return (
     <SafeAreaView style={tw`dark:bg-black bg-white flex-1 p-3`}>
       <Text>index</Text>
-       <Button title="Pick an image from camera roll" onPress={pickImage} />
+       <Button label="Pick an image from camera roll" onPress={pickImage} />
       {image && <Image source={{ uri: image }} />}
     </SafeAreaView>
   );
