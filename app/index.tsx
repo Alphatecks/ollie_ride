@@ -45,7 +45,7 @@ const Index = () => {
                 <Button
                 label ="Sign In"  
                 backgroundColor = "1e3a8a"
-                style={tw`outline`}
+                style={tw`outline rounded-md`}
                 labelStyle = {tw`text-blue-800`}
                 poppins
                 rounded

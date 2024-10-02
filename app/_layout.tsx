@@ -64,52 +64,52 @@ Typography.loadTypographies({
   
 const btnStyle = tw`bg-blue-900 rounded-md py-5 my-10 text-white`
 
-console.log(btnStyle)
+// console.log(btnStyle)
   // Loading custom themes
-ThemeManager.setComponentTheme('Button', (props, context) => {
-    if (props.square) {
-      return {
-        borderRadius: 0,
-        padding: 70,
-        paddingBottom: 12,
-        width: "100%",
-        marginVertical: 4,
-        backgroundColor: props.outline ? '#014D3D' : '#e67e00',
-      };
-    }
-    if (props.rounded) {
-      return {
-        borderRadius: 5,
-        padding: 70,
-        paddingBottom: 12,
-        marginVertical: 4,
-        backgroundColor: props.outline ? '#008955' : '#e67e00',
-        color: props.outline ? '#008955' : 'white',
-        borderColor: props.outline ? '#008955' : '',
-      };
-    }
-    if (props.outline) {
-      return {
-        borderRadius: 4,
-        padding: 70,
-        paddingBottom: 12,
-        color: '#1D0BBB',
-        borderColor: '#1D0BBB',
-      };
-    }
-    if (props.default) {
-      return {
-        borderRadius: 0,
-        padding: 70,
-        paddingBottom: 100,
-        width: "100%",
-        height: 100,
-        marginVertical: 10,
-        backgroundColor: props.outline ? '#014D3D' : '#e67e00',
-      }
-    }
+// ThemeManager.setComponentTheme('Button', (props, context) => {
+//     if (props.square) {
+//       return {
+//         borderRadius: 0,
+//         padding: 70,
+//         paddingBottom: 12,
+//         width: "100%",
+//         marginVertical: 4,
+//         backgroundColor: props.outline ? '#014D3D' : '#e67e00',
+//       };
+//     }
+//     if (props.rounded) {
+//       return {
+//         borderRadius: 5,
+//         padding: 70,
+//         paddingBottom: 12,
+//         marginVertical: 4,
+//         backgroundColor: props.outline ? '#008955' : '#e67e00',
+//         color: props.outline ? '#008955' : 'white',
+//         borderColor: props.outline ? '#008955' : '',
+//       };
+//     }
+//     if (props.outline) {
+//       return {
+//         borderRadius: 4,
+//         padding: 70,
+//         paddingBottom: 12,
+//         color: '#1D0BBB',
+//         borderColor: '#1D0BBB',
+//       };
+//     }
+//     if (props.default) {
+//       return {
+//         borderRadius: 0,
+//         padding: 70,
+//         paddingBottom: 100,
+//         width: "100%",
+//         height: 100,
+//         marginVertical: 10,
+//         backgroundColor: props.outline ? '#014D3D' : '#e67e00',
+//       }
+//     }
 
-  });
+//   });
 
   const TextFieldStyle = tw`border-[1px] border-[#B3B3B3] p-3 w-full rounded-md`;
 
