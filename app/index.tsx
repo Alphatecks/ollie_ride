@@ -25,7 +25,7 @@ const Index = () => {
             <View style={tw`gap-y-8`} >
                 <Welcome width={356} />
                 <View>
-                    <Text h2 poppinsMedium center onPress = {()=> router.push("auth/await_email_verification")} >Welcome</Text>
+                    <Text h2 poppinsMedium center onPress = {()=> router.push("(tabs)")} >Welcome</Text>
                     <Text poppinsLight center>Have a better driving experience</Text>
                 </View>
             </View>

@@ -32,7 +32,7 @@ const DriverVerification = () => {
          <Button label="Sign In" 
          poppins
          outline
-         onPress={()=> router.push("sign_in")} 
+         onPress={()=> router.push("auth/sign_in")} 
          style={tw`btn`}
 
          // disabled = {!email || !password ? true: false}
