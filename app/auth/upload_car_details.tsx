@@ -4,16 +4,27 @@ import { TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import tw from "@/tailwind"
 import Entypo from '@expo/vector-icons/Entypo';
 import { FontAwesome } from '@expo/vector-icons';
+import ButtonLoader from "@/components/general/ButtonLoader"
 
 import uploadFile, { fetchBlobFromUri } from "@/utils/upload"
-import { auth } from "@/firebaseConfig"
+import { auth, db } from "@/firebaseConfig"
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { doc, setDoc, collection, addDoc} from "firebase/firestore"
+
+import { useRouter } from "expo-router"
+
 import * as ImagePicker from 'expo-image-picker';
 
 const UploadCarDetails = () => {
   const [carFrontURL, setCarFrontURL] = useState<string>("")
   const [carBackURL, setCarBackURL] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const router = useRouter()                                             
+
   const storage = getStorage()
+
+  const user = auth.currentUser
 
   const [formValues, setFormValues] = useState({
     carBrand: '',
@@ -29,8 +40,29 @@ const UploadCarDetails = () => {
     });
   };
 
-  const handleContinue = () => {
-    console.log(formValues)
+  const handleContinue = async() => {
+    // console.log({
+    //     ...formValues,
+    //     carFrontURL,
+    //     carBackURL
+    //   })
+    try{
+	  	setLoading(true)
+
+	  	console.log("Seting data to Firebase")
+
+	    await setDoc(doc(db, "cars", user.uid), {
+	        ...formValues,
+	        carFrontURL,
+	        carBackURL
+	      })
+	    setLoading(false)
+
+    } catch(e){
+    	setLoading(false)
+    	console.log(e)
+    }
+
   }
 
   const pickImage = async (carView: string) => {
@@ -66,7 +98,7 @@ const UploadCarDetails = () => {
 
   return (
     <View style={tw`bg-white flex-1 p-3`}>
-      <Text poppins h2 style={tw`mb-5 text-center`}>Upload Car Details</Text>
+      <Text poppins h2 style={tw`mb-5 text-center`} onPress={()=> router.push("auth/driver_verification")}>Upload Car Details</Text>
 
       <View style={tw`flex-row justify-around`}>
         <TouchableOpacity onPress={() => pickImage("frontView")}>
@@ -125,8 +157,11 @@ const UploadCarDetails = () => {
           onChangeText={(value) => handleInputChange('carPlateNumber', value)}
         />
       </View>
-
-      <Button label="Continue" poppins style={tw`p-4 rounded-md`} onPress={handleContinue} />
+      {loading ? (<ButtonLoader />) : (
+	      <Button label="Continue" poppins 
+	        disabled = {Object.values(formValues).some(value => value === '')} 
+	       style={tw`p-4 rounded-md`} onPress={handleContinue} />
+      )}
     </View>
   )
 }

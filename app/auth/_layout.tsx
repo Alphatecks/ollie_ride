@@ -39,6 +39,12 @@ const Layout = () => {
 				headerStyle: {elevation: 0, border: 0},
 			}} 
 			/>
+			<Stack.Screen name="driver_verification" options = {{ 
+				headerShown: true, 
+				title: "",
+				headerStyle: {elevation: 0, border: 0},
+			}} 
+			/>
 		</Stack>
 	)
 }
