@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        gateway: {
+        ollie: {
           100: '#ffe8cc',
           150: '#ffddb3',
           200: '#ffd199',

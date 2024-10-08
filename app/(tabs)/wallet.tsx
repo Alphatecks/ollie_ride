@@ -4,11 +4,18 @@ import { View, Text, Button } from 'react-native-ui-lib'
 import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "@/tailwind";
 
+import { useRouter } from "expo-router"
+
 import { BarChart } from "react-native-gifted-charts";
 
 
 const Wallet = () => {
-	 const barData = [
+	const router = useRouter()
+
+
+	console.log(router)
+
+	const barData = [
         {value: 250, label: 'M'},
         {value: 500, label: 'T', frontColor: '#177AD5'},
         {value: 745, label: 'W', frontColor: '#177AD5'},
@@ -28,7 +35,8 @@ const Wallet = () => {
 						<Text poppins>Today’s earnings: $30.51</Text>
 					</View>
 					<View style={tw`flex-grow justify-center`}>
-						<Button label = "Withdraw" style={tw`btn`} poppins />
+						<Button label = "Withdraw" style={tw`btn`} poppins
+							onPress={()=> router.push("wallet_aux/withdraw")}  />
 					</View>
 				</View>
 				<View style={tw`items-center my-4`}>
