@@ -39,7 +39,9 @@ export default function TabLayout() {
         // to prevent a hydration error in React Navigation v6.
         headerShown: false,
         tabBarLabelStyle: { fontFamily: "Poppins_400Regular", fontSize: 12, },
-        tabBarStyle: tw`elevation-0 border-t-0 h-14 dark:bg-black`
+        tabBarStyle: tw`elevation-0 border-t-0 h-14 dark:bg-black`,
+        headerTitleAlign: "center",
+        headerTitleStyle: {fontFamily: "Poppins_400Regular"}
       }}>
       <Tabs.Screen
         name="index"
@@ -51,7 +53,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="wallet"
         options={{
-          title: 'Wallet',
+          title: 'My Wallet',
+          headerShown: true,
           tabBarIcon: ({ color }) => <MaterialIcons name="wallet" size={22} color={color} />,
         }}
       />
@@ -59,6 +62,7 @@ export default function TabLayout() {
         name="history"
         options={{
           title: 'History',
+          headerShown: true,
           tabBarIcon: ({ color }) => <MaterialIcons name="history" size={28} color={color} />,
         }}
       />
@@ -66,6 +70,7 @@ export default function TabLayout() {
         name="notifications"
         options={{
           title: 'Notifications',
+          headerShown: true,
           tabBarIcon: ({ color }) => <MaterialIcons name="notifications" size={24} color={color}  />,
         }}
       />

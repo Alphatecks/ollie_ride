@@ -39,14 +39,14 @@ const History = () => {
 	    />
   );
 	return (
-		<SafeAreaView style={tw`flex-1 p-3 bg-white`}>
+		<View style={tw`flex-1 p-3 bg-white`}>
 			<FlatList
 			data={tripData}
 			keyExtractor={item => item.id}
 			renderItem={renderItem}
 			contentContainerStyle={tw`gap-2`}
 			/>
-		</SafeAreaView>
+		</View>
 	)
 }
 

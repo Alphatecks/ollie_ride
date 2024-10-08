@@ -1,10 +1,12 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
+import Text from 'react-native-ui-lib/text'
+import tw from "@/tailwind"
 
 const Notifications = () => {
 	return (
-		<View>
-			<Text>Notifications</Text>
+		<View style={tw`bg-white flex-1`}>
+			<Text center poppins>Notifications Incoming</Text>
 		</View>
 	)
 }

@@ -47,7 +47,7 @@ export default function Index() {
   // }, [auth.currentUser]);
 
   return (
-    <SafeAreaView style={tw`bg-white flex-1`}>
+    <View style={tw`bg-white flex-1`}>
       <View style={tw`flex-1 relative`}>
         <MapView
         style = {styles.map}
@@ -66,7 +66,7 @@ export default function Index() {
       </View>
       </View>
 
-     </SafeAreaView>
+     </View>
   );
 }
 

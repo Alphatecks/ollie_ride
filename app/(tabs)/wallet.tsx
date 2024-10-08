@@ -26,8 +26,8 @@ const Wallet = () => {
     ];
 
 	return (
-		<SafeAreaView style={tw`bg-white flex-1 p-3`}>
-			<ScrollView showsVerticalScrollIndicator = {false} style = {tw`flex-1`} >
+		// <View style={tw`bg-white flex-1 p-3`}>
+			<ScrollView showsVerticalScrollIndicator = {false} style = {tw`flex-1 bg-white p-3`} >
 				<View style={tw`flex-row gap-4 border border-[0.8px] p-4 rounded-md border-blue-900 my-3`}>
 					<View style={tw`flex-grow`}>
 						<Text poppins style={tw`text-gray-500`}>Wallet Balance</Text>
@@ -89,7 +89,7 @@ const Wallet = () => {
 					</View>
 				</View>				
 			</ScrollView>
-		</SafeAreaView>
+		// </View>
 	)
 }
 
