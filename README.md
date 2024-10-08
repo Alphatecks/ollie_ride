@@ -1,15 +1,5 @@
-### React-Native-UI-Lib-twrnc-firebase-template
+### Ollie Ride Driver's App
 
-This project is a React Native Expo app featuring:
-
-* **React Native UI Lib:** Streamlined UI components for building responsive interfaces.
-* **Expo Fonts:** Easy integration of custom fonts for a polished look.
-* **Twrnc:** Tailwind CSS-inspired utility-first framework for rapid styling.
-* **Firebase JS SDK:** Seamless integration of Firebase authentication and database services.
-* **React Native SVG:** Support for scalable vector graphics for illustrations and icons.
-* **Onboarding Screen:** Guided introduction for new users.
-* **Auth Screen:** User sign-in and sign-out functionality powered by Firebase.
-* **Home Screen:** Home screen with five bottom tabs for organized user interaction.
 
 **Prerequisites**
 
@@ -20,7 +10,7 @@ This project is a React Native Expo app featuring:
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/sparkle666/rnuilib-twrnc-firebase-template
+   git clone https://github.com/Alphatecks/ollie_ride_driver
    ```
 
 2. **Install Dependencies:**
@@ -28,12 +18,10 @@ This project is a React Native Expo app featuring:
    Navigate to the project directory and run:
 
    ```bash
+   cd ollie_ride_driver
    npx expo install
    ```
 
-3. **Set Up Assets:**
-
-   - Copy your logo and splash screen images to the `assets/images` folder. These images will be used for branding and app presentation.
 
 **Firebase Configuration**
 
@@ -71,7 +59,7 @@ This project is a React Native Expo app featuring:
 
 2. **Twrnc Configuration:**
 
-   - You may find a `twrnc.config.js` file for tailoring Twrnc settings (optional).
+   - You may find a `tailwind.config.js` file for tailoring Twrnc settings (optional).
 
 **Development Server**
 
