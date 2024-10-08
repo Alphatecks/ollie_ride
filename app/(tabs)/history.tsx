@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, Avatar } from 'react-native-ui-lib'
 import {FlatList} from "react-native"
+import { useRouter } from "expo-router"
 
 import { SafeAreaView } from "react-native-safe-area-context"
 import tw from "@/tailwind"
@@ -24,6 +25,9 @@ const tripData: TripData[] = [
 ];
 
 const History = () => {
+
+	const router = useRouter()
+
 	const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd"
 	const renderItem = ({ item }: { item: TripData }) => (
 	    <TripCard 
@@ -31,6 +35,7 @@ const History = () => {
 	      rating={item.rating}
 	      tripTotal={item.tripTotal}
 	      userImageUri={item.userImageUri}
+	      handlePress = {()=> router.push(`history_aux/${item.id}`)}
 	    />
   );
 	return (
