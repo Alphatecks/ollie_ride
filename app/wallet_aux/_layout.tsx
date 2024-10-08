@@ -21,6 +21,12 @@ const Layout = () => {
 				headerStyle: {elevation: 0, border: 0},
 			}} 
 			/>
+			<Stack.Screen name="withdraw_success" options = {{ 
+				headerShown: false, 
+				title: "Withdraw",
+				headerStyle: {elevation: 0, border: 0},
+			}} 
+			/>
 		</Stack>
 	)
 }

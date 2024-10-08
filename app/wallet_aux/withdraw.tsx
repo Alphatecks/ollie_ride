@@ -3,12 +3,14 @@ import Text from 'react-native-ui-lib/text'
 import Button from 'react-native-ui-lib/button'
 import { TextInput, View } from "react-native"
 import tw from "@/tailwind"
+import { useRouter } from "expo-router"
 
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const Withdraw = () => {
 	const [amount, setAmount] = useState<number>(0)
+	const router = useRouter()
 
 	return (
 		<View style={tw`flex-1 bg-white dark:bg-gray-800`}>
@@ -53,7 +55,11 @@ const Withdraw = () => {
 						<Text poppinsBold>Earnings</Text>
 						<Text poppinsBold>$400.24</Text>
 					</View>
-					<Button label = "Withdraw" style={tw`btn`} />
+					<Button poppins 
+					label = "Withdraw" 
+					style={tw`btn`}
+					onPress = {()=> router.push("wallet_aux/withdraw_success")}
+					 />
 				</View>
 				
 			</View>
