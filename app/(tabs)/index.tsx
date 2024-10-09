@@ -1,115 +1,109 @@
-import { useState, useEffect } from "react";
-import { Text, View, Avatar, Badge, Button, Image } from 'react-native-ui-lib';
-import { ScrollView, StyleSheet, TextInput } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { useState, useEffect, useMemo } from "react";
+import { View, TextInput, Image } from "react-native";
+import Avatar from 'react-native-ui-lib/avatar'
+import Text from 'react-native-ui-lib/text'
 
-
+import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import * as Location from 'expo-location';
 import tw from "@/tailwind";
-import { useDeviceContext } from "twrnc"
 
-import { db } from "@/firebaseConfig.js";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+const getDistanceFromLatLonInMeters = (lat1, lon1, lat2, lon2) => {
+  const R = 6371e3; // Earth radius in meters
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a = 
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in meters
+  return distance;
+};
 
-import * as ImagePicker from 'expo-image-picker';
-// import * as Permissions from 'expo-permissions' // For iOS (if using Expo)
-import * as Location from 'expo-location' // For iOS and Android (if using Expo)
+const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd"
 
-
+const riders = [
+  { id: 1, latitude: 5.4798823, longitude: 7.4309101 }, // Within 100 meters
+  { id: 2, latitude: 5.4808823, longitude: 7.4319101 }, // Outside 100 meters
+  { id: 3, latitude: 5.4785823, longitude: 7.4299101 }, // Within 100 meters
+];
 
 export default function Index() {
-  const [userInfo, setUserInfo] = useState({});
-
-
-  useDeviceContext(tw);
-
   const [location, setLocation] = useState(null);
+  const [region, setRegion] = useState({
+    latitude: 5.4788823,
+    longitude: 7.4309201,
+    latitudeDelta: 0.015,
+    longitudeDelta: 0.0121,
+  });
   const [errorMsg, setErrorMsg] = useState(null);
 
-    useEffect(() => {
-      (async () => {
-        
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-          return;
-        }
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
 
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
-      })();
-    }, []);
+      let userLocation = await Location.getCurrentPositionAsync({});
+      setLocation(userLocation);
 
-    let text = 'Waiting..';
-    if (errorMsg) {
-      text = errorMsg;
-    } else if (location) {
-      text = JSON.stringify(location);
+      setRegion({
+        latitude: userLocation.coords.latitude,
+        longitude: userLocation.coords.longitude,
+        latitudeDelta: 0.005,  // Adjust for zoom level
+        longitudeDelta: 0.005, // Adjust for zoom level
+      });
+    })();
+  }, []);
+
+  const memoizedRiders = useMemo(() => riders.map((rider) => {
+    if (location) {
+      const distance = getDistanceFromLatLonInMeters(
+        location.coords.latitude,
+        location.coords.longitude,
+        rider.latitude,
+        rider.longitude
+      );
+      return { ...rider, distance };
     }
-
-
-
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const userDoc = await getDoc(doc(db, "Users", auth.currentUser.uid));
-  //       if (userDoc.exists()) {
-  //         setUserInfo(userDoc.data());
-  //       } else {
-  //         console.log("No such document!");
-  //       }
-  //     } catch (e) {
-  //       console.log("Error getting document:", e);
-  //     }
-  //   };
-
-  //   if (auth.currentUser) {
-  //     fetchUserData();
-  //   }
-  // }, [auth.currentUser]);
+    return rider;
+  }), [location]);
 
   return (
     <View style={tw`bg-white flex-1`}>
-      <View style={tw`flex-1 relative`}>
-        <MapView
-        style = {styles.map}
-        provider={PROVIDER_GOOGLE} 
+      <MapView
+        style={tw`flex-1`}
+        provider={PROVIDER_GOOGLE}
+        loadingEnabled={true}
         showsUserLocation
-        initailRegion={{
-         latitude: 37.78825,
-         longitude: -122.4324,
-         latitudeDelta: 0.015,
-         longitudeDelta: 0.0121,
-       }}
-         mapType="standard"
-        // initialRegion={{
-        //   latitude: 37.78825,
-        //   longitude: -122.4324,
-        //   latitudeDelta: 0.0922,
-        //   longitudeDelta: 0.0421,
-        // }}
-      />
-      <View style={tw`absolute bottom-6 right-2 left-2`}>
-        <View style={tw`bg-white dark:bg-black flex-1 flex-row items-center p-4 rounded-3xl gap-2`}>
-          <MaterialIcons name="search" size={24} style={tw`text-gray-300`} />
-          <TextInput style={tw`flex-1 poppins dark:text-white`} placeholder = "Search" />
-        </View>
-        <Text>{process.env.GOOGLE_MAPS_API_KEY_OLD}</Text>
-      </View>
-      </View>
+        followsUserLocation={true}
+        region={region}
+        mapType="standard"
+      >
+        {location && (
+          <>
+            {memoizedRiders.map((rider) => (
+              <Marker
+                key={rider.id}
+                coordinate={{ latitude: rider.latitude, longitude: rider.longitude }}
+                title={`Rider ${rider.id}`}
+                onPress = {()=> console.log(`Pressed: ${rider.id}`)}
+              >
+                <Image source={{ uri: url }} style={tw`h-12 w-12 rounded-full border-2 border-white`} />
+              </Marker>
+            ))}
+          </>
+        )}
+      </MapView>
 
-     </View>
+      <View style={tw`absolute bottom-6 right-2 left-2`}>
+        <View style={tw`bg-white flex-1 flex-row items-center p-4 rounded-3xl gap-2`}>
+          <TextInput style={tw`flex-1 poppins`} placeholder="Search" />
+        </View>
+      </View>
+    </View>
   );
 }
-
-
-const styles = StyleSheet.create({
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-});
