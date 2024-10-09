@@ -36,7 +36,8 @@ module.exports = {
         '.btn-secondary': `p-4 rounded-md my-3 text-white`,
         '.outline': `border-[#008955] p-4 w-full border-blue-800`,
         '.input': `border rounded-md border-gray-300 p-3 mb-3`,
-        'poppins': { fontFamily: "Poppins_400Regular" }
+        'poppins': { fontFamily: "Poppins_400Regular" },
+        'poppinsMedium': { fontFamily: "Poppins_500Medium" },
       });
     }),
   ],
