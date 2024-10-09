@@ -74,6 +74,14 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <MaterialIcons name="notifications" size={24} color={color}  />,
         }}
       />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'My Profile',
+          headerShown: true,
+          tabBarIcon: ({ color }) => <FontAwesome name="user" size={24} color={color}  />,
+        }}
+      />
     </Tabs>
   );
 }

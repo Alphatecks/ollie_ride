@@ -10,10 +10,12 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { NotificationCardMessage } from "@/components/notification/NotificationCardBase"
 
 const Notifications = () => {
+	console.log("ENV: ")
 	const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd"
 
 	return (
 		<View style={tw`bg-white flex-1 p-3`}>
+			<Text>dfdsf</Text>
 			<View style={tw`border border-[0.9px] border-ollie-base rounded-md p-4 gap-4`}>
 				<Text poppinsMedium style={tw`text-gray-500`} >Ongoing trip</Text>
 				<TouchableOpacity 

@@ -80,12 +80,13 @@ export default function Index() {
         style = {styles.map}
         provider={PROVIDER_GOOGLE} 
         showsUserLocation
-        region={{
+        initailRegion={{
          latitude: 37.78825,
          longitude: -122.4324,
          latitudeDelta: 0.015,
          longitudeDelta: 0.0121,
        }}
+         mapType="standard"
         // initialRegion={{
         //   latitude: 37.78825,
         //   longitude: -122.4324,

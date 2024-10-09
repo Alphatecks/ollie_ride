@@ -30,7 +30,7 @@
       "package": "com.sparklesix.ollieridedriver",
       "config": {
         "googleMaps": {
-          "apiKey": "$GOOGLE_MAPS_API_KEY"
+          "apiKey": "AIzaSyCwiyu1HxfDQFf5A9U4g_m4YLI21EzVuLg"
           }
       },
       "permissions": [
