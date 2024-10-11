@@ -2,6 +2,8 @@ import React from 'react';
 import { TouchableOpacity, View, Text } from 'react-native';
 import { Avatar } from 'react-native-ui-lib'; // Assuming you're using react-native-elements for Avatar
 
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+
 import tw from "@/tailwind"
 
 /*
@@ -24,7 +26,7 @@ const NotificationCardBase: React.FC<NotificationCardBaseProps> = ({
   const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd"
 
   return (
-    <TouchableOpacity style={tw`flex-row justify-between items-center rounded-md`}>
+    <TouchableOpacity style={tw`flex-row justify-between items-center rounded-md my-2`}>
       <View style={tw`flex-row gap-2 items-center`}>
         <Avatar name={name} source={{ uri: imageUrl || url }} />
         <View>
@@ -70,6 +72,42 @@ export const NotificationCardMessage: React.FC<NotificationCardMessageProps> = (
       </View>
       <View>
         <Text style={[tw`poppinsMedium`, { color: 'gray' }]}>{time}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+
+interface NotificationCardDrivingProps {
+  name: string;
+  imageUrl: string;
+  phoneNumber: string;
+  time: string;
+}
+
+export const NotificationCardDriving: React.FC<NotificationCardDrivingProps> = ({
+  name,
+  imageUrl,
+  phoneNumber,
+  time,
+}) => {
+  const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd"
+
+  return (
+    <TouchableOpacity style={tw`flex-row justify-between items-center rounded-md my-2`}>
+      <View style={tw`flex-row gap-2 items-center`}>
+        <Avatar name={name} source={{ uri: imageUrl || url }} />
+        <View>
+          <Text style={tw`poppins`}>{name}</Text>
+          <View style={tw`flex-row items-center gap-2`}>
+            <Text style={tw`poppins text-gray-400`}>{phoneNumber}</Text>
+          </View>
+        </View>
+      </View>
+      <View style={tw`flex-row gap-2`}>
+        <MaterialIcons name="call" size={24} style={tw`bg-gray-200 p-2 rounded-full text-ollie-base`} />
+        <MaterialIcons name="message" size={24} style={tw`bg-gray-200 p-2 rounded-full text-ollie-base`} />
+        <MaterialIcons name="cancel" size={26} color="black" style={tw`bg-gray-200 p-2 rounded-full text-red-500`}/>
       </View>
     </TouchableOpacity>
   );

@@ -3,9 +3,14 @@ import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { View, TextInput, Image } from "react-native";
 import Avatar from 'react-native-ui-lib/avatar'
 import Text from 'react-native-ui-lib/text'
+import Button from 'react-native-ui-lib/button'
 
 import { getDistanceFromLatLonInMeters } from "@/utils/calculations"; // Utility to calculate distance between two lat/lon points
 import NotificationCardBase from "@/components/notification/NotificationCardBase";
+import { NotificationCardDriving } from "@/components/notification/NotificationCardBase";
+
+import DoubleLocationCard from "@/components/home/DoubleLocationCard";
+import { ridersData as riders } from "@/constants/Data"
 
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'; // Importing Gorhom Bottom Sheet for the drawer
 
@@ -17,11 +22,11 @@ import tw from "@/tailwind"; // TailwindCSS for styling
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
 
 // Sample rider data (latitude/longitude)
-const riders = [
-  { id: 1, latitude: 5.4798823, longitude: 7.4309101, fullName: "Sixtus Anyanwu", phoneNumber: "090104023", time: "10:30 am" }, // Within 100 meters
-  { id: 2, latitude: 5.4808823, longitude: 7.4319101, fullName: "Gedit Oliver", phoneNumber: "090104023", time: "1:01 am" }, // Outside 100 meters
-  { id: 3, latitude: 5.4785823, longitude: 7.4299101, fullName: "Maclom Xanderi", phoneNumber: "08789892345", time: "10:30" }, // Within 100 meters
-];
+// const riders = [
+//   { id: 1, latitude: 5.4798823, longitude: 7.4309101, fromLocation: "2a School Road", toLocation: "234 Wethey Ave. USA", fullName: "Sixtus Anyanwu", phoneNumber: "090104023", time: "10:30 am" }, // Within 100 meters
+//   { id: 2, latitude: 5.4808823, longitude: 7.4319101, fullName: "Gedit Oliver", phoneNumber: "090104023", time: "1:01 am" }, // Outside 100 meters
+//   { id: 3, latitude: 5.4785823, longitude: 7.4299101, fullName: "Maclom Xanderi", phoneNumber: "08789892345", time: "10:30" }, // Within 100 meters
+// ];
 
 export default function Index() {
   // State to hold the user's current location
@@ -153,9 +158,24 @@ useEffect(() => {
         initialSnapIndex={-1}
         index={-1} 
       >
-        <BottomSheetView style={tw`p-3`}>
+        <BottomSheetView style={tw`p-4`}>
            <NotificationCardBase
             key={selectedRider?.id}
+            name={selectedRider?.fullName}
+            phoneNumber={selectedRider?.phoneNumber}
+            time={selectedRider?.time}
+          />
+          <DoubleLocationCard locationDistance = "10 mins" 
+          fromLocation = {selectedRider?.fromLocation}
+          toLocation = {selectedRider?.toLocation}
+          />
+          <Text poppins style={tw`my-4`} >Price Range: N4000 - N5000 </Text>
+          <View style={tw`flex-row gap-2`}>
+            <Button label = "Accept" poppins style={tw`btn flex-grow`}/>
+            <Button label = "Reject" poppins style={tw`btn flex-grow bg-[#BFC8D4] text-red-300`} color = "#0C3569"/>
+          </View>
+
+           <NotificationCardDriving
             name={selectedRider?.fullName}
             phoneNumber={selectedRider?.phoneNumber}
             time={selectedRider?.time}

@@ -1,0 +1,40 @@
+import React, {ReactNode} from 'react'
+import { View, Text, Button, Colors } from 'react-native-ui-lib'
+import tw from "@/tailwind"
+
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import AntDesign from '@expo/vector-icons/AntDesign';
+
+
+interface DoubleLocationCardProps {
+	fromLocation: string;
+	toLocation: string;
+	locationDistance: number;
+}
+
+const DoubleLocationCard: React.FC<DoubleLocationCardProps> = ({ fromLocation, toLocation, locationDistance }) => {
+		return (
+		<View style={tw`w-full p-2 flex-row my-2`}>
+			<View style = {tw`items-center w-6`} >
+				<MaterialCommunityIcons name="map-marker" size={24} color="blue"  />
+				<View style={tw`border-dashed border-l-[1.5px] h-[52px] border-blue-600`}></View>
+				<MaterialCommunityIcons name="map-marker" size={24} style={tw`text-ollie-base`} />
+			</View>
+			<View style={tw`flex-1 justify-between`}>
+				<View>
+					<Text poppinsMedium>From Location</Text>
+					<Text poppins style={tw`text-gray-400`} >{fromLocation ? fromLocation : "2972 Westheimer Rd. Santa Ana"} </Text>
+				</View>				
+				<View style={tw`flex-row justify-between -mb-5`} >
+					<View>
+						<Text poppinsMedium>To Location</Text>
+						<Text poppins style={tw`text-gray-400`} >{ toLocation? toLocation: "1901 Thornridge Cir. Shiloh, Hawaii 81063" }</Text>	
+					</View>
+					<Text poppinsMedium>{ locationDistance ? locationDistance : "1.1km" }</Text>
+				</View>
+			</View>
+		</View>
+	)
+}
+
+export default DoubleLocationCard
