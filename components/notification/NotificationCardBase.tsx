@@ -21,14 +21,16 @@ const NotificationCardBase: React.FC<NotificationCardBaseProps> = ({
   phoneNumber,
   time,
 }) => {
+  const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd"
+
   return (
     <TouchableOpacity style={tw`flex-row justify-between items-center rounded-md`}>
       <View style={tw`flex-row gap-2 items-center`}>
-        <Avatar name={name} source={{ uri: imageUrl }} />
+        <Avatar name={name} source={{ uri: imageUrl || url }} />
         <View>
           <Text style={tw`poppins`}>{name}</Text>
           <View style={tw`flex-row items-center gap-2`}>
-            <Text style={tw`poppins`}>{phoneNumber}</Text>
+            <Text style={tw`poppins text-gray-400`}>{phoneNumber}</Text>
           </View>
         </View>
       </View>

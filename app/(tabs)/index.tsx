@@ -4,7 +4,8 @@ import { View, TextInput, Image } from "react-native";
 import Avatar from 'react-native-ui-lib/avatar'
 import Text from 'react-native-ui-lib/text'
 
-import { getDistanceFromLatLonInMeters } from "@/utils/calculations" // Utility to calculate distance between two lat/lon points
+import { getDistanceFromLatLonInMeters } from "@/utils/calculations"; // Utility to calculate distance between two lat/lon points
+import NotificationCardBase from "@/components/notification/NotificationCardBase";
 
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'; // Importing Gorhom Bottom Sheet for the drawer
 
@@ -13,13 +14,13 @@ import * as Location from 'expo-location'; // Importing expo-location for handli
 import tw from "@/tailwind"; // TailwindCSS for styling
 
 // Rider avatar URL
-const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd"
+const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
 
 // Sample rider data (latitude/longitude)
 const riders = [
-  { id: 1, latitude: 5.4798823, longitude: 7.4309101 }, // Within 100 meters
-  { id: 2, latitude: 5.4808823, longitude: 7.4319101 }, // Outside 100 meters
-  { id: 3, latitude: 5.4785823, longitude: 7.4299101 }, // Within 100 meters
+  { id: 1, latitude: 5.4798823, longitude: 7.4309101, fullName: "Sixtus Anyanwu", phoneNumber: "090104023", time: "10:30 am" }, // Within 100 meters
+  { id: 2, latitude: 5.4808823, longitude: 7.4319101, fullName: "Gedit Oliver", phoneNumber: "090104023", time: "1:01 am" }, // Outside 100 meters
+  { id: 3, latitude: 5.4785823, longitude: 7.4299101, fullName: "Maclom Xanderi", phoneNumber: "08789892345", time: "10:30" }, // Within 100 meters
 ];
 
 export default function Index() {
@@ -33,20 +34,25 @@ export default function Index() {
     longitudeDelta: 0.0121, // Zoom level (longitudinal)
   });
   const [errorMsg, setErrorMsg] = useState(null); // Error message for location permission
+  const [riderList, setRiderList] = useState([]); // List of riders with distances
+  const [selectedRider, setSelectedRider] = useState({}); // List of riders with distances
 
-  // useEffect to handle location fetching when the component is mounted
-  useEffect(() => {
-    (async () => {
-      // Request location permissions
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
+// useEffect to handle location fetching when the component is mounted
+useEffect(() => {
+  let isMounted = true; // Flag to prevent updates after unmounting
 
-      // Fetch current location
-      let userLocation = await Location.getCurrentPositionAsync({});
+  (async () => {
+    // Request location permissions
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      setErrorMsg('Permission to access location was denied');
+      return;
+    }
 
+    // Fetch current location
+    let userLocation = await Location.getCurrentPositionAsync({});
+
+    if (isMounted) {
       // Only update the location if it's significantly different from the previous one
       if (!location || 
          (location.coords.latitude !== userLocation.coords.latitude || 
@@ -61,24 +67,40 @@ export default function Index() {
           longitudeDelta: 0.005, // Adjust for zoom level
         });
       }
-    })();
+    }
+  })();
+
+  return () => {
+    isMounted = false; // Clean up after unmounting
+  };
 }, [location]); // Only re-run if the location changes
 
-  // Memoizing the riders' data to avoid re-calculation on every render
-  const memoizedRiders = useMemo(() => {
-    if (!location) return riders; // Return the rider data if location is not available yet
+// Memoizing the riders' data to avoid re-calculation on every render
+const memoizedRiders = useMemo(() => {
+  if (!location) return riders; // Return the rider data if location is not available yet
 
-    // Calculate the distance between each rider and the user's location
-    return riders.map((rider) => {
-      const distance = getDistanceFromLatLonInMeters(
-        location.coords.latitude,
-        location.coords.longitude,
-        rider.latitude,
-        rider.longitude
-      );
-      return { ...rider, distance }; // Add the calculated distance to each rider object
-    });
+  // Calculate the distance between each rider and the user's location
+  return riders.map((rider) => {
+    const distance = getDistanceFromLatLonInMeters(
+      location.coords.latitude,
+      location.coords.longitude,
+      rider.latitude,
+      rider.longitude
+    );
+    return { ...rider, distance }; // Add the calculated distance to each rider object
+  });
 }, [location?.coords.latitude, location?.coords.longitude]); // Depend on user's latitude and longitude
+
+// Update riderList state only if memoizedRiders changes
+useEffect(() => {
+  if (memoizedRiders !== riderList) {
+    setRiderList(memoizedRiders); // Set the calculated riders to riderList
+  }
+}, [memoizedRiders, riderList]); // Re-run only when memoizedRiders or riderList changes
+
+
+
+  // console.log(riderList);
 
   // Bottom sheet reference
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -91,10 +113,10 @@ export default function Index() {
 
   // Function to open the bottom sheet when a rider is clicked
   const handleOpen = (rider) => {
-      bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
-      console.log("The clicked rider: ", rider); // Log the clicked rider data
-    };
-
+    bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
+    console.log("The clicked rider: "); // Log the clicked rider data
+    setSelectedRider(rider)
+  };
 
   return (
     <View style={tw`bg-white flex-1`}>
@@ -113,7 +135,7 @@ export default function Index() {
                 key={rider.id}
                 coordinate={{ latitude: rider.latitude, longitude: rider.longitude }}
                 title={`Rider ${rider.id}`}
-                style = {tw`poppins`}
+                style={tw`poppins`}
                 onPress={() => handleOpen(rider)}
               >
                 <Image source={{ uri: url }} style={tw`h-12 w-12 rounded-full border-2 border-white`} />
@@ -126,13 +148,18 @@ export default function Index() {
       <BottomSheet
         ref={bottomSheetRef}
         onChange={handleSheetChanges}
-        snapPoints = {snapPoints}
-        enablePanDownToClose = {true}
+        snapPoints={snapPoints}
+        enablePanDownToClose={true}
+        initialSnapIndex={-1}
+        index={-1} 
       >
-        <BottomSheetView>
-          <Text>Awesome 🎉</Text>
-          <Text>Awesome 🎉</Text>
-          <TextInput style={tw`poppins`} placeholder="Search" />
+        <BottomSheetView style={tw`p-3`}>
+           <NotificationCardBase
+            key={selectedRider?.id}
+            name={selectedRider?.fullName}
+            phoneNumber={selectedRider?.phoneNumber}
+            time={selectedRider?.time}
+          />
         </BottomSheetView>
       </BottomSheet>
     </View>

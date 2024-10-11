@@ -43,6 +43,7 @@ export default function TabLayout() {
         headerTitleAlign: "center",
         headerTitleStyle: {fontFamily: "Poppins_400Regular"},
         tabBarHideOnKeyboard: true,
+        tabBarStyle: tw`h-[70px] py-2`
       }}>
       <Tabs.Screen
         name="index"
