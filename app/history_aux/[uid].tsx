@@ -1,7 +1,8 @@
 import React from 'react'
 import { View, Image, ScrollView } from 'react-native'
 import Text from "react-native-ui-lib/text"
-import { useLocalSearchParams } from "expo-router"
+import { useLocalSearchParams, useRouter } from "expo-router"
+
 import { Avatar } from 'react-native-ui-lib/avatar';
 
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -12,6 +13,7 @@ const History = () => {
 	const params = useLocalSearchParams()
 	const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd"
 
+	const router = useRouter()
 	// console.log(params)
 	return (
 		<ScrollView 
@@ -21,7 +23,7 @@ const History = () => {
 			<View style={tw`flex-1 pt-10 gap-2`}>
 		        <View style={tw`flex-row items-center`}>
 		          <Image source={{uri: url}} style={tw`w-12 h-12 rounded-full mr-4`} />
-		          <Text poppinsMedium style={tw`text-lg`}>Miracle Geidt</Text>
+		          <Text poppinsMedium style={tw`text-lg`} onPress = {()=> router.push("history_aux/bottom_test")} >Miracle Geidt</Text>
 		        </View>
 
 		        <View style={tw`flex-row gap-2 my-4`}>

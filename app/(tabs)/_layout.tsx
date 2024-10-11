@@ -41,7 +41,8 @@ export default function TabLayout() {
         tabBarLabelStyle: { fontFamily: "Poppins_400Regular", fontSize: 12, },
         tabBarStyle: tw`elevation-0 border-t-0 h-14 dark:bg-black`,
         headerTitleAlign: "center",
-        headerTitleStyle: {fontFamily: "Poppins_400Regular"}
+        headerTitleStyle: {fontFamily: "Poppins_400Regular"},
+        tabBarHideOnKeyboard: true,
       }}>
       <Tabs.Screen
         name="index"

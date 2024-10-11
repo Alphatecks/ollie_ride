@@ -9,6 +9,8 @@ import { useDeviceContext } from 'twrnc';
 
 import Toast from 'react-native-toast-message';
 
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 import {
   Colors, Typography, ThemeManager
 } from 'react-native-ui-lib';
@@ -154,8 +156,8 @@ function RootLayoutNav() {
 
 
   return (
-    // <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
     <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -164,7 +166,7 @@ function RootLayoutNav() {
         <Stack.Screen name="auth" options={{ headerShown: false }} />
       </Stack>
       <Toast />
+    </ GestureHandlerRootView>
     </>
-    // </ThemeProvider>
   );
 }

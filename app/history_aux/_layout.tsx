@@ -20,6 +20,12 @@ const Layout = () => {
 				title: "History",
 				headerStyle: {elevation: 0, border: 0},
 			}} 
+			/>	
+			<Stack.Screen name="bottom_test" options = {{ 
+				headerShown: true, 
+				title: "History",
+				headerStyle: {elevation: 0, border: 0},
+			}} 
 			/>
 		</Stack>
 	)

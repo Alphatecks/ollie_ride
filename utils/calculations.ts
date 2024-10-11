@@ -1,0 +1,25 @@
+export const getDistanceFromLatLonInMeters = (lat1, lon1, lat2, lon2) => {
+/**
+ * Calculates the distance between two geographical coordinates (latitude and longitude) on the Earth's surface in meters.
+ *
+ * Uses the Haversine formula for accurate distance calculations.
+ *
+ * @param lat1 - Latitude of the first point (in degrees).
+ * @param lon1 - Longitude of the first point (in degrees).
+ * @param lat2 - Latitude of the second point (in degrees).
+ * @param lon2 - Longitude of the second point (in degrees).  
+
+ *
+ * @returns The distance between the two points in meters.
+ */
+  const R = 6371e3; // Earth radius in meters
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a = 
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in meters
+  return distance;
+};
