@@ -14,7 +14,6 @@ const Notifications = () => {
 
 	return (
 		<View style={tw`bg-white flex-1 p-3`}>
-			<Text>dfdsf</Text>
 			<View style={tw`border border-[0.9px] border-ollie-base rounded-md p-4 gap-4`}>
 				<Text poppinsMedium style={tw`text-gray-500`} >Ongoing trip</Text>
 				<TouchableOpacity 
