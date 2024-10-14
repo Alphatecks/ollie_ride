@@ -38,6 +38,7 @@ module.exports = {
         '.input': `border rounded-md border-gray-300 p-3 mb-3`,
         'poppins': { fontFamily: "Poppins_400Regular" },
         'poppinsMedium': { fontFamily: "Poppins_500Medium" },
+        'poppinsItalic': { fontFamily: "Poppins_400Regular_Italic" },
       });
     }),
   ],

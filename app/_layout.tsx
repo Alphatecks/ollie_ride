@@ -17,7 +17,7 @@ import {
 
 import { useColorScheme } from '@/components/useColorScheme';
 import { Poppins_100Thin, Poppins_200ExtraLight, Poppins_300Light, Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold,
-Poppins_700Bold,
+Poppins_700Bold, Poppins_400Regular_Italic,
 Poppins_800ExtraBold,
 Poppins_900Black } from '@expo-google-fonts/poppins'
 
@@ -127,6 +127,7 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     Poppins_100Thin, Poppins_200ExtraLight, Poppins_300Light, Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold,
     Poppins_700Bold,
+    Poppins_400Regular_Italic,
     Poppins_800ExtraBold,
     Poppins_900Black 
   });
@@ -162,6 +163,7 @@ function RootLayoutNav() {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="wallet_aux" options={{ headerShown: false }} />
+        <Stack.Screen name="document_aux" options={{ headerShown: false }} />
         <Stack.Screen name="history_aux" options={{ headerShown: false }} />
         <Stack.Screen name="auth" options={{ headerShown: false }} />
       </Stack>

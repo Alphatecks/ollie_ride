@@ -50,11 +50,12 @@ const Profile = () => {
 				{/* Profile Options */}
 				<View style={tw`p-3 gap-7`}>
 					<ProfileOptionsCard title = "Payment" icon = {<MaterialCommunityIcons name="file-document-outline" size={24} color="black" />}/>
-					<ProfileOptionsCard title = "Documents" icon = {<FontAwesome5 name="coins" size={24} color="black" />} />
+					<ProfileOptionsCard title = "Documents" href = "document_aux" icon = {<FontAwesome5 name="coins" size={24} color="black" />} />
 					<ProfileOptionsCard title = "Settings" icon={<MaterialCommunityIcons name="cog-outline" size={24} color="black" />} />
 					<ProfileOptionsCard title = "Help Center" icon={<MaterialCommunityIcons name="headset" size={24} color="black" />} />
 					<ProfileOptionsCard title = "Log Out"  textStyle = "text-red-500" icon = {<AntDesign name="logout" size={24} color="red" />} hasArrowIcon = {false} />
 				</View>
+				
 			</View>
 	)
 }
