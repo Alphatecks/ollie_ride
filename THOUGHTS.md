@@ -20,3 +20,38 @@ This Works:
           }
       },
  ```
+
+
+ ### ERRORS ENCOUNTERED
+
+Firebase Error:
+
+ ```bash
+  [2024-10-15T08:32:48.841Z]  @firebase/firestore: Firestore (10.13.1): WebChannelConnection RPC 'Write' stream 0x85f8e373 transport errored: 
+ ```
+How I fixed it?
+
+
+
+
+
+
+/// REMOVE LATER
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyDyYIgmy9Vt_z6ydTfzq-Y4M0A9ygEtBC4",
+
+  authDomain: "ollie-ride-7abb8.firebaseapp.com",
+
+  projectId: "ollie-ride-7abb8",
+
+  storageBucket: "ollie-ride-7abb8.appspot.com",
+
+  messagingSenderId: "460810931103",
+
+  appId: "1:460810931103:web:3ba78182dadce210598baa",
+
+  measurementId: "G-QTVFPQTSYQ"
+
+};

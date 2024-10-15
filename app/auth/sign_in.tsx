@@ -46,10 +46,10 @@ const SignIn = () => {
      <View style={tw`bg-white flex-1 p-6`}> 
         <View style={tw`mb-4`} >
              <Link asChild href="auth/upload_car_details">
-                 <Text style={tw`text-2xl mb-6`} interMedium >Sign In to your account</Text>   
+                 <Text style={tw`text-2xl mb-6`} poppinsMedium >Sign In to your account</Text>   
              </Link>
              
-             <Text inter style={tw`text-gray-500`} >Please sign in to continue</Text>    
+             <Text poppins style={tw`text-gray-500`} >Please sign in to continue</Text>    
         </View>                                                            
          <TextField                                                                     
              placeholder="Email"                                                        
@@ -58,7 +58,7 @@ const SignIn = () => {
              keyboardType="email-address"                                               
              autoCapitalize="none" 
              rounded
-             inter                                                     
+             poppins                                                     
              style={tw`mb-4`}                                                           
          />                                                                             
          <TextField                                                                     
@@ -67,14 +67,14 @@ const SignIn = () => {
              onChangeText={setPassword}                                                 
              secureTextEntry                                                            
              style={tw`mb-6`}
-             inter  
+             poppins  
              rounded                                                         
          />  
          {loading ? 
              <ButtonLoader />
             :
              <Button label="Sign In" 
-             inter
+             poppins
              onPress={handleSignIn} 
              style={tw`btn`}
              disabled = {!email || !password ? true: false}
@@ -84,13 +84,13 @@ const SignIn = () => {
          {error ? <Text style={tw`text-red-500`}>{error}</Text> : null}  
 
          <Link asChild href="auth/forgot_password">
-             <Text interMedium style={tw`text-gateway-base py-4`} >Forgot Password?</Text>
+             <Text poppinsMedium style={tw`text-ollie-base py-4`} >Forgot Password?</Text>
          </Link>
 
-         <Text interMedium style={tw`py-3`}>
+         <Text poppinsMedium style={tw`py-3`}>
                 Don't an account?
                 <Link href="auth/sign_up" asChild  >
-                    <Text style={tw`text-gateway-base`}> Sign Up</Text>
+                    <Text style={tw`text-ollie-base`}> Sign Up</Text>
                 </Link>
         </Text>               
      </View>                                                                            

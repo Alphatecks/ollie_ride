@@ -162,11 +162,12 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="auth" options={{ headerShown: false }} />
+        <Stack.Screen name="riding_flow" options={{ headerShown: false }} />
         <Stack.Screen name="wallet_aux" options={{ headerShown: false }} />
         <Stack.Screen name="document_aux" options={{ headerShown: false }} />
         <Stack.Screen name="payment" options={{ headerShown: false }} />
         <Stack.Screen name="history_aux" options={{ headerShown: false }} />
-        <Stack.Screen name="auth" options={{ headerShown: false }} />
       </Stack>
       <Toast />
     </ GestureHandlerRootView>

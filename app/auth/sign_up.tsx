@@ -151,7 +151,7 @@ const SignUp = () => {
          <Text poppinsMedium style={tw`my-4`} >
                 Have an account?
                 <Link href="auth/sign_in" asChild >
-                    <Text style={tw`text-gateway-base`}> Sign In</Text>
+                    <Text style={tw`text-ollie-base`}> Sign In</Text>
                 </Link>
         </Text>               
         </ScrollView>

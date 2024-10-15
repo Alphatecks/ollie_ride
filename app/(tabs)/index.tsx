@@ -1,8 +1,12 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { View, TextInput, Image } from "react-native";
 import Avatar from 'react-native-ui-lib/avatar'
 import Text from 'react-native-ui-lib/text'
+import {TextField} from 'react-native-ui-lib'
 import Button from 'react-native-ui-lib/button'
 
 import { getDistanceFromLatLonInMeters } from "@/utils/calculations"; // Utility to calculate distance between two lat/lon points
@@ -31,6 +35,9 @@ const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspo
 export default function Index() {
   // State to hold the user's current location
   const [location, setLocation] = useState(null);
+  const [otp, setOtp] = useState(["", "", "", ""]);
+
+
   // Initial region to display on the map
   const [region, setRegion] = useState({
     latitude: 5.4788823,
@@ -123,6 +130,13 @@ useEffect(() => {
     setSelectedRider(rider)
   };
 
+  const handleInputChange = (value, index) => {
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+    console.log(newOtp)
+  };
+
   return (
     <View style={tw`bg-white flex-1`}>
       <MapView
@@ -159,27 +173,114 @@ useEffect(() => {
         index={-1} 
       >
         <BottomSheetView style={tw`p-4`}>
-           <NotificationCardBase
-            key={selectedRider?.id}
-            name={selectedRider?.fullName}
-            phoneNumber={selectedRider?.phoneNumber}
-            time={selectedRider?.time}
-          />
-          <DoubleLocationCard locationDistance = "10 mins" 
-          fromLocation = {selectedRider?.fromLocation}
-          toLocation = {selectedRider?.toLocation}
-          />
-          <Text poppins style={tw`my-4`} >Price Range: N4000 - N5000 </Text>
-          <View style={tw`flex-row gap-2`}>
-            <Button label = "Accept" poppins style={tw`btn flex-grow`}/>
-            <Button label = "Reject" poppins style={tw`btn flex-grow bg-[#BFC8D4] text-red-300`} color = "#0C3569"/>
+          {/* Flow 1 for the ride acceptance for the driver
+          
+           */}
+          <View>    
+            <NotificationCardBase
+              key={selectedRider?.id}
+              name={selectedRider?.fullName}
+              phoneNumber={selectedRider?.phoneNumber}
+              time={selectedRider?.time}
+            />
+            <DoubleLocationCard locationDistance = "10 mins" 
+            fromLocation = {selectedRider?.fromLocation}
+            toLocation = {selectedRider?.toLocation}
+            />
+            <Text poppins style={tw`my-4`} >Price Range: N4000 - N5000 </Text>
+            <View style={tw`flex-row gap-2`}>
+              <Button label = "Accept" poppins style={tw`btn flex-grow`}/>
+              <Button label = "Reject" poppins style={tw`btn flex-grow bg-[#BFC8D4] text-red-300`} color = "#0C3569"/>
+            </View>
           </View>
 
-           <NotificationCardDriving
-            name={selectedRider?.fullName}
-            phoneNumber={selectedRider?.phoneNumber}
-            time={selectedRider?.time}
-          />
+
+          {/* Flow 2 for ride acceptance */}
+
+     {/*     <View>
+             <NotificationCardDriving
+              name={selectedRider?.fullName}
+              phoneNumber={selectedRider?.phoneNumber}
+              time={selectedRider?.time}
+            />
+            <DoubleLocationCard locationDistance = "10 mins" 
+            fromLocation = {selectedRider?.fromLocation}
+            toLocation = {selectedRider?.toLocation}
+            />
+            <Button label = "Navigate To Customer Location" poppins style={tw`btn my-3`}/>
+          </View>*/}
+
+          {/*Flow 3 Request OTP from Customer*/}
+
+         {/* <View>
+            <View style={tw`items-center gap-3`}>
+              <AntDesign name="checkcircle" size={100} color="green" />
+              <Text poppinsMedium>Arrived at Customer's Location</Text>
+              <Text poppins>{selectedRider?.fromLocation}</Text>
+            </View>
+            <Button label = "Request OTP" poppins style={tw`btn my-3`}/>
+          </View>*/}
+
+          {/* Flow 4 OTP Flow */}
+     {/*     <View style={tw`gap-4`}>
+            <Text poppinsMedium h2 center>Enter OTP</Text>     
+            <Text poppins center>We sent a code to the customer’s phone number</Text>     
+            <View style={tw`flex flex-row gap-2 justify-center`} center>
+            {otp.map((value, index) => (
+              <TextField
+                key={index}
+                style={tw`border-[1px] border-gray-400 py-4 rounded w-12 text-2xl text-center`}
+                poppins
+                labelColor="#3C2F3D"
+                enableErrors
+                keyboardType="numeric"
+                maxLength={1}
+                value={value}
+                onChangeText={(text) => handleInputChange(text, index)}
+              />
+            ))}
+          </View>
+          <Text poppinsMedium center p1>Didn't get OTP?</Text>     
+          <Text poppinsMedium center style={tw`text-blue-500 underline`}>Resend Code</Text>     
+          </View>*/}
+
+          {/* Flow 5 Start Trip */}
+        {/*  <View>
+             <NotificationCardDriving
+              name={selectedRider?.fullName}
+              phoneNumber={selectedRider?.phoneNumber}
+              time={selectedRider?.time}
+            />
+            <DoubleLocationCard locationDistance = "10 mins" 
+            fromLocation = {selectedRider?.fromLocation}
+            toLocation = {selectedRider?.toLocation}
+            />
+            <Button label = "Start Trip" poppins style={tw`btn my-3`}/>
+         </View>*/}
+
+         {/* Flow 6 Await Payment */}
+
+       {/* <View>
+            <View style={tw`items-center gap-3`}>
+              <AntDesign name="checkcircle" size={100} color="green" />
+              <Text poppinsMedium>Arrived at Customer's Destination</Text>
+              <Text poppins>{selectedRider?.fromLocation}</Text>
+            </View>
+            <Button label = "Initiate Payment" poppins style={tw`btn my-3`}/>
+        </View>*/}
+
+        <View>
+            <View style={tw`items-center gap-3`}>
+              <FontAwesome name="times-circle" size={100} color="red" />
+              <Text poppinsMedium>Booking cancelled successfully</Text>
+              <Text poppins center >Your booking with 
+              <Text poppinsMedium> ID: 5467DFY778 </Text>
+              has been cancelled successfully.</Text>
+            </View>
+            <Button label = "Continue" poppins style={tw`btn my-3`}/>
+        </View>
+
+
         </BottomSheetView>
       </BottomSheet>
     </View>
