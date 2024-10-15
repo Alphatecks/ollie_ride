@@ -3,13 +3,14 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, initializeAuth, getReactNativePersistence } from "firebase/auth";
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-import { getFirestore, addDoc, collection, initializeFirestore } from "firebase/firestore";
-// import { getStorage } from "firebase/storage"; // Import getStorage for Firebase Storage
-import 'firebase/storage';
-import { setLogLevel as setFirestoreLogLevel } from "firebase/firestore";
+import { getFirestore, initializeFirestore, setLogLevel as setFirestoreLogLevel } from "firebase/firestore";
+// Import getStorage for Firebase Storage
+import { getStorage } from "firebase/storage"; 
+
+import { setLogLevel } from "firebase/app";
+setLogLevel("debug"); // Enable debug level logging for Firebase
 
 
-setFirestoreLogLevel('debug');
 // Firebase configuration
 const firebaseConfig = {
 
@@ -29,26 +30,50 @@ const firebaseConfig = {
 
 };
 
+// const firebaseConfig = {
+
+//   apiKey: "AIzaSyAq-1C5ccMT1H8FZJQdmYvG9RFPJ8VUF0g",
+
+//   authDomain: "ollie-test-a8923.firebaseapp.com",
+
+//   projectId: "ollie-test-a8923",
+
+//   storageBucket: "ollie-test-a8923.appspot.com",
+
+//   messagingSenderId: "728995073964",
+
+//   appId: "1:728995073964:web:eb1b89fd2221ba77f83409",
+
+//   measurementId: "G-B306JQW8H3"
+
+// };
+
+
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase Authentication
+// Initialize Firebase Authentication with persistence
 export const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
 });
 
-// Initialize Firestore
-export const db = getFirestore(app);
+// Initialize Firestore with custom options (if needed)
+export const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true, // Useful in environments where WebSockets are blocked
+});
 
-// export const db = initializeFirestore(app, {
-// experimentalForceLongPolling: true
-// })
+// Initialize Firebase Storage (if needed)
+export const storage = getStorage(app);
 
-// export const db = initializeFirestore(app, {
-//   experimentalForceLongPolling: true,
-//   useFetchStreams: false,
-// });
+// Set Firestore Log Level for debugging (development use only)
+setFirestoreLogLevel('debug');
+
+console.log("Auth: ", auth, "DB: ", db);
+
+
+
+
 
 // Initialize Firebase Storage
 

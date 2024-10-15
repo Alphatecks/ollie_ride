@@ -29,29 +29,15 @@ Firebase Error:
  ```bash
   [2024-10-15T08:32:48.841Z]  @firebase/firestore: Firestore (10.13.1): WebChannelConnection RPC 'Write' stream 0x85f8e373 transport errored: 
  ```
-How I fixed it?
+##### What have i tried?
 
+- Uninstalled and reinstalled firebase
+- Clear expo cache ``` npx expo -c ```
+- Restarted server multiple times
+- Created a fresh Firebase Project to test it.
 
+##### How I fixed it?
 
+OMO!!! It was MTN and their useless network oo!!! Switched to Airtel and it worked!! Shit was browsing but seems
+blocked when accessing Google servers. Useless people!!
 
-
-
-/// REMOVE LATER
-
-const firebaseConfig = {
-
-  apiKey: "AIzaSyDyYIgmy9Vt_z6ydTfzq-Y4M0A9ygEtBC4",
-
-  authDomain: "ollie-ride-7abb8.firebaseapp.com",
-
-  projectId: "ollie-ride-7abb8",
-
-  storageBucket: "ollie-ride-7abb8.appspot.com",
-
-  messagingSenderId: "460810931103",
-
-  appId: "1:460810931103:web:3ba78182dadce210598baa",
-
-  measurementId: "G-QTVFPQTSYQ"
-
-};

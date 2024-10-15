@@ -5,6 +5,7 @@ import { Link, useRouter } from "expo-router"
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
 import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { auth } from "@/firebaseConfig"
 
 import ButtonLoader from "@/components/general/ButtonLoader"
 // const db = getFirestore();
@@ -17,12 +18,14 @@ const SignIn = () => {
 	const [email, setEmail] = useState('')                                                 
     const [loading, setLoading] = useState(false)                                                 
 	const [password, setPassword] = useState('')                                           
-	const [error, setError] = useState('')                                                 
+	const [error, setError] = useState('')     
+
+    if (auth.currentUser) console.log("User: ", auth.currentUser)                                            
                                                                                         
 	const handleSignIn = async () => {
 	    try {
             setLoading(true)
-            const auth = getAuth()
+            // const auth = getAuth()
 
 	        const userCredential = await signInWithEmailAndPassword(auth, email, password);
 	        const user = userCredential.user;  // Get the registered user object
