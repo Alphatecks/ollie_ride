@@ -16,7 +16,7 @@ export const getNearbyPlaces = async (latitude, longitude, radius = 1000, placeT
     params.type = placeType;
   }
 
-  console.log(`URL: ${baseUrl}?location=${latitude},${longitude}&radius=${radius}&key=${apiKey}${placeType ? `&type=${placeType}` : ''}`); // For debugging
+  // console.log(`URL: ${baseUrl}?location=${latitude},${longitude}&radius=${radius}&key=${apiKey}${placeType ? `&type=${placeType}` : ''}`); // For debugging
 
   try {
     const response = await axios.get(baseUrl, { params });

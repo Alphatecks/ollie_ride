@@ -1,7 +1,7 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import {ActivityIndicator, Alert} from "react-native"
+import {ActivityIndicator, Alert, TouchableOpacity} from "react-native"
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { View, TextInput, Image } from "react-native";
@@ -81,11 +81,11 @@ export default function Index() {
           longitudeDelta: 0.005,
         });
         // Get nearby Places of the users current location
-        
+
         console.log("Getting nearby places...")
         const allNearbyPlaces = await getNearbyPlaces(userLocation.coords.latitude, userLocation.coords.longitude)
 
-        console.log("From Index: ", allNearbyPlaces)
+        // console.log("From Index: ", allNearbyPlaces)
         setRiders(allNearbyPlaces)
       }
     };
@@ -133,7 +133,7 @@ export default function Index() {
   // Function to open the bottom sheet when a rider is clicked
   const handleRiderMarkerClicked = (rider) => {
     bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
-    console.log("The clicked rider: "); // Log the clicked rider data
+    console.log("The clicked rider: ", rider); // Log the clicked rider data
     setSelectedRider(rider)
     setIsRiderMarkerClicked(true)
 
@@ -253,8 +253,11 @@ export default function Index() {
             coordinate={{ latitude: rider.latitude, longitude: rider.longitude }}
             title={`Rider ${rider.id}`}
             onPress={() => handleRiderMarkerClicked(rider)}
-          >
-            <Image source={{ uri: url }} style={tw`h-12 w-12 rounded-full border-2 border-white`} />
+            
+          > 
+          <Image source={{ uri: url }}  
+          style={tw`h-12 w-12 rounded-full border-2 border-white`} />
+
           </Marker>
         ))}
 
