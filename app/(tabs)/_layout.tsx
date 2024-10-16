@@ -1,52 +1,71 @@
-import React from 'react';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { useState, useEffect } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-
-import { Link, Tabs } from 'expo-router';
-import { Pressable, View } from 'react-native';
-import tw from "@/tailwind"
+import { auth, db } from "@/firebaseConfig";
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { Tabs } from 'expo-router';
+import { TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import tw from "@/tailwind";
 import { useDeviceContext } from 'twrnc';
-
-import Text from "react-native-ui-lib/text"
-
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-
+import Text from "react-native-ui-lib/text";
 import Entypo from '@expo/vector-icons/Entypo';
 
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
-
 export default function TabLayout() {
-  // const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
-
+  const [isOnline, setIsOnline] = useState(false); // Default to false initially
+  const [isLoading, setIsLoading] = useState(false); // Default to false initially
+  const user = auth.currentUser;
   useDeviceContext(tw);
+
+  // Fetch user's current isOnline status when component mounts
+  useEffect(() => {
+    const fetchOnlineStatus = async () => {
+      try {
+        if (user) {
+          const userRef = doc(db, 'users', user.uid);
+          const docSnap = await getDoc(userRef);
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            setIsOnline(userData.isOnline || false); // Use current status or default to false
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching document:', error);
+      }
+    };
+
+    fetchOnlineStatus();
+  }, [user]);
+
+  // Toggle isOnline status in Firestore and update UI state
+  const updateOnlineStatus = async () => {
+    try {
+      setIsLoading(true)
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, { isOnline: !isOnline });
+      setIsOnline((prevStatus) => !prevStatus); // Toggle local state
+      console.log('Toggled the isOnline State');
+      setIsLoading(false)
+    } catch (error) {
+      setIsLoading(false)
+      console.error('Error updating document:', error);
+    }
+  };
 
   return (
     <Tabs
       screenOptions={{
-        // tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         tabBarActiveTintColor: "blue",
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
         headerShown: false,
-        tabBarLabelStyle: { fontFamily: "Poppins_400Regular", fontSize: 12, },
+        tabBarLabelStyle: { fontFamily: "Poppins_400Regular", fontSize: 12 },
         tabBarStyle: tw`elevation-0 border-t-0 h-14 dark:bg-black`,
         headerTitleAlign: "center",
-        headerTitleStyle: {fontFamily: "Poppins_400Regular"},
+        headerTitleStyle: { fontFamily: "Poppins_400Regular" },
         tabBarHideOnKeyboard: true,
         tabBarStyle: tw`h-[70px] py-2`
       }}>
@@ -55,15 +74,25 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           headerShown: true,
-          header: () => {            
+          header: () => {
             return (
               <View style={[
                 tw`h-[70px] bg-white items-center`,
-                { paddingTop: insets.top || 10 } // Adjust padding according to safe area insets
+                { paddingTop: insets.top || 10 }
               ]}>
-                <View style={tw`bg-ollie-base w-30 rounded-full`}>
-                  <Text style={tw`text-white p-2`} poppins center>Online</Text>
-                </View>
+                <TouchableOpacity style={tw`${isOnline ? "bg-ollie-base" : "bg-gray-800 opacity-80"} w-30 rounded-full`}
+                  onPress={updateOnlineStatus}>
+                  {isLoading ?
+                    <ActivityIndicator size = "large" color = "white" />
+                    :
+                    <View style={tw`flex-row items-center justify-around`}>
+                      <Text style={tw`text-white p-2`} poppins center>
+                        {isOnline ? "Online" : "Offline"}
+                      </Text>
+                      <Ionicons name="car-sharp" size={24}  style={tw`text-ollie-base bg-white rounded-full`} />
+                    </View>
+                  }
+                </TouchableOpacity>
               </View>
             );
           },
@@ -91,7 +120,7 @@ export default function TabLayout() {
         options={{
           title: 'Notifications',
           headerShown: true,
-          tabBarIcon: ({ color }) => <MaterialIcons name="notifications" size={24} color={color}  />,
+          tabBarIcon: ({ color }) => <MaterialIcons name="notifications" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -99,7 +128,7 @@ export default function TabLayout() {
         options={{
           title: 'My Profile',
           headerShown: true,
-          tabBarIcon: ({ color }) => <FontAwesome name="user" size={24} color={color}  />,
+          tabBarIcon: ({ color }) => <FontAwesome name="user" size={24} color={color} />,
         }}
       />
     </Tabs>

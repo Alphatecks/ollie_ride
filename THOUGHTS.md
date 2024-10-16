@@ -24,7 +24,7 @@ This Works:
 
  ### ERRORS ENCOUNTERED
 
-Firebase Error:
+#### Firebase Error:
 
  ```bash
   [2024-10-15T08:32:48.841Z]  @firebase/firestore: Firestore (10.13.1): WebChannelConnection RPC 'Write' stream 0x85f8e373 transport errored: 
@@ -40,4 +40,37 @@ Firebase Error:
 
 OMO!!! It was MTN and their useless network oo!!! Switched to Airtel and it worked!! Shit was browsing but seems
 blocked when accessing Google servers. Useless people!!
+
+#### Google Maps Not working
+
+##### What i tried?
+
+- Rebuilt app multiple times
+- Cleared cache
+- Exported Google maps API keys to expo secrets
+
+My app.json looked like:
+
+```json
+        "config": {
+        "googleMaps": {
+          "apiKey": "$raw_api_key_here" // Key from expo secreets
+          }
+      },
+```
+
+##### How I fixed it?
+
+I had to add the API key raw into the app.json google maps config
+```json
+        "config": {
+        "googleMaps": {
+          "apiKey": "raw_api_key_here"
+          }
+      },
+```
+
+Using the $ sign didn't work, expo eas was not substituting the secret key.
+
+#### ERROR:  Error adding document:  [TypeError: _firebaseConfig.db.collection is not a function (it is undefined)]
 
