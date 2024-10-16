@@ -243,12 +243,6 @@ useEffect(() => {
     then set all other states to false to restart flow.
     */
 
-    /*setIsRiderMarkerClicked(false)
-    setIsDriverAtRiderLocation(false)
-    setIsOTPSentToRider(false)
-    setIsTripStarted(false)
-    setIsRiderDestinationReached(false)*/
-
     Alert.alert(
       'Cancel Trip', // The title of the alert
       'Are you sure you want to cancel this trip?', // The message that will appear inside the alert

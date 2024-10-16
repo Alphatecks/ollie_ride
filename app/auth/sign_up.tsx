@@ -25,7 +25,7 @@ const SignUp = () => {
     const [confirmPassword, setConfirmPassword] = useState('')                                           
 	const [error, setError] = useState('')  
 
-    if (auth.currentUser) return router.push("(tabs)")   
+    // if (auth.currentUser) return router.push("(tabs)")   
                                                                                         
 	const handleSignUp = async () => {
 	    try {
