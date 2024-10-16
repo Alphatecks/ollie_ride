@@ -1,13 +1,14 @@
 
 import { View, Text, Button, Colors } from 'react-native-ui-lib'
 import { Alert } from "react-native"
-import { useEffect, useCallback } from "react"
+import { useEffect, useCallback, useState } from "react"
 
 import tw from "@/tailwind"
 import Welcome from "@/assets/welcome.svg"
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, useRouter, useFocusEffect } from "expo-router"
 
+import * as Location from 'expo-location'; // Importing expo-location for handling location permissions and fetching user location
 
 import { auth, db } from "@/firebaseConfig"
 import { addDoc, collection } from "firebase/firestore";
@@ -16,17 +17,32 @@ import { addDoc, collection } from "firebase/firestore";
 
 const Index = () => {
 	const router = useRouter()
+   const [errorMsg, setErrorMsg] = useState(null); // Error message for location permission
 
    useFocusEffect(
-    useCallback(() => {
+     useCallback(() => {
+       async function requestLocationPermission() {
+         let { status } = await Location.requestForegroundPermissionsAsync();
+         if (status !== 'granted') {
+           setErrorMsg('Permission to access location was denied');
+         } else {
+           console.log("Thank you for granting application...");
+         }
 
-      if (auth.currentUser) router.replace("(tabs)")
+         if (auth.currentUser) {
+           router.replace("(tabs)");
+         }
+       }
 
-      return () => {
-        console.log('This route is now unfocused.');
-      }
-    }, [])
-  );
+       // Call the async function
+       requestLocationPermission();
+
+       return () => {
+         console.log('This route is now unfocused.');
+       };
+     }, [])
+   );
+
     
 	// useEffect(()=>{
 	// 	if (auth.currentUser) return router.replace("(tabs)")

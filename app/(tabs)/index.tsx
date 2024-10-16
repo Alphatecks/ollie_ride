@@ -68,70 +68,28 @@ export default function Index() {
   const [riderList, setRiderList] = useState([]); // List of riders with distances
   const [selectedRider, setSelectedRider] = useState({}); // List of riders with distances
 
-// useEffect to handle location fetching when the component is mounted
-useEffect(() => {
-  let isMounted = true; // Flag to prevent updates after unmounting
-
-  (async () => {
-    // Request location permissions
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      setErrorMsg('Permission to access location was denied');
-      return;
-    }
-
-    // Fetch current location
-    let userLocation = await Location.getCurrentPositionAsync({});
-
-    if (isMounted) {
-      // Only update the location if it's significantly different from the previous one
-      if (!location || 
-         (location.coords.latitude !== userLocation.coords.latitude || 
-          location.coords.longitude !== userLocation.coords.longitude)) {
-        setLocation(userLocation); // Set current location
-
-        // Set region for the map to focus on the user's location
+  useEffect(() => {
+    const fetchLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+      } else {
+        let userLocation = await Location.getCurrentPositionAsync({});
+        setLocation(userLocation);
         setRegion({
           latitude: userLocation.coords.latitude,
           longitude: userLocation.coords.longitude,
-          latitudeDelta: 0.005,  // Adjust for zoom level
-          longitudeDelta: 0.005, // Adjust for zoom level
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
         });
       }
-    }
-  })();
+    };
 
-  return () => {
-    isMounted = false; // Clean up after unmounting
-  };
-}, [location]); // Only re-run if the location changes
-
-// Memoizing the riders' data to avoid re-calculation on every render
-const memoizedRiders = useMemo(() => {
-  if (!location) return riders; // Return the rider data if location is not available yet
-
-  // Calculate the distance between each rider and the user's location
-  return riders.map((rider) => {
-    const distance = getDistanceFromLatLonInMeters(
-      location.coords.latitude,
-      location.coords.longitude,
-      rider.latitude,
-      rider.longitude
-    );
-    return { ...rider, distance }; // Add the calculated distance to each rider object
-  });
-}, [location?.coords.latitude, location?.coords.longitude]); // Depend on user's latitude and longitude
-
-// Update riderList state only if memoizedRiders changes
-useEffect(() => {
-  if (memoizedRiders !== riderList) {
-    setRiderList(memoizedRiders); // Set the calculated riders to riderList
-  }
-}, [memoizedRiders, riderList]); // Re-run only when memoizedRiders or riderList changes
+    fetchLocation(); // Call the async function inside useEffect
+  }, []); // Ensure it's an empty dependency array
 
 
 
-  // console.log(riderList);
 
   // Bottom sheet reference
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -287,7 +245,7 @@ useEffect(() => {
       >
         {location && (
           <>
-            {memoizedRiders.map((rider) => (
+            {riders.map((rider) => (
               <Marker
                 key={rider.id}
                 coordinate={{ latitude: rider.latitude, longitude: rider.longitude }}

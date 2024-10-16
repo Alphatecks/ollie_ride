@@ -4,12 +4,15 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+
 import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
-import tw from "twrnc"
+import { Pressable, View } from 'react-native';
+import tw from "@/tailwind"
 import { useDeviceContext } from 'twrnc';
 
-
+import Text from "react-native-ui-lib/text"
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -28,6 +31,8 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   // const colorScheme = useColorScheme();
+  const insets = useSafeAreaInsets();
+
   useDeviceContext(tw);
 
   return (
@@ -49,6 +54,19 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
+          headerShown: true,
+          header: () => {            
+            return (
+              <View style={[
+                tw`h-[70px] bg-white items-center`,
+                { paddingTop: insets.top || 10 } // Adjust padding according to safe area insets
+              ]}>
+                <View style={tw`bg-ollie-base w-30 rounded-full`}>
+                  <Text style={tw`text-white p-2`} poppins center>Online</Text>
+                </View>
+              </View>
+            );
+          },
           tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
         }}
       />
