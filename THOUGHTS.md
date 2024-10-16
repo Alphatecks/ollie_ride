@@ -74,3 +74,23 @@ Using the $ sign didn't work, expo eas was not substituting the secret key.
 
 #### ERROR:  Error adding document:  [TypeError: _firebaseConfig.db.collection is not a function (it is undefined)]
 
+My code:
+```javascript
+  db.collection('users')
+````
+##### How I fixed it?
+
+- I was using the Firebase V8 instead of Firebase V9 Modular SDK. Thanks ChatGPT.
+
+Correct code:
+
+```javascript
+  const userDocRef = doc(db, 'users', user.uid); // Modular SDK usage
+  return onSnapshot(userDocRef, (docSnapshot) => {
+    if (docSnapshot.exists()) {
+      console.log('Current data: ', docSnapshot.data());
+    } else {
+      console.log('No such document!');
+    }
+  });
+```

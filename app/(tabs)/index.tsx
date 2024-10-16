@@ -15,7 +15,7 @@ import NotificationCardBase from "@/components/notification/NotificationCardBase
 import { NotificationCardDriving } from "@/components/notification/NotificationCardBase";
 
 import DoubleLocationCard from "@/components/home/DoubleLocationCard";
-import { ridersData as riders } from "@/constants/Data"
+// import { ridersData2 as riders } from "@/constants/Data"
 
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'; // Importing Gorhom Bottom Sheet for the drawer
 
@@ -23,23 +23,19 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'; // MapView
 import * as Location from 'expo-location'; // Importing expo-location for handling location permissions and fetching user location
 import tw from "@/tailwind"; // TailwindCSS for styling
 
-
+import { getNearbyPlaces } from "@/utils/googleAPI"
 
 
 
 // Rider avatar URL
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
 
-// Sample rider data (latitude/longitude)
-// const riders = [
-//   { id: 1, latitude: 5.4798823, longitude: 7.4309101, fromLocation: "2a School Road", toLocation: "234 Wethey Ave. USA", fullName: "Sixtus Anyanwu", phoneNumber: "090104023", time: "10:30 am" }, // Within 100 meters
-//   { id: 2, latitude: 5.4808823, longitude: 7.4319101, fullName: "Gedit Oliver", phoneNumber: "090104023", time: "1:01 am" }, // Outside 100 meters
-//   { id: 3, latitude: 5.4785823, longitude: 7.4299101, fullName: "Maclom Xanderi", phoneNumber: "08789892345", time: "10:30" }, // Within 100 meters
-// ];
+
 
 export default function Index() {
   // State to hold the user's current location
   const [location, setLocation] = useState(null);
+  const [riders, setRiders] = useState([]);
   // Rider Acceptance Flow
   const [isRiderMarkerClicked, setIsRiderMarkerClicked] = useState(false);
   const [isRiderAccepted, setIsRiderAccepted] = useState(false);
@@ -65,7 +61,9 @@ export default function Index() {
     longitudeDelta: 0.0121, // Zoom level (longitudinal)
   });
   const [errorMsg, setErrorMsg] = useState(null); // Error message for location permission
+
   const [riderList, setRiderList] = useState([]); // List of riders with distances
+
   const [selectedRider, setSelectedRider] = useState({}); // List of riders with distances
 
   useEffect(() => {
@@ -82,6 +80,13 @@ export default function Index() {
           latitudeDelta: 0.005,
           longitudeDelta: 0.005,
         });
+        // Get nearby Places of the users current location
+        
+        console.log("Getting nearby places...")
+        const allNearbyPlaces = await getNearbyPlaces(userLocation.coords.latitude, userLocation.coords.longitude)
+
+        console.log("From Index: ", allNearbyPlaces)
+        setRiders(allNearbyPlaces)
       }
     };
 
@@ -90,10 +95,9 @@ export default function Index() {
 
 
 
-
   // Bottom sheet reference
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = ["25%", "50%", "90%"]; // Snap points for the bottom sheet
+  const snapPoints = ["25%", "50%", "70%", "90%"]; // Snap points for the bottom sheet
 
   // Handle bottom sheet changes (logs the index when the sheet changes position)
   const handleSheetChanges = useCallback((index: number) => {
@@ -243,21 +247,17 @@ export default function Index() {
         region={region}
         mapType="standard"
       >
-        {location && (
-          <>
-            {riders.map((rider) => (
-              <Marker
-                key={rider.id}
-                coordinate={{ latitude: rider.latitude, longitude: rider.longitude }}
-                title={`Rider ${rider.id}`}
-                style={tw`poppins`}
-                onPress={() => handleRiderMarkerClicked(rider)}
-              >
-                <Image source={{ uri: url }} style={tw`h-12 w-12 rounded-full border-2 border-white`} />
-              </Marker>
-            ))}
-          </>
-        )}
+       {Array.isArray(riders) && riders.map((rider) => (
+          <Marker
+            key={rider.id}
+            coordinate={{ latitude: rider.latitude, longitude: rider.longitude }}
+            title={`Rider ${rider.id}`}
+            onPress={() => handleRiderMarkerClicked(rider)}
+          >
+            <Image source={{ uri: url }} style={tw`h-12 w-12 rounded-full border-2 border-white`} />
+          </Marker>
+        ))}
+
       </MapView>
 
       <BottomSheet
