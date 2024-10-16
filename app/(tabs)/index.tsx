@@ -1,6 +1,7 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import {ActivityIndicator, Alert} from "react-native"
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { View, TextInput, Image } from "react-native";
@@ -43,10 +44,12 @@ export default function Index() {
   const [isRiderMarkerClicked, setIsRiderMarkerClicked] = useState(false);
   const [isRiderAccepted, setIsRiderAccepted] = useState(false);
   const [isDriverAtRiderLocation, setIsDriverAtRiderLocation] = useState(false);
+  // const [sendOTP, set] = useState(false);
   const [isOTPSentToRider, setIsOTPSentToRider] = useState(false);
   const [isOTPValid, setIsOTPValid] = useState(false);
   const [isTripStarted, setIsTripStarted] = useState(false);
-  const [isTripEnroute, setIsTripEnroute] = useState(false);
+  const [isTripStartedButtonClicked, setIsTripStartedButtonClicked] = useState(false);
+  const [isRiderDestinationReached, setIsRiderDestinationReached] = useState(false);
   const [isTripFinished, setIsTripFinished] = useState(false);
 
 
@@ -137,7 +140,25 @@ useEffect(() => {
   // Handle bottom sheet changes (logs the index when the sheet changes position)
   const handleSheetChanges = useCallback((index: number) => {
     console.log('handleSheetChanges', index);
+    /*
+    if the index === -1 that means the bottom sheet is closed set all state flows to false to 
+    start afresh.
+    FUTURE: Save state of the flow so user can restart where they left off
+    */
+
+    if (index === -1){
+      setIsRiderMarkerClicked(false)
+      setIsDriverAtRiderLocation(false)
+      setIsOTPSentToRider(false)
+      setIsTripStarted(false)
+      setIsRiderDestinationReached(false)
+    }
   }, []);
+
+  const handleBottomSheetClose = () => {
+    /* This close the bottom sheet is opened. */
+      bottomSheetRef.current?.close();
+  };
 
 
   const handleInputChange = (value, index) => {
@@ -161,6 +182,103 @@ useEffect(() => {
     setIsRiderMarkerClicked(false)
 
     console.log("Trip started")
+  }
+
+  const handleIsDriverAtRiderLocation = () => {
+    setIsDriverAtRiderLocation(true)
+    // Remove from view {Flow 2}
+    setIsRiderAccepted(false)
+
+    console.log("Driver At Customer Location, requesting OTP")
+  }
+
+  const handleSendOTPToCustomer = () => {
+    // Use external API to send OTP to the particular customer number
+    console.log("OTP sent to the Customer please enter the OTP to continue...")
+    // Rmove Flow 3 from View
+    setIsDriverAtRiderLocation(false)
+    // Render the OTP component [Flow 4]
+    setIsOTPSentToRider(true)
+  }
+
+  const handleResendOTP = () => {
+    console.log("Resent OTP to the Customer phone number. please renter new OTP")
+  }
+
+  const handleVerifyOTP = () => {
+    /*
+    Check if OTP is valid here, if true remove Flow 4 and render Flow 5
+    Else remain on the same flow till OTP is valid
+    */
+    console.log("Checking if OTP is valid...")
+    setIsOTPSentToRider(false) // Remove Previous flow
+    setIsTripStarted(true)
+  }
+
+  const handleTripStartedButtonClicked = () => {
+    /*
+    Once the "Start Trip button is clicked, change the button title to be "enroute"
+    Then use geo location to check wether the driver has reached customer destination points
+    if true, set the button to end trip
+    */
+    console.log("Trip started button pressed!! The Driver is driving to destination")
+    setIsTripStartedButtonClicked(true)
+  }
+
+  const handleReachedRiderDestination = () => {
+    /*
+    On the useEffect check if customer destination has been reached and set this to true
+    so user can initiate payment
+    */
+    setIsRiderDestinationReached(true)
+    console.log("You have reached your destination!!")
+    // Remove the previous flow from view
+    setIsTripStarted(false)
+  }
+
+  const handleOnCancelIconPressed = () => {
+    console.log("Pressed Icon to cancel Trip...")
+    /*
+    FUTURE TODO: Show a pop up to ask whether user is show they want to cancel
+    then set all other states to false to restart flow.
+    */
+
+    /*setIsRiderMarkerClicked(false)
+    setIsDriverAtRiderLocation(false)
+    setIsOTPSentToRider(false)
+    setIsTripStarted(false)
+    setIsRiderDestinationReached(false)*/
+
+    Alert.alert(
+      'Cancel Trip', // The title of the alert
+      'Are you sure you want to cancel this trip?', // The message that will appear inside the alert
+      [
+        {
+          text: 'Cancel', // Button label
+          onPress: () => console.log('Cancel Pressed'), // What happens when the button is pressed
+          style: 'cancel', // Button style ('default', 'cancel', 'destructive')
+        },
+        {
+          text: 'OK', // Button label
+          onPress: resetAllTripState, // What happens when the button is pressed
+        },
+      ],
+      { cancelable: false } // Optionally, whether the user can dismiss the alert by tapping outside
+    );
+
+  }
+
+  const resetAllTripState = () => {
+    console.log("Ok button from alert pressed")
+    // Close bottomsheet
+    handleBottomSheetClose()
+    // Reset all states
+    setIsRiderAccepted(false)
+    setIsRiderMarkerClicked(false)
+    setIsDriverAtRiderLocation(false)
+    setIsOTPSentToRider(false)
+    setIsTripStarted(false)
+    setIsRiderDestinationReached(false)
   }
 
   return (
@@ -224,34 +342,52 @@ useEffect(() => {
           }
 
 
-          {/* Flow 2 for ride acceptance */}
+          {/* Flow 2 for ride acceptance. 
+          If Driver has accepted a ride then show this component where driver can call, message or cancel the ride
 
-     {/*     <View>
-             <NotificationCardDriving
-              name={selectedRider?.fullName}
-              phoneNumber={selectedRider?.phoneNumber}
-              time={selectedRider?.time}
-            />
-            <DoubleLocationCard locationDistance = "10 mins" 
-            fromLocation = {selectedRider?.fromLocation}
-            toLocation = {selectedRider?.toLocation}
-            />
-            <Button label = "Navigate To Rider Location" poppins style={tw`btn my-3`}/>
-          </View>*/}
+          */}
+
+          {isRiderAccepted && 
+
+            <View>
+              <NotificationCardDriving
+                name={selectedRider?.fullName}
+                phoneNumber={selectedRider?.phoneNumber}
+                time={selectedRider?.time}
+                onCancelIconPressed = {handleOnCancelIconPressed}
+              />
+              <DoubleLocationCard locationDistance = "10 mins" 
+              fromLocation = {selectedRider?.fromLocation}
+              toLocation = {selectedRider?.toLocation}
+              />
+              <Button label = "Navigate To Customer Location" poppins style={tw`btn my-3`}
+              onPress = {handleIsDriverAtRiderLocation}
+              />
+            </View>
+
+          }
+
+
 
           {/*Flow 3 Request OTP from Rider*/}
-
-         {/* <View>
-            <View style={tw`items-center gap-3`}>
-              <AntDesign name="checkcircle" size={100} color="green" />
-              <Text poppinsMedium>Arrived at Rider's Location</Text>
-              <Text poppins>{selectedRider?.fromLocation}</Text>
+          {isDriverAtRiderLocation && 
+            <View>
+              <View style={tw`items-center gap-3`}>
+                <AntDesign name="checkcircle" size={100} color="green" />
+                <Text poppinsMedium>Arrived at Rider's Location</Text>
+                <Text poppins>{selectedRider?.fromLocation}</Text>
+              </View>
+              <Button label = "Request OTP" poppins style={tw`btn my-3`}
+              onPress = {handleSendOTPToCustomer}
+              />
             </View>
-            <Button label = "Request OTP" poppins style={tw`btn my-3`}/>
-          </View>*/}
+          }
 
           {/* Flow 4 OTP Flow */}
-     {/*     <View style={tw`gap-4`}>
+
+          {isOTPSentToRider &&
+
+          <View style={tw`gap-4`}>
             <Text poppinsMedium h2 center>Enter OTP</Text>     
             <Text poppins center>We sent a code to the Rider’s phone number</Text>     
             <View style={tw`flex flex-row gap-2 justify-center`} center>
@@ -270,33 +406,66 @@ useEffect(() => {
             ))}
           </View>
           <Text poppinsMedium center p1>Didn't get OTP?</Text>     
-          <Text poppinsMedium center style={tw`text-blue-500 underline`}>Resend Code</Text>     
-          </View>*/}
+          <Text poppinsMedium center style={tw`text-blue-500 underline`}
+          onPress = {handleResendOTP}
+          >Resend Code</Text> 
+
+          <Button label = "Verify OTP" poppins style={tw`btn my-3`}
+          onPress = {handleVerifyOTP}
+          />
+
+          </View>
+
+          }
 
           {/* Flow 5 Start Trip */}
-        {/*  <View>
-             <NotificationCardDriving
+          { isTripStarted && 
+
+          <View>
+            <NotificationCardDriving
               name={selectedRider?.fullName}
               phoneNumber={selectedRider?.phoneNumber}
               time={selectedRider?.time}
+              onCancelIconPressed = {handleOnCancelIconPressed}
             />
             <DoubleLocationCard locationDistance = "10 mins" 
             fromLocation = {selectedRider?.fromLocation}
             toLocation = {selectedRider?.toLocation}
             />
-            <Button label = "Start Trip" poppins style={tw`btn my-3`}/>
-         </View>*/}
+            <Button 
+
+            label = {isTripStartedButtonClicked ? "Enroute" : "Start Trip"}
+
+            poppins style={tw`btn my-3 ${isTripStartedButtonClicked ? "bg-[#D5A419]" : "" }`}
+
+            onPress = {isTripStartedButtonClicked ? () => {} : handleTripStartedButtonClicked }
+            />
+            {isTripStartedButtonClicked && 
+            <Text poppinsMedium 
+            style={tw`text-blue-500 my-2`}
+            onPress = {handleReachedRiderDestination}
+            >Arrived Destination?</Text>}
+          </View>
+
+           }
 
          {/* Flow 6 Await Payment */}
+        { isRiderDestinationReached &&
 
-       {/* <View>
-            <View style={tw`items-center gap-3`}>
-              <AntDesign name="checkcircle" size={100} color="green" />
-              <Text poppinsMedium>Arrived at Rider's Destination</Text>
-              <Text poppins>{selectedRider?.fromLocation}</Text>
-            </View>
-            <Button label = "Initiate Payment" poppins style={tw`btn my-3`}/>
-        </View>*/}
+          <View>
+              <View style={tw`items-center gap-3`}>
+                <AntDesign name="checkcircle" size={100} color="green" />
+                <Text poppinsMedium>Arrived at Rider's Destination</Text>
+                <Text poppins>{selectedRider?.fromLocation}</Text>
+              </View>
+              <View>
+                <ActivityIndicator size = "large" style={tw`my-3`} />
+              </View>
+              <Text poppinsMedium style={tw`my-3`} center p1 >Awaiting Payment from Customer...</Text>
+          </View>
+         }
+
+
           {/* if cancled Show this */}
    {/*     <View>
             <View style={tw`items-center gap-3`}>

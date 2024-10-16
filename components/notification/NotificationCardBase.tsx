@@ -83,6 +83,7 @@ interface NotificationCardDrivingProps {
   imageUrl: string;
   phoneNumber: string;
   time: string;
+  onCancelIconPressed: () => void;
 }
 
 export const NotificationCardDriving: React.FC<NotificationCardDrivingProps> = ({
@@ -90,6 +91,7 @@ export const NotificationCardDriving: React.FC<NotificationCardDrivingProps> = (
   imageUrl,
   phoneNumber,
   time,
+  onCancelIconPressed
 }) => {
   const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd"
 
@@ -107,7 +109,10 @@ export const NotificationCardDriving: React.FC<NotificationCardDrivingProps> = (
       <View style={tw`flex-row gap-2`}>
         <MaterialIcons name="call" size={24} style={tw`bg-gray-200 p-2 rounded-full text-ollie-base`} />
         <MaterialIcons name="message" size={24} style={tw`bg-gray-200 p-2 rounded-full text-ollie-base`} />
-        <MaterialIcons name="cancel" size={26} color="black" style={tw`bg-gray-200 p-2 rounded-full text-red-500`}/>
+        <MaterialIcons name="cancel" size={26} color="black" 
+        style={tw`bg-gray-200 p-2 rounded-full text-red-500`}
+        onPress = {onCancelIconPressed}
+        />
       </View>
     </TouchableOpacity>
   );
