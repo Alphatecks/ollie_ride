@@ -8,6 +8,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
+import { auth } from "@/firebaseConfig"
 
 import { useRouter } from "expo-router"
 
@@ -15,6 +16,8 @@ import ProfileOptionsCard from "@/components/profile/ProfileOptionsCard"
 
 const Profile = () => {
 	const router = useRouter()
+
+	const user = auth.currentUser
 
 	return (
 			<View style = {tw`flex-1 bg-white`} >
@@ -26,7 +29,7 @@ const Profile = () => {
 							<MaterialIcons name="star" size={16} color="white" />
 							<Text style={tw`text-white poppins`}> 4.0 </Text>
 						</View>
-						<Text style={tw`poppinsMedium text-white`}>Peter Creche</Text>
+						<Text style={tw`poppinsMedium text-white`}>{user.displayName}</Text>
 					</View>
 					<Text style={tw`text-white`}>Edit</Text>
 				</View>

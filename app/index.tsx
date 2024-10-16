@@ -1,12 +1,12 @@
 
 import { View, Text, Button, Colors } from 'react-native-ui-lib'
 import { Alert } from "react-native"
-import { useEffect } from "react"
+import { useEffect, useCallback } from "react"
 
 import tw from "@/tailwind"
 import Welcome from "@/assets/welcome.svg"
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link, useRouter } from "expo-router"
+import { Link, useRouter, useFocusEffect } from "expo-router"
 
 
 import { auth, db } from "@/firebaseConfig"
@@ -17,6 +17,16 @@ import { addDoc, collection } from "firebase/firestore";
 const Index = () => {
 	const router = useRouter()
 
+   useFocusEffect(
+    useCallback(() => {
+
+      if (auth.currentUser) router.replace("(tabs)")
+
+      return () => {
+        console.log('This route is now unfocused.');
+      }
+    }, [])
+  );
     
 	// useEffect(()=>{
 	// 	if (auth.currentUser) return router.replace("(tabs)")
