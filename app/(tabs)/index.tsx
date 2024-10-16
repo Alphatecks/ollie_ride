@@ -22,6 +22,10 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'; // MapView
 import * as Location from 'expo-location'; // Importing expo-location for handling location permissions and fetching user location
 import tw from "@/tailwind"; // TailwindCSS for styling
 
+
+
+
+
 // Rider avatar URL
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
 
@@ -35,6 +39,18 @@ const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspo
 export default function Index() {
   // State to hold the user's current location
   const [location, setLocation] = useState(null);
+  // Rider Acceptance Flow
+  const [isRiderMarkerClicked, setIsRiderMarkerClicked] = useState(false);
+  const [isRiderAccepted, setIsRiderAccepted] = useState(false);
+  const [isDriverAtRiderLocation, setIsDriverAtRiderLocation] = useState(false);
+  const [isOTPSentToRider, setIsOTPSentToRider] = useState(false);
+  const [isOTPValid, setIsOTPValid] = useState(false);
+  const [isTripStarted, setIsTripStarted] = useState(false);
+  const [isTripEnroute, setIsTripEnroute] = useState(false);
+  const [isTripFinished, setIsTripFinished] = useState(false);
+
+
+
   const [otp, setOtp] = useState(["", "", "", ""]);
 
 
@@ -123,12 +139,6 @@ useEffect(() => {
     console.log('handleSheetChanges', index);
   }, []);
 
-  // Function to open the bottom sheet when a rider is clicked
-  const handleOpen = (rider) => {
-    bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
-    console.log("The clicked rider: "); // Log the clicked rider data
-    setSelectedRider(rider)
-  };
 
   const handleInputChange = (value, index) => {
     const newOtp = [...otp];
@@ -136,6 +146,22 @@ useEffect(() => {
     setOtp(newOtp);
     console.log(newOtp)
   };
+
+  // Function to open the bottom sheet when a rider is clicked
+  const handleRiderMarkerClicked = (rider) => {
+    bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
+    console.log("The clicked rider: "); // Log the clicked rider data
+    setSelectedRider(rider)
+    setIsRiderMarkerClicked(true)
+
+  };
+  const handleRiderAccepted = () => {
+    setIsRiderAccepted(true)
+    // Remove the Rider acceptance component from view
+    setIsRiderMarkerClicked(false)
+
+    console.log("Trip started")
+  }
 
   return (
     <View style={tw`bg-white flex-1`}>
@@ -155,7 +181,7 @@ useEffect(() => {
                 coordinate={{ latitude: rider.latitude, longitude: rider.longitude }}
                 title={`Rider ${rider.id}`}
                 style={tw`poppins`}
-                onPress={() => handleOpen(rider)}
+                onPress={() => handleRiderMarkerClicked(rider)}
               >
                 <Image source={{ uri: url }} style={tw`h-12 w-12 rounded-full border-2 border-white`} />
               </Marker>
@@ -176,6 +202,7 @@ useEffect(() => {
           {/* Flow 1 for the ride acceptance for the driver
           
            */}
+          {isRiderMarkerClicked && 
           <View>    
             <NotificationCardBase
               key={selectedRider?.id}
@@ -189,10 +216,12 @@ useEffect(() => {
             />
             <Text poppins style={tw`my-4`} >Price Range: N4000 - N5000 </Text>
             <View style={tw`flex-row gap-2`}>
-              <Button label = "Accept" poppins style={tw`btn flex-grow`}/>
+              <Button label = "Accept" poppins style={tw`btn flex-grow`} onPress = {handleRiderAccepted} />
               <Button label = "Reject" poppins style={tw`btn flex-grow bg-[#BFC8D4] text-red-300`} color = "#0C3569"/>
             </View>
           </View>
+
+          }
 
 
           {/* Flow 2 for ride acceptance */}
@@ -207,15 +236,15 @@ useEffect(() => {
             fromLocation = {selectedRider?.fromLocation}
             toLocation = {selectedRider?.toLocation}
             />
-            <Button label = "Navigate To Customer Location" poppins style={tw`btn my-3`}/>
+            <Button label = "Navigate To Rider Location" poppins style={tw`btn my-3`}/>
           </View>*/}
 
-          {/*Flow 3 Request OTP from Customer*/}
+          {/*Flow 3 Request OTP from Rider*/}
 
          {/* <View>
             <View style={tw`items-center gap-3`}>
               <AntDesign name="checkcircle" size={100} color="green" />
-              <Text poppinsMedium>Arrived at Customer's Location</Text>
+              <Text poppinsMedium>Arrived at Rider's Location</Text>
               <Text poppins>{selectedRider?.fromLocation}</Text>
             </View>
             <Button label = "Request OTP" poppins style={tw`btn my-3`}/>
@@ -224,7 +253,7 @@ useEffect(() => {
           {/* Flow 4 OTP Flow */}
      {/*     <View style={tw`gap-4`}>
             <Text poppinsMedium h2 center>Enter OTP</Text>     
-            <Text poppins center>We sent a code to the customer’s phone number</Text>     
+            <Text poppins center>We sent a code to the Rider’s phone number</Text>     
             <View style={tw`flex flex-row gap-2 justify-center`} center>
             {otp.map((value, index) => (
               <TextField
@@ -263,13 +292,13 @@ useEffect(() => {
        {/* <View>
             <View style={tw`items-center gap-3`}>
               <AntDesign name="checkcircle" size={100} color="green" />
-              <Text poppinsMedium>Arrived at Customer's Destination</Text>
+              <Text poppinsMedium>Arrived at Rider's Destination</Text>
               <Text poppins>{selectedRider?.fromLocation}</Text>
             </View>
             <Button label = "Initiate Payment" poppins style={tw`btn my-3`}/>
         </View>*/}
-
-        <View>
+          {/* if cancled Show this */}
+   {/*     <View>
             <View style={tw`items-center gap-3`}>
               <FontAwesome name="times-circle" size={100} color="red" />
               <Text poppinsMedium>Booking cancelled successfully</Text>
@@ -278,7 +307,7 @@ useEffect(() => {
               has been cancelled successfully.</Text>
             </View>
             <Button label = "Continue" poppins style={tw`btn my-3`}/>
-        </View>
+        </View>*/}
 
 
         </BottomSheetView>
@@ -286,3 +315,4 @@ useEffect(() => {
     </View>
   );
 }
+
