@@ -27,7 +27,7 @@ const DoubleLocationCard: React.FC<DoubleLocationCardProps> = ({ fromLocation, t
 				</View>				
 				<View style={tw`flex-row justify-between -mb-5`} >
 					<View>
-						<Text poppinsMedium>To Location</Text>
+						<Text poppinsMedium>To Destination</Text>
 						<Text poppins style={tw`text-gray-400`} >{ toLocation? toLocation: "1901 Thornridge Cir. Shiloh, Hawaii 81063" }</Text>	
 					</View>
 					<Text poppinsMedium>{ locationDistance ? locationDistance : "1.1km" }</Text>

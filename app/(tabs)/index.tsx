@@ -15,7 +15,7 @@ import NotificationCardBase from "@/components/notification/NotificationCardBase
 import { NotificationCardDriving } from "@/components/notification/NotificationCardBase";
 
 import DoubleLocationCard from "@/components/home/DoubleLocationCard";
-// import { ridersData2 as riders } from "@/constants/Data"
+import { ridersData2 as riders } from "@/constants/Data"
 
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'; // Importing Gorhom Bottom Sheet for the drawer
 
@@ -29,7 +29,6 @@ import { getNearbyPlaces } from "@/utils/googleAPI"
 
 // Rider avatar URL
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
-
 
 
 export default function Index() {
@@ -83,10 +82,10 @@ export default function Index() {
         // Get nearby Places of the users current location
 
         console.log("Getting nearby places...")
-        const allNearbyPlaces = await getNearbyPlaces(userLocation.coords.latitude, userLocation.coords.longitude)
+        // const allNearbyPlaces = await getNearbyPlaces(userLocation.coords.latitude, userLocation.coords.longitude)
 
         // console.log("From Index: ", allNearbyPlaces)
-        setRiders(allNearbyPlaces)
+        // setRiders(allNearbyPlaces)
       }
     };
 

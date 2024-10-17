@@ -13,7 +13,7 @@ const Wallet = () => {
 	const router = useRouter()
 
 
-	console.log(router)
+	// console.log(router)
 
 	const barData = [
         {value: 250, label: 'M'},
@@ -25,13 +25,17 @@ const Wallet = () => {
         {value: 300, label: 'S'},
     ];
 
+    
+
 	return (
 		// <View style={tw`bg-white flex-1 p-3`}>
 			<ScrollView showsVerticalScrollIndicator = {false} style = {tw`flex-1 bg-white p-3`} >
 				<View style={tw`flex-row gap-4 border border-[0.8px] p-4 rounded-md border-blue-900 my-3`}>
 					<View style={tw`flex-grow`}>
 						<Text poppins style={tw`text-gray-500`}>Wallet Balance</Text>
-						<Text poppinsMedium h2>$145.43</Text>
+						<Text poppinsMedium h2
+						onPress = {() => router.push("chat")}
+						>$145.43</Text>
 						<Text poppins>Today’s earnings: $30.51</Text>
 					</View>
 					<View style={tw`flex-grow justify-center`}>
