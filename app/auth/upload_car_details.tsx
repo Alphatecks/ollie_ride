@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text, Button, Badge } from 'react-native-ui-lib'
-import { TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { TextInput, StyleSheet, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native';
 import tw from "@/tailwind"
 import Entypo from '@expo/vector-icons/Entypo';
 import { FontAwesome } from '@expo/vector-icons';
@@ -16,6 +16,10 @@ import { useRouter } from "expo-router"
 import * as ImagePicker from 'expo-image-picker';
 
 const UploadCarDetails = () => {
+  /*
+  TODO: Refactor code to avoid sending to firebase storage until the button is pressed,
+  instead show the raw image got from ImagePicker
+  */
   const [carFrontURL, setCarFrontURL] = useState<string>("")
   const [carBackURL, setCarBackURL] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
@@ -56,7 +60,10 @@ const UploadCarDetails = () => {
 	        carFrontURL,
 	        carBackURL
 	      })
+
 	    setLoading(false)
+      // Push to the next screen
+      router.push("auth/driver_verification")
 
     } catch(e){
     	setLoading(false)
@@ -97,7 +104,12 @@ const UploadCarDetails = () => {
   };
 
   return (
-    <View style={tw`bg-white flex-1 p-3`}>
+    <KeyboardAvoidingView 
+      // contentContainerStyle={{ flexGrow: 1 }}
+      enableOnAndroid={true} // Ensures this works on Android
+      extraScrollHeight={50} // Scrolls a bit more to avoid keyboard
+      keyboardOpeningTime={0} 
+    style={tw`bg-white flex-1 p-3`}>
       <Text poppins h2 style={tw`mb-5 text-center`} onPress={()=> router.push("auth/driver_verification")}>Upload Car Details</Text>
 
       <View style={tw`flex-row justify-around`}>
@@ -162,7 +174,7 @@ const UploadCarDetails = () => {
 	        disabled = {Object.values(formValues).some(value => value === '')} 
 	       style={tw`p-4 rounded-md`} onPress={handleContinue} />
       )}
-    </View>
+    </KeyboardAvoidingView>
   )
 }
 

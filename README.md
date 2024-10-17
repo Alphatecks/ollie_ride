@@ -94,3 +94,10 @@
 
 - **Firebase Security:** Keep your Firebase credentials secure and do not share them publicly.
 - **Running on Physical Devices:** For testing on physical devices, you'll need a development build using EAS or alternative approaches like device mirroring.
+
+
+
+#### TODOS
+
+- Fix the Keyboard avoiding view not working on upload_car_details.tsx
+- Refactor upload_car_details.tsx to show images directly from the image picker instead of uploading first to firebase.

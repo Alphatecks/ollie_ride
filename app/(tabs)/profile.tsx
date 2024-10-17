@@ -13,11 +13,22 @@ import { auth } from "@/firebaseConfig"
 import { useRouter } from "expo-router"
 
 import ProfileOptionsCard from "@/components/profile/ProfileOptionsCard"
+import { ProfileOptionsLogoutCard } from "@/components/profile/ProfileOptionsCard"
 
 const Profile = () => {
 	const router = useRouter()
 
 	const user = auth.currentUser
+
+	const handleLogout = () => {
+		console.log("Pressed logout!!")
+	    try {
+	      // await auth.signOut();  // Sign out the user
+	      router.replace('auth/sign_in');
+	    } catch (error) {
+	      console.error('Error signing out: ', error);
+	    }
+	}
 
 	return (
 			<View style = {tw`flex-1 bg-white`} >
@@ -54,9 +65,16 @@ const Profile = () => {
 				<View style={tw`p-3 gap-7`}>
 					<ProfileOptionsCard title = "Payment" href="payment" icon = {<MaterialCommunityIcons name="file-document-outline" size={24} color="black" />}/>
 					<ProfileOptionsCard title = "Documents" href = "document_aux" icon = {<FontAwesome5 name="coins" size={24} color="black" />} />
-					<ProfileOptionsCard title = "Settings" icon={<MaterialCommunityIcons name="cog-outline" size={24} color="black" />} />
-					<ProfileOptionsCard title = "Help Center" icon={<MaterialCommunityIcons name="headset" size={24} color="black" />} />
-					<ProfileOptionsCard title = "Log Out"  textStyle = "text-red-500" icon = {<AntDesign name="logout" size={24} color="red" />} hasArrowIcon = {false} />
+					<ProfileOptionsCard title = "Settings"  
+					disabled = {true}
+					icon={<MaterialCommunityIcons name="cog-outline" size={24} color="black" />} />
+					<ProfileOptionsCard title = "Help Center" 
+					disabled = {true}
+					icon={<MaterialCommunityIcons name="headset" size={24} color="black" />} />
+					<ProfileOptionsLogoutCard title = "Log Out"  
+					handlePress = {handleLogout}
+					textStyle = "text-red-500" icon = {<AntDesign name="logout" size={24} color="red" />} 
+					hasArrowIcon = {false} />
 				</View>
 				
 			</View>

@@ -7,35 +7,36 @@ import tw from "@/tailwind"
 const Layout = () => {
 	return (
 		<Stack screenOptions={{ 
-			headerTitleStyle: {fontFamily: "Inter400_Regular", fontSize: 16},
+			headerTitleStyle: {fontFamily: "Poppins_400Regular", fontSize: 18},
+			headerTitleAlign: "center"
 		 }} >
 			<Stack.Screen name="sign_up" options = {{ 
 				headerShown: true, 
-				title: "",
+				title: "Sign Up",
 				headerStyle: {elevation: 0, border: 0},
 			}} 
 				/>
 			<Stack.Screen name="sign_in" options = {{ 
 				headerShown: true, 
-				title: "",
+				title: "Sign In",
 				headerStyle: {elevation: 0, border: 0},
 			}} 
 				/>	
 			<Stack.Screen name="await_email_verification" options = {{ 
 				headerShown: true, 
-				title: "",
+				title: "Verify Email",
 				headerStyle: {elevation: 0, border: 0},
 			}} 
 			/>	
 			<Stack.Screen name="forgot_password" options = {{ 
 				headerShown: true, 
-				title: "",
+				title: "Forgot Password",
 				headerStyle: {elevation: 0, border: 0},
 			}} 
 			/>			
 			<Stack.Screen name="upload_car_details" options = {{ 
 				headerShown: true, 
-				title: "",
+				title: "Upload Car Details",
 				headerStyle: {elevation: 0, border: 0},
 			}} 
 			/>

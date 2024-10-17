@@ -46,7 +46,8 @@ const SignUp = () => {
 
             await setDoc(doc(db, "users", userId), {
                 firstName, lastName, phoneNumber,
-                role: "driver"
+                role: "driver",
+                isApproved: false
             });
 
             console.log("Set the doc of users")
@@ -58,7 +59,7 @@ const SignUp = () => {
             await updateProfile(user, {displayName: `${firstName} ${lastName}`})
 
             setLoading(false)
-            router.push("(tabs)");
+            router.push("auth/await_email_verification");
 
 	        // Handle successful sign-up (e.g., navigate to home screen)
 	    } catch (error) {
@@ -73,7 +74,9 @@ const SignUp = () => {
      <KeyboardAvoidingView style={tw`bg-white flex-1 p-3`}> 
         <ScrollView showsVerticalScrollIndicator={false} >
             <View style={tw`mb-4`} >
-             <Text style={tw`text-2xl mb-6`} poppinsMedium >Create an account</Text>   
+             <Text style={tw`text-2xl mb-6`} 
+             onPress = {()=> router.push("auth/await_email_verification")}
+             poppinsMedium >Create an account</Text>   
              <Text poppins style={tw`text-gray-500`} >Lets guide you throught the steps of creating an account on Ollie Ride</Text>    
         </View> 
         <TextField                                                                     

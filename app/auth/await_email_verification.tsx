@@ -1,17 +1,39 @@
-import React, { useState } from 'react';                                                    
-import { View, Text, TextField, Button, TouchableOpacity } from 'react-native-ui-lib';                        
+import React, { useState, useEffect, useCallback } from 'react';                                                    
+import { View, Text, Button, TouchableOpacity } from 'react-native-ui-lib';                        
 import tw from "@/tailwind";
-import { Link, useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 
 import { auth } from "@/firebaseConfig";
 import { sendEmailVerification } from "firebase/auth";
 
-import ButtonLoader from "@/components/general/ButtonLoader";
+import Toast from 'react-native-toast-message';
 
-const SignIn = () => {  
+
+const AwaitEmail = () => {  
     const router = useRouter();
     const [emailTimeout, setEmailTimeout] = useState(false);
-                                                                                
+    const [emailVerified, setEmailVerified] = useState(auth.currentUser?.emailVerified);
+
+    // Polling function to check email verification status
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            await auth.currentUser.reload(); // Refresh user data
+            if (auth.currentUser.emailVerified) {
+                setEmailVerified(true);  // Update the state if the email is verified
+                clearInterval(interval); // Stop polling once email is verified
+                Toast.show({
+                  type: "success",
+                  text1: `Your email ${auth.currentUser.email} was verified`,
+                  text2: "Click continue to finish setup",
+                  textStyle: tw`poppins`,
+                  visibilityTime: 5000,
+                })
+            }
+        }, 5000);  // Check every 5 seconds
+
+        return () => clearInterval(interval);  // Clear the interval on unmount
+    }, []);
+
     const handleResendEmail = async () => {
         try {
             await sendEmailVerification(auth.currentUser);
@@ -22,7 +44,7 @@ const SignIn = () => {
 
             setTimeout(() => {
                 setEmailTimeout(false);  // Re-enable the button after 3 seconds
-            }, 3000);  // Correct usage of setTimeout
+            }, 3000);
         } catch (error) {
             console.log("Error sending verification email: ", error);
         }
@@ -32,17 +54,23 @@ const SignIn = () => {
         <View style={tw`bg-white flex-1 p-6 justify-between`}> 
             <View style={tw`mb-4`} >
                 <Text style={tw`text-2xl mb-6`} poppinsMedium center>Verify your email</Text>   
+                {emailVerified ? 
+
+                <Text poppins style={tw`text-gray-500`} center >Please click button below to continue</Text>    
+                :
+
                 <Text poppins style={tw`text-gray-500`} center >Please check your email and verify to continue</Text>    
+                }
             </View> 
             <View>
                 <Button 
                     label="Continue" 
                     poppins
-                    onPress={()=> router.push("upload_car_details")} 
+                    onPress={() => router.push("auth/upload_car_details")} 
                     style={tw`btn`}
-                    disabled={!auth.currentUser.emailVerified}  // Disable button if email is not verified
+                    disabled={!emailVerified}  // Disable button if email is not verified
                 />     
-
+                {!emailVerified &&
                 <View style={tw`flex-row items-center`}>
                     <Text poppins style={tw`py-3 my-3`}>
                         Didn't receive the email verification link? 
@@ -54,9 +82,10 @@ const SignIn = () => {
                         </TouchableOpacity>
                     )}
                 </View>
+                }
             </View>                                                           
         </View>                                                                            
     );                                                                                      
 };                                                                                          
                                                                                         
-export default SignIn;
+export default AwaitEmail;

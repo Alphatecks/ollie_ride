@@ -21,6 +21,12 @@ const Layout = () => {
 				headerStyle: {elevation: 0, border: 0},
 			}} 
 			/>	
+			<Stack.Screen name="[conversationId]" options = {{ 
+				headerShown: true, 
+				title: "Chats",
+				headerStyle: {elevation: 0, border: 0},
+			}} 
+			/>	
 		</Stack>
 	)
 }

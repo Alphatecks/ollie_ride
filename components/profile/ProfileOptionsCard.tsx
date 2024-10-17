@@ -12,15 +12,16 @@ interface ProfileOptionsCardProps {
 	icon: React.Node;
 	hasArrowIcon: boolean;
 	textStyle: string;
+	disabled: boolean;
 }
 
-const ProfileOptionsCard: React.FC<ProfileOptionsCardProps> = ({title, href, icon, hasArrowIcon = true, textStyle }) => {
+const ProfileOptionsCard: React.FC<ProfileOptionsCardProps> = ({title, href, icon, disabled = false, hasArrowIcon = true, textStyle }) => {
 
 	const router = useRouter()
 
 	return (
 		<TouchableOpacity style={tw`flex-row justify-between items-center`}
-		onPress = {()=> router.push(href)}
+		onPress = {disabled ? ()=>{} : ()=> router.push(href)}
 		>	
 			<View style={tw`flex-row items-center gap-3`}>
 				{/*<MaterialCommunityIcons name="file-document-outline" size={24} color="black" />*/}
@@ -34,3 +35,30 @@ const ProfileOptionsCard: React.FC<ProfileOptionsCardProps> = ({title, href, ico
 }
 
 export default ProfileOptionsCard
+
+
+interface ProfileOptionsLogoutCardProps {
+	title: string;
+	icon: React.Node;
+	hasArrowIcon: boolean;
+	textStyle: string;
+	handlePress: () => void;
+}
+
+export const ProfileOptionsLogoutCard: React.FC<ProfileOptionsLogoutCardProps> = ({title, icon, handlePress, hasArrowIcon = true, textStyle }) => {
+
+	return (
+		<TouchableOpacity style={tw`flex-row justify-between items-center`}
+		onPress = {handlePress}
+		>	
+			<View style={tw`flex-row items-center gap-3`}>
+				{/*<MaterialCommunityIcons name="file-document-outline" size={24} color="black" />*/}
+				{icon}
+				<Text poppins style = {tw`${textStyle}`} >{ title ? title : "Change Password" } </Text>
+			</View>
+			{ hasArrowIcon && <Feather name="chevron-right" size={24} style={tw`text-gray-600`} />  }
+
+		</TouchableOpacity>
+	)
+}
+
