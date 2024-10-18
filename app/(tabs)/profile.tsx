@@ -20,10 +20,10 @@ const Profile = () => {
 
 	const user = auth.currentUser
 
-	const handleLogout = () => {
+	const handleLogout = async () => {
 		console.log("Pressed logout!!")
 	    try {
-	      // await auth.signOut();  // Sign out the user
+	      await auth.signOut();  // Sign out the user
 	      router.replace('auth/sign_in');
 	    } catch (error) {
 	      console.error('Error signing out: ', error);
@@ -42,7 +42,7 @@ const Profile = () => {
 						</View>
 						<Text style={tw`poppinsMedium text-white`}>{user.displayName}</Text>
 					</View>
-					<Text style={tw`text-white`}>Edit</Text>
+					<Text style={tw`text-white`} onPress = {()=> router.push("auth/driver_verification")} >Edit</Text>
 				</View>
 				<View style={tw`p-4`}>
 				<View style={tw`bg-white shadow-md -mt-10 rounded-md p-3 gap-2`}>

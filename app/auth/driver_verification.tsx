@@ -1,10 +1,12 @@
-import React, { useState } from 'react'                                                    
-import { View, Text, TextField, Button } from 'react-native-ui-lib'                        
+import React, { useState, useEffect } from 'react'                                                    
+import { View, Text, TextField, Button } from 'react-native-ui-lib'    
+import { ActivityIndicator } from "react-native"                    
 import tw from "@/tailwind"
 import { Link, useRouter } from "expo-router"
 import Car from "@/assets/car.svg"
+import AntDesign from '@expo/vector-icons/AntDesign';
 
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "@/firebaseConfig"
 
 import ButtonLoader from "@/components/general/ButtonLoader"
@@ -14,38 +16,71 @@ import ButtonLoader from "@/components/general/ButtonLoader"
 const DriverVerification = () => {  
 
 	const router = useRouter()  
+    const [isApproved, setIsApproved] = useState<boolean>(false)
+
+    useEffect(()=>{
+        let unsubscribe;
+
+        const checkApproved = async() => {
+            try{
+                const userDocRef = doc(db, "users", user.uid)
+
+                 unsubscribe = onSnapshot((userDocRef), (docSnapshot)=>{
+                    if (docSnapshot.exists()){
+                    const userData = docSnapshot.data()
+                    console.log(userData, "isApproved: ", userData?.isApproved)
+                    setIsApproved(userData?.isApproved ? true: false)
+                     }
+                    else {
+                        console.log("Error, doc does not exists.")
+                    }
+                })
+
+                }
+            catch(e){
+                console.log("Error occured: ", e)
+            }
+        }
+        checkApproved()
+
+        return () => {
+              if (unsubscribe) unsubscribe(); // Ensure unsubscribe exists before calling
+            };
+    }, [])
 
     const user = auth.currentUser                                           
                                                                                         
 	const handleDriverVerification = async () => {
-        try{
-            const userDocRef = doc(db, "users", user.uid)
-            const docSnapshot = await getDoc(userDocRef)
 
-            if (docSnapshot.exists()){
-                const userData = docSnapshot.data()
-                console.log(userData, userData?.isApproved)
-            }
-            else {
-                console.log("Error, doc does not exists.")
-            }
-
-        }
-        catch(e){
-            console.log("Error occured: ", e)
-        }
 	};
 
                                                                                         
  return (                                                                               
      <View style={tw`bg-white flex-1 p-6 justify-between`}> 
+        {
+            isApproved ?
+            <View style={tw`items-center gap-3`}>
+                <AntDesign name="checkcircle" size={100} color="green" />
+                <Text poppins h2 center >Approved!!</Text>
+                <Text poppins center>You are approved! Please click the button below to sign in.</Text>
+            </View>
+
+            :
         <View style={tw`items-center gap-5`}>
             {/*Image here*/}
             <Car/>
-            <Text poppins h2 center onPress={handleDriverVerification} >Please Wait</Text>
+            <Text poppins h2 center >Please Wait</Text>
             <Text poppins center>We're reviewing your details, we'll get back to you shortly</Text>
-        </View>
-              
+        </View> 
+        }
+
+        {!isApproved && 
+            <View>
+                <ActivityIndicator size = "xlarge" color = "red" />
+            </View>
+        }
+        
+        {isApproved && 
          <Button label="Sign In" 
          poppins
          outline
@@ -54,6 +89,7 @@ const DriverVerification = () => {
 
          // disabled = {!email || !password ? true: false}
           />                 
+        }
      </View>                                                                            
  )                                                                                      
 }                                                                                          
