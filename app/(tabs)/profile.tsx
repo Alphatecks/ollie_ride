@@ -21,6 +21,8 @@ import { ProfileOptionsLogoutCard } from "@/components/profile/ProfileOptionsCar
 
 import { getAllCollectionsData } from "@/utils/firebase"
 
+import Toast from "react-native-toast-message"
+
 // getAllCollectionsData().catch((error) => {
 //   console.error('Error retrieving collections:', error);
 // });
@@ -84,6 +86,10 @@ const Profile = () => {
       console.log("Image uploaded and profile updated:", downloadUrl);
     } catch (error) {
       console.error("Error uploading image:", error);
+      Toast.show({
+      	type: "error",
+      	text1: `Error: ${error}`
+      })
     }
   };
 
@@ -94,6 +100,10 @@ const Profile = () => {
 	      router.replace('auth/sign_in');
 	    } catch (error) {
 	      console.error('Error signing out: ', error);
+        Toast.show({
+	      	type: "error",
+	      	text1: `Error: ${error}`
+	      })
 	    }
 	}
 

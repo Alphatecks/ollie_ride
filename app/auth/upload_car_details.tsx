@@ -1,34 +1,29 @@
-import React, { useState } from 'react'
-import { View, Text, Button, Badge } from 'react-native-ui-lib'
-import { TextInput, StyleSheet, TouchableOpacity, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
-import tw from "@/tailwind"
+import React, { useState } from 'react';
+import { View, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
+import {Text, Button} from "react-native-ui-lib"
+
+import tw from "@/tailwind";
 import Entypo from '@expo/vector-icons/Entypo';
 import { FontAwesome } from '@expo/vector-icons';
-import ButtonLoader from "@/components/general/ButtonLoader"
-
-import uploadFile, { fetchBlobFromUri } from "@/utils/upload"
-import { auth, db } from "@/firebaseConfig"
+import ButtonLoader from "@/components/general/ButtonLoader";
+import { auth, db, storage } from "@/firebaseConfig";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { doc, setDoc, collection, addDoc} from "firebase/firestore"
-
-import { useRouter } from "expo-router"
-
+import { doc, setDoc } from "firebase/firestore";
+import { useRouter } from "expo-router";
 import * as ImagePicker from 'expo-image-picker';
 
+import Toast from "react-native-toast-message"
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+
 const UploadCarDetails = () => {
-  /*
-  TODO: Refactor code to avoid sending to firebase storage until the button is pressed,
-  instead show the raw image got from ImagePicker
-  */
-  const [carFrontURL, setCarFrontURL] = useState<string>("")
-  const [carBackURL, setCarBackURL] = useState<string>("")
-  const [loading, setLoading] = useState<boolean>(false)
+  const [carFrontURI, setCarFrontURI] = useState<string>(""); // Local URI for front image
+  const [carBackURI, setCarBackURI] = useState<string>("");  // Local URI for back image
+  const [carFrontURL, setCarFrontURL] = useState<string>(""); // Firebase URL for front image
+  const [carBackURL, setCarBackURL] = useState<string>("");   // Firebase URL for back image
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const router = useRouter()                                             
-
-  const storage = getStorage()
-
-  const user = auth.currentUser
+  const router = useRouter();
+  const user = auth.currentUser;
 
   const [formValues, setFormValues] = useState({
     carBrand: '',
@@ -44,33 +39,51 @@ const UploadCarDetails = () => {
     });
   };
 
-  const handleContinue = async() => {
-    // console.log({
-    //     ...formValues,
-    //     carFrontURL,
-    //     carBackURL
-    //   })
-    try{
-	  	setLoading(true)
-
-	  	console.log("Seting data to Firebase")
-
-	    await setDoc(doc(db, "cars", user.uid), {
-	        ...formValues,
-	        carFrontURL,
-	        carBackURL
-	      })
-
-	    setLoading(false)
-      // Push to the next screen
-      router.push("auth/driver_verification")
-
-    } catch(e){
-    	setLoading(false)
-    	console.log(e)
+  const handleContinue = async () => {
+    if (!user) {
+      console.log("You are not authenitcated")
+      Toast.show({
+        type: "error",
+        text1: "You are not authenitcated!!"
+      })
+      return
     }
+    try {
+      setLoading(true);
 
-  }
+      // Upload the front image
+      if (carFrontURI) {
+        const frontRef = ref(storage, `${auth?.currentUser?.uid}/carFront.jpg`);
+        const frontBlob = await fetch(carFrontURI).then(res => res.blob());
+        await uploadBytes(frontRef, frontBlob);
+        const frontDownloadURL = await getDownloadURL(frontRef);
+        setCarFrontURL(frontDownloadURL);
+      }
+
+      // Upload the back image
+      if (carBackURI) {
+        const backRef = ref(storage, `${auth?.currentUser?.uid}/carBack.jpg`);
+        const backBlob = await fetch(carBackURI).then(res => res.blob());
+        await uploadBytes(backRef, backBlob);
+        const backDownloadURL = await getDownloadURL(backRef);
+        setCarBackURL(backDownloadURL);
+      }
+
+      // Save data to Firestore with the image URLs
+      await setDoc(doc(db, "cars", user.uid), {
+        ...formValues,
+        carFrontURL,
+        carBackURL
+      });
+
+      setLoading(false);
+      router.push("auth/driver_verification");
+
+    } catch (e) {
+      setLoading(false);
+      console.error(e);
+    }
+  };
 
   const pickImage = async (carView: string) => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -81,67 +94,55 @@ const UploadCarDetails = () => {
     });
 
     if (!result.canceled) {
-      let blob = await fetchBlobFromUri(result.assets[0].uri);
+      const selectedImageUri = result.assets[0].uri;
 
-      // Generate a reference to the file in Firebase Storage
-      const storageRef = ref(storage, `${auth?.currentUser?.uid}/${result.assets[0].fileName}`);
-
-      // Upload the image to Firebase Storage
-      await uploadBytes(storageRef, blob);
-      console.log("Image uploaded to Firebase Storage");
-
-      // Get the download URL for the uploaded image
-      const downloadURL = await getDownloadURL(storageRef);
-      console.log("URL: ", downloadURL);
-
-      // Set the URL based on carView
+      // Set the image URI for immediate display
       if (carView === "frontView") {
-        setCarFrontURL(downloadURL);
+        setCarFrontURI(selectedImageUri);
       } else {
-        setCarBackURL(downloadURL);
+        setCarBackURI(selectedImageUri);
       }
     }
   };
 
   return (
-    <KeyboardAvoidingView 
-      // contentContainerStyle={{ flexGrow: 1 }}
-      enableOnAndroid={true} // Ensures this works on Android
-      extraScrollHeight={50} // Scrolls a bit more to avoid keyboard
-      keyboardOpeningTime={0} 
+    <KeyboardAvoidingView
+      enableOnAndroid={true}
+      extraScrollHeight={50}
+      keyboardOpeningTime={0}
       style={tw`bg-white flex-1 p-3`}>
-      <ScrollView 
-      showsVerticalScrollIndicator = {false}
-      >
-        <Text poppins h2 style={tw`mb-5 text-center`} onPress={()=> router.push("auth/driver_verification")}>Upload Car Details</Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/*<Text poppins h2 style={tw`mb-5 text-center`} onPress={() => router.push("auth/driver_verification")}>
+          Upload Car Details
+        </Text>*/}
 
-        <View style={tw`flex-row justify-around`}>
+        <View style={tw`flex-row justify-around mt-6`}>
           <TouchableOpacity onPress={() => pickImage("frontView")}>
-          {carFrontURL ? (
-          <View style={tw`h-30 w-30`}>
-              <Image source={{ uri: carFrontURL }} style={tw`h-30 w-30`} />
-              <FontAwesome name="times" size={24} color="red" style={tw`absolute right-0`} onPress = {()=> setCarFrontURL("")} />
-  	    </View>
+            {carFrontURI ? (
+              <View style={tw`h-30 w-30`}>
+                <Image source={{ uri: carFrontURI }} style={tw`h-30 w-30`} />
+                <FontAwesome6 name="xmark" size={24} color="red" style={tw`absolute right-0`} onPress={() => setCarFrontURI("")} />
+              </View>
             ) : (
-            <View style={tw`flex-grow h-30 w-30 bg-gray-200 items-center justify-center`}>
-              <Entypo name="plus" size={24} color="white" />
-            </View>
+              <View style={tw`flex-grow h-30 w-30 bg-gray-200 items-center justify-center`}>
+                <Entypo name="plus" size={24} color="white" />
+              </View>
             )}
-          <Text poppins center>Front View</Text>
+            <Text poppins center>Front View</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => pickImage("backView")}>
-            {carBackURL ? (
-            <View style={tw`h-30 w-30`}>
-              <Image source={{ uri: carBackURL }} style={tw`h-30 w-30`} />
-              <FontAwesome name="times" size={24} color="red" style={tw`absolute right-0`} onPress = {()=> setCarFrontURL("")} />
-  	      </View>
+            {carBackURI ? (
+              <View style={tw`h-30 w-30`}>
+                <Image source={{ uri: carBackURI }} style={tw`h-30 w-30`} />
+                <FontAwesome6 name="xmark" size={24} color="red" style={tw`absolute right-0`} onPress={() => setCarBackURI("")} />
+              </View>
             ) : (
-            <View style={tw`flex-grow h-30 w-30 bg-gray-200 items-center justify-center`}>
-              <Entypo name="plus" size={24} color="white" />
-            </View>
+              <View style={tw`flex-grow h-30 w-30 bg-gray-200 items-center justify-center`}>
+                <Entypo name="plus" size={24} color="white" />
+              </View>
             )}
-          <Text poppins center>Back View</Text>
+            <Text poppins center>Back View</Text>
           </TouchableOpacity>
         </View>
 
@@ -172,15 +173,20 @@ const UploadCarDetails = () => {
             onChangeText={(value) => handleInputChange('carPlateNumber', value)}
           />
         </View>
-        {loading ? (<ButtonLoader />) : (
-  	      <Button label="Continue" poppins 
-  	        disabled = {Object.values(formValues).some(value => value === '')} 
-  	       style={tw`p-4 rounded-md`} onPress={handleContinue} />
+        {loading ? (
+          <ButtonLoader />
+        ) : (
+          <Button
+            label="Continue"
+            poppins
+            disabled={Object.values(formValues).some(value => value === '')}
+            style={tw`p-4 rounded-md`}
+            onPress={handleContinue}
+          />
         )}
-
       </ScrollView>
     </KeyboardAvoidingView>
-  )
-}
+  );
+};
 
 export default UploadCarDetails;

@@ -16,6 +16,14 @@ const AwaitEmail = () => {
 
     // Polling function to check email verification status
     useEffect(() => {
+        if (!auth.currentUser) {
+            Toast.show({
+                type: "error",
+                text1: "You need to be authenticated to access this screen"
+            })
+            return
+        }
+
         const interval = setInterval(async () => {
             await auth.currentUser.reload(); // Refresh user data
             if (auth.currentUser.emailVerified) {
@@ -44,7 +52,7 @@ const AwaitEmail = () => {
 
             setTimeout(() => {
                 setEmailTimeout(false);  // Re-enable the button after 3 seconds
-            }, 3000);
+            }, 6000);
         } catch (error) {
             console.log("Error sending verification email: ", error);
         }
@@ -72,8 +80,8 @@ const AwaitEmail = () => {
                 />     
                 {!emailVerified &&
                 <View style={tw`flex-row items-center`}>
-                    <Text poppins style={tw`py-3 my-3`}>
-                        Didn't receive the email verification link? 
+                    <Text poppins style={tw`py-3 my-3 flex-1`}>
+                        Didn't receive the email verification link?
                     </Text>    
 
                     {!emailTimeout && ( // Only show the button if timeout has expired

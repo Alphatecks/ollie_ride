@@ -58,7 +58,7 @@ const SignIn = () => {
  return (                                                                               
      <View style={tw`bg-white flex-1 p-6`}> 
         <View style={tw`mb-4`} >
-             <Link asChild href="auth/driver_verification">
+             <Link asChild href="auth/await_email_verification">
                  <Text style={tw`text-2xl mb-6`} poppinsMedium >Sign In to your account</Text>   
              </Link>
              
