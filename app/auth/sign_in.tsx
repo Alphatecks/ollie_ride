@@ -1,7 +1,7 @@
-import React, { useState } from 'react'                                                    
+import React, { useState, useCallback } from 'react'                                                    
 import { View, Text, TextField, Button } from 'react-native-ui-lib'                        
 import tw from "@/tailwind"
-import { Link, useRouter } from "expo-router"
+import { Link, useRouter, useFocusEffect } from "expo-router"
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
 import { getFirestore, doc, setDoc } from "firebase/firestore";
@@ -20,7 +20,17 @@ const SignIn = () => {
 	const [password, setPassword] = useState('')                                           
 	const [error, setError] = useState('')     
 
-    if (auth.currentUser) console.log("User: ", auth.currentUser)                                            
+    const user = auth.currentUser
+
+
+   useFocusEffect(
+     useCallback(() => {
+       if (user) router.replace("(tabs)")
+       return () => {
+         console.log('This route is now unfocused.');
+       };
+     }, [user])
+   );                                    
                                                                                         
 	const handleSignIn = async () => {
 	    try {
