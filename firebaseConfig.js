@@ -8,7 +8,7 @@ import { getFirestore, initializeFirestore, setLogLevel as setFirestoreLogLevel 
 import { getStorage } from "firebase/storage"; 
 
 import { setLogLevel } from "firebase/app";
-setLogLevel("debug"); // Enable debug level logging for Firebase
+// setLogLevel("debug"); // Enable debug level logging for Firebase
 
 
 // Firebase configuration

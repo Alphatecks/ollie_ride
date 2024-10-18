@@ -14,12 +14,17 @@ import { auth, db, storage } from "@/firebaseConfig"
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { updateProfile } from 'firebase/auth';
 
-
-
 import { useRouter } from "expo-router"
 
 import ProfileOptionsCard from "@/components/profile/ProfileOptionsCard"
 import { ProfileOptionsLogoutCard } from "@/components/profile/ProfileOptionsCard"
+
+import { getAllCollectionsData } from "@/utils/firebase"
+
+// getAllCollectionsData().catch((error) => {
+//   console.error('Error retrieving collections:', error);
+// });
+
 
 const Profile = () => {
 	const router = useRouter()
