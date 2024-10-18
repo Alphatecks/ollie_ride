@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text, Button, Badge } from 'react-native-ui-lib'
-import { TextInput, StyleSheet, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native';
+import { TextInput, StyleSheet, TouchableOpacity, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
 import tw from "@/tailwind"
 import Entypo from '@expo/vector-icons/Entypo';
 import { FontAwesome } from '@expo/vector-icons';
@@ -109,71 +109,76 @@ const UploadCarDetails = () => {
       enableOnAndroid={true} // Ensures this works on Android
       extraScrollHeight={50} // Scrolls a bit more to avoid keyboard
       keyboardOpeningTime={0} 
-    style={tw`bg-white flex-1 p-3`}>
-      <Text poppins h2 style={tw`mb-5 text-center`} onPress={()=> router.push("auth/driver_verification")}>Upload Car Details</Text>
+      style={tw`bg-white flex-1 p-3`}>
+      <ScrollView 
+      showsVerticalScrollIndicator = {false}
+      >
+        <Text poppins h2 style={tw`mb-5 text-center`} onPress={()=> router.push("auth/driver_verification")}>Upload Car Details</Text>
 
-      <View style={tw`flex-row justify-around`}>
-        <TouchableOpacity onPress={() => pickImage("frontView")}>
-        {carFrontURL ? (
-        <View style={tw`h-30 w-30`}>
-            <Image source={{ uri: carFrontURL }} style={tw`h-30 w-30`} />
-            <FontAwesome name="times" size={24} color="red" style={tw`absolute right-0`} onPress = {()=> setCarFrontURL("")} />
-	    </View>
-          ) : (
-          <View style={tw`flex-grow h-30 w-30 bg-gray-200 items-center justify-center`}>
-            <Entypo name="plus" size={24} color="white" />
-          </View>
-          )}
-        <Text poppins center>Front View</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => pickImage("backView")}>
-          {carBackURL ? (
+        <View style={tw`flex-row justify-around`}>
+          <TouchableOpacity onPress={() => pickImage("frontView")}>
+          {carFrontURL ? (
           <View style={tw`h-30 w-30`}>
-            <Image source={{ uri: carBackURL }} style={tw`h-30 w-30`} />
-            <FontAwesome name="times" size={24} color="red" style={tw`absolute right-0`} onPress = {()=> setCarFrontURL("")} />
-	      </View>
-          ) : (
-          <View style={tw`flex-grow h-30 w-30 bg-gray-200 items-center justify-center`}>
-            <Entypo name="plus" size={24} color="white" />
-          </View>
-          )}
-        <Text poppins center>Back View</Text>
-        </TouchableOpacity>
-      </View>
+              <Image source={{ uri: carFrontURL }} style={tw`h-30 w-30`} />
+              <FontAwesome name="times" size={24} color="red" style={tw`absolute right-0`} onPress = {()=> setCarFrontURL("")} />
+  	    </View>
+            ) : (
+            <View style={tw`flex-grow h-30 w-30 bg-gray-200 items-center justify-center`}>
+              <Entypo name="plus" size={24} color="white" />
+            </View>
+            )}
+          <Text poppins center>Front View</Text>
+          </TouchableOpacity>
 
-      {/* Form fields */}
-      <View style={tw`my-4`}>
-        <TextInput
-          style={tw`input poppins`}
-          placeholder="Car Brand"
-          value={formValues.carBrand}
-          onChangeText={(value) => handleInputChange('carBrand', value)}
-        />
-        <TextInput
-          style={tw`input poppins`}
-          placeholder="Gear Type"
-          value={formValues.gearType}
-          onChangeText={(value) => handleInputChange('gearType', value)}
-        />
-        <TextInput
-          style={tw`input poppins`}
-          placeholder="Car Condition"
-          value={formValues.carCondition}
-          onChangeText={(value) => handleInputChange('carCondition', value)}
-        />
-        <TextInput
-          style={tw`input poppins`}
-          placeholder="Car Plate Number"
-          value={formValues.carPlateNumber}
-          onChangeText={(value) => handleInputChange('carPlateNumber', value)}
-        />
-      </View>
-      {loading ? (<ButtonLoader />) : (
-	      <Button label="Continue" poppins 
-	        disabled = {Object.values(formValues).some(value => value === '')} 
-	       style={tw`p-4 rounded-md`} onPress={handleContinue} />
-      )}
+          <TouchableOpacity onPress={() => pickImage("backView")}>
+            {carBackURL ? (
+            <View style={tw`h-30 w-30`}>
+              <Image source={{ uri: carBackURL }} style={tw`h-30 w-30`} />
+              <FontAwesome name="times" size={24} color="red" style={tw`absolute right-0`} onPress = {()=> setCarFrontURL("")} />
+  	      </View>
+            ) : (
+            <View style={tw`flex-grow h-30 w-30 bg-gray-200 items-center justify-center`}>
+              <Entypo name="plus" size={24} color="white" />
+            </View>
+            )}
+          <Text poppins center>Back View</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Form fields */}
+        <View style={tw`my-4`}>
+          <TextInput
+            style={tw`input poppins`}
+            placeholder="Car Brand"
+            value={formValues.carBrand}
+            onChangeText={(value) => handleInputChange('carBrand', value)}
+          />
+          <TextInput
+            style={tw`input poppins`}
+            placeholder="Gear Type"
+            value={formValues.gearType}
+            onChangeText={(value) => handleInputChange('gearType', value)}
+          />
+          <TextInput
+            style={tw`input poppins`}
+            placeholder="Car Condition"
+            value={formValues.carCondition}
+            onChangeText={(value) => handleInputChange('carCondition', value)}
+          />
+          <TextInput
+            style={tw`input poppins`}
+            placeholder="Car Plate Number"
+            value={formValues.carPlateNumber}
+            onChangeText={(value) => handleInputChange('carPlateNumber', value)}
+          />
+        </View>
+        {loading ? (<ButtonLoader />) : (
+  	      <Button label="Continue" poppins 
+  	        disabled = {Object.values(formValues).some(value => value === '')} 
+  	       style={tw`p-4 rounded-md`} onPress={handleContinue} />
+        )}
+
+      </ScrollView>
     </KeyboardAvoidingView>
   )
 }
