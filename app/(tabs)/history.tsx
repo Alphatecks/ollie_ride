@@ -1,53 +1,87 @@
-import React from 'react'
-import { View, Text, Avatar } from 'react-native-ui-lib'
-import {FlatList} from "react-native"
-import { useRouter } from "expo-router"
-
-import { SafeAreaView } from "react-native-safe-area-context"
-import tw from "@/tailwind"
+import React, { useEffect, useState } from 'react';
+import { View, Text, Avatar } from 'react-native-ui-lib';
+import { FlatList } from 'react-native';
+import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import tw from '@/tailwind';
 import Ionicons from '@expo/vector-icons/Ionicons';
-
-import TripCard from "@/components/history/TripCard"
-
+import TripCard from '@/components/history/TripCard';
+import { collection, getDocs } from 'firebase/firestore'; // Firestore methods
+import { auth, db } from '@/firebaseConfig'; // Firebase setup
 
 interface TripData {
   id: string;
-  userName: string;
-  rating: number;
+  rider: string;
   tripTotal: number;
-  userImageUri: string;
+  riderImageUrl: string;
 }
-
-const tripData: TripData[] = [
-  { id: '1', userName: 'Chinaza Mgbeke', rating: 4.5, tripTotal: 300, userImageUri: '' },
-  { id: '2', userName: 'Anyalewechi Maduka', rating: 4.8, tripTotal: 250, userImageUri: '' },
-  { id: '3', userName: 'Nwammuo Eunince', rating: 4.7, tripTotal: 320, userImageUri: '' },
-];
 
 const History = () => {
+  const [tripData, setTripData] = useState<TripData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-	const router = useRouter()
+  // Fetch trip history from Firestore
+  useEffect(() => {
+    const fetchTripHistory = async () => {
+      const currentUser = auth.currentUser;
 
-	const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd"
-	const renderItem = ({ item }: { item: TripData }) => (
-	    <TripCard 
-	      userName={item.userName}
-	      rating={item.rating}
-	      tripTotal={item.tripTotal}
-	      userImageUri={item.userImageUri}
-	      handlePress = {()=> router.push(`history_aux/${item.id}`)}
-	    />
+      if (currentUser) {
+        const tripHistoryRef = collection(db, 'users', currentUser.uid, 'tripHistory');
+        try {
+          const tripHistorySnapshot = await getDocs(tripHistoryRef);
+          const trips = tripHistorySnapshot.docs.map(doc => ({
+            id: doc.id,
+            rider: doc.data().rider,
+            tripTotal: doc.data().tripTotal,
+            riderImageUrl: doc.data().riderImageUrl,
+          }));
+
+          setTripData(trips);
+        } catch (error) {
+          console.error('Error fetching trip history:', error);
+        }
+      }
+      setLoading(false);
+    };
+
+    fetchTripHistory();
+  }, []);
+
+  const renderItem = ({ item }: { item: TripData }) => (
+    <TripCard
+      userName={item.rider}
+      tripTotal={item.tripTotal}
+      userImageUri={item.riderImageUrl}
+      handlePress={() => router.push(`history_aux/${item.id}`)}
+    />
   );
-	return (
-		<View style={tw`flex-1 p-3 bg-white`}>
-			<FlatList
-			data={tripData}
-			keyExtractor={item => item.id}
-			renderItem={renderItem}
-			contentContainerStyle={tw`gap-2`}
-			/>
-		</View>
-	)
-}
 
-export default History
+  if (loading) {
+    return (
+      <View style={tw`flex-1 justify-center items-center`}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={tw`flex-1 p-3 bg-white`}>
+      {tripData.length > 0 ? (
+        <FlatList
+          data={tripData}
+          keyExtractor={item => item.id}
+          renderItem={renderItem}
+          contentContainerStyle={tw`gap-2`}
+        />
+      ) : (
+        <View style={tw`flex-1 justify-center items-center`}>
+          <Ionicons name="car-outline" size={50} color="gray" />
+          <Text style={tw`text-gray-500 mt-4 poppins`}>No trip history found</Text>
+        </View>
+      )}
+    </View>
+  );
+};
+
+export default History;

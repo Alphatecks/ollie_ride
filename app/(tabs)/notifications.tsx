@@ -6,12 +6,15 @@ import tw from "@/tailwind"
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useRouter } from "expo-router"
 
 import { NotificationCardMessage } from "@/components/notification/NotificationCardBase"
 
 const Notifications = () => {
 	const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd"
 
+	const router = useRouter()
+	
 	return (
 		<View style={tw`bg-white flex-1 p-3`}>
 			<View style={tw`border border-[0.9px] border-ollie-base rounded-md p-4 gap-4`}>
@@ -38,7 +41,9 @@ const Notifications = () => {
 			    		<Ionicons name="call" size={24} style={tw`text-ollie-base`} />
 			    		<Text poppinsMedium style={tw`text-ollie-base`} >Call</Text>
 			    	</TouchableOpacity>
-			    	<TouchableOpacity style={tw`items-center gap-2`}>
+			    	<TouchableOpacity style={tw`items-center gap-2`}
+			    	onPress = {()=> router.push("chat") }
+			    	>
 				    	<MaterialIcons name="message" size={24} style={tw`text-ollie-base`}/>
 			    		<Text poppinsMedium style={tw`text-ollie-base`} >Chat</Text>
 			    	</TouchableOpacity>

@@ -57,16 +57,25 @@ const AccountList = () => {
       <Text poppinsMedium>All Bank Accounts</Text>
 
       {bankAccounts.length > 0 ? (
-        <View>
-          {bankAccounts.map((account) => (
-            <PaymentCard
-              key={account.id}
-              title={`***${account.bankAccount.slice(-4)}`} // Display last 4 digits of the account
-              subtitle={account.bankName}
-              icon={<FontAwesome name="bank" size={24} color="black" />}
-              href={`payment/${account.id}`} // Navigate to bank detail page
-            />
-          ))}
+        <View style={tw`flex-1 justify-between`}>
+        	<View>
+	          {bankAccounts.map((account) => (
+	            <PaymentCard
+	              key={account.id}
+	              title={`***${account.bankAccount.slice(-4)}`} // Display last 4 digits of the account
+	              subtitle={account.bankName}
+	              icon={<FontAwesome name="bank" size={24} color="black" />}
+	              href={`payment/${account.id}`} // Navigate to bank detail page
+	            />
+	          ))}
+        	</View>
+	        <Button
+	          label="Add New Bank"
+	          poppins
+	          style={tw`btn mt-5`}
+	          disabled={loading}
+	          onPress = {()=>router.push('payment/add_bank')}
+        />
         </View>
       ) : (
         <View style={tw`flex-1 justify-center items-center`}>
