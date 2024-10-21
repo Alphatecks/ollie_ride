@@ -47,9 +47,18 @@ const SignUp = () => {
             await setDoc(doc(db, "users", userId), {
                 firstName, lastName, phoneNumber,
                 role: "driver",
-                isApproved: false
+                isApproved: false,
+                totalBalance: 0,
+                todayEarnings: 0,
+                totalTrips: 0,
+                totalTimeOnline: 0,
+                totalDistanceCovered: 0,
+                totalTips: 0,
+                aceeptanceRate: 0,
+                cancellationRate: 0,
+                totalTimeSpentOnTrip: 0
             });
-
+            // This is where chatGPT write other db sets.
             console.log("Set the doc of users")
 
             await sendEmailVerification(user)

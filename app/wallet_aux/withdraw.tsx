@@ -8,12 +8,18 @@ import { useRouter } from "expo-router"
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
+import { auth, db } from "@/firebaseConfig"
+import { doc, getDoc } from "firebase/firestore";
+
+import Ionicons from '@expo/vector-icons/Ionicons';
+
+
 const Withdraw = () => {
 	const [amount, setAmount] = useState<number>(0)
 	const router = useRouter()
 
 	return (
-		<View style={tw`flex-1 bg-white dark:bg-gray-800`}>
+		<View style={tw`flex-1 bg-white`}>
 			<View style={tw`bg-ollie-base p-3 gap-5 py-9`} >
 				<Text poppins center style={tw`text-white`}>Enter amount to withdraw</Text>
 				<TextInput 
@@ -23,15 +29,24 @@ const Withdraw = () => {
 		        value={amount} 
 				/>
 			</View>
-			<View style={tw`flex-row items-center justify-between border dark:border-white border-blue-900 p-5`} >
+			<View style={tw`flex-row items-center justify-between border border-blue-900 p-5`} >
 				<View style={tw`flex-row items-center gap-2`}>
-					<FontAwesome name="bank" size={22} style={tw`dark:text-white`} />
+					<FontAwesome name="bank" size={22} style={tw``} />
 					<View>
-						<Text style={tw`dark:text-white`} poppins>****23456</Text>
-						<Text style={tw`dark:text-white`} poppins >Bank Of Nigeria</Text>
+						<Text style={tw``} poppins>****23456</Text>
+						<Text style={tw``} poppins >Bank Of Nigeria</Text>
 					</View>
 				</View>
 				<AntDesign name="right" size={24} color="grey" />
+			</View>
+			<View style={tw`items-center p-4 gap-3`}>
+				<Ionicons name="trash-bin-outline" size={40} color="black" />
+				<Text poppins center style={tw``}>Pls add a bank account first before withdrawal</Text>
+				<Button poppins 
+				label = "Add Bank Details" 
+				style={tw`btn`}
+				onPress = {()=> router.push("payment/add_bank")}
+				 />
 			</View>
 			<View style={tw`p-3 flex-1`} >
 				<View style={tw`gap-3 my-4`}>
@@ -52,7 +67,7 @@ const Withdraw = () => {
 				<View style={tw`h-[0.5px] bg-gray-500 my-8`}></View>
 				<View style={tw`flex-1 justify-between`}>
 					<View style={tw`flex-row justify-between`} >
-						<Text poppinsBold>Earnings</Text>
+						<Text poppinsBold>Total</Text>
 						<Text poppinsBold>$400.24</Text>
 					</View>
 					<Button poppins 

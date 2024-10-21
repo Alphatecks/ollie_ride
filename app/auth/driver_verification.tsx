@@ -81,10 +81,10 @@ const DriverVerification = () => {
         }
         
         {isApproved && 
-         <Button label="Sign In" 
+         <Button label="Continue" 
          poppins
          outline
-         onPress={()=> router.push("auth/sign_in")} 
+         onPress={()=> router.push("(tabs)")} 
          style={tw`btn`}
 
          // disabled = {!email || !password ? true: false}

@@ -11,12 +11,12 @@ import { Link, useRouter, useFocusEffect } from "expo-router"
 import * as Location from 'expo-location'; // Importing expo-location for handling location permissions and fetching user location
 
 import { auth, db } from "@/firebaseConfig"
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 
 
 
 const Index = () => {
-	const router = useRouter()
+	 const router = useRouter()
    const [errorMsg, setErrorMsg] = useState(null); // Error message for location permission
 
    useFocusEffect(
@@ -29,9 +29,35 @@ const Index = () => {
            console.log("Thank you for granting application...");
          }
 
-         if (auth.currentUser) {
-           router.replace("(tabs)");
-         }
+
+        if (auth.currentUser) {
+          const currentUser = auth.currentUser;
+
+          try {
+            // Reference to the user's document in the "users" collection
+            const docRef = doc(db, "users", currentUser.uid);
+
+            // Get the document snapshot
+            const docSnapShot = await getDoc(docRef);
+
+            if (docSnapShot.exists()) {
+              const userData = docSnapShot.data();
+
+              // Check if the user is approved
+              if (userData.isApproved) {
+                router.replace("(tabs)"); // Redirect to tabs if approved
+              } else {
+                router.replace("auth/driver_verification"); // Redirect to awaiting approval screen
+              }
+            } else {
+              console.log("No such document!");
+            }
+          } catch (error) {
+            console.error("Error fetching document:", error);
+            // Optionally, you can redirect to an error screen or show an error message
+          }
+        }
+
        }
 
        // Call the async function

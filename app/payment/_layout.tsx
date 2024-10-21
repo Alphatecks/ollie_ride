@@ -27,6 +27,12 @@ const Layout = () => {
 				headerStyle: {elevation: 0, border: 0},
 			}} 
 			/>	
+			<Stack.Screen name="add_bank" options = {{ 
+				headerShown: true, 
+				title: "Bank Account",
+				headerStyle: {elevation: 0, border: 0},
+			}} 
+			/>	
 			<Stack.Screen name="[bank_id]" options = {{ 
 				headerShown: true, 
 				title: "Bank Details",
