@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import { View, TextInput, Alert } from 'react-native';
 import Text from 'react-native-ui-lib/text';
 import Button from 'react-native-ui-lib/button';
-import { collection, addDoc } from 'firebase/firestore'; // Import Firestore methods for subcollection
-import { auth, db } from '@/firebaseConfig'; // Import Firebase auth and Firestore
+import { collection, addDoc, query, where, getDocs, setDoc, doc } from 'firebase/firestore'; // Import necessary Firestore methods
+import { auth, db } from '@/firebaseConfig';
 import { useRouter } from 'expo-router';
 import tw from '@/tailwind';
-
-import Toast from "react-native-toast-message"
+import Toast from 'react-native-toast-message';
 
 const AddBankDetails = () => {
   const [bankName, setBankName] = useState('');
@@ -19,17 +18,17 @@ const AddBankDetails = () => {
   const handleAddBankDetails = async () => {
     if (!bankName || !bankAccount || !accountHolder) {
       Toast.show({
-        type: "error",
-        text1: 'Please fill in all fields'
-      })
+        type: 'error',
+        text1: 'Please fill in all fields',
+      });
       return;
     }
 
     if (bankAccount.length < 10) {
       Toast.show({
-        type: "error",
-        text1: 'Bank account number must be at least 10 digits'
-      })
+        type: 'error',
+        text1: 'Bank account number must be at least 10 digits',
+      });
       return;
     }
 
@@ -39,32 +38,58 @@ const AddBankDetails = () => {
       const currentUser = auth.currentUser;
 
       if (!currentUser) {
-        Alert.alert('Error', 'User not authenticated');
         Toast.show({
-        type: "error",
-        text1: 'User not authenticated'
-      })
+          type: 'error',
+          text1: 'User not authenticated',
+        });
         return;
       }
 
       // Reference to the user's "bankAccounts" subcollection
       const bankAccountsRef = collection(db, 'users', currentUser.uid, 'bankAccounts');
-      
-      // Add a new document with bank details in the "bankAccounts" subcollection
-      await addDoc(bankAccountsRef, {
-        bankName,
-        bankAccount,
-        accountHolder,
-      });
 
-      Alert.alert('Success', 'Bank details added successfully');
+      // Query to check if the bank account already exists
+      const q = query(bankAccountsRef, where('bankAccount', '==', bankAccount));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        // If no account exists, add a new one with addDoc()
+        await addDoc(bankAccountsRef, {
+          bankName,
+          bankAccount,
+          accountHolder,
+        });
+        Toast.show({
+          type: 'success',
+          text1: 'Bank details added successfully',
+        });
+      } else {
+        // If the account exists, update it with setDoc()
+        const existingAccountDoc = querySnapshot.docs[0]; // Get the first matching document
+        const docRef = doc(db, 'users', currentUser.uid, 'bankAccounts', existingAccountDoc.id);
+        await setDoc(docRef, {
+          bankName,
+          bankAccount,
+          accountHolder,
+        });
+        Toast.show({
+          type: 'success',
+          text1: 'Bank details updated successfully',
+        });
+      }
+
+      // Clear form fields
       setBankName('');
       setBankAccount('');
       setAccountHolder('');
-      // router.push('/wallet_aux/withdraw_success'); // Navigate after successful addition
+      // Navigate after successful operation
+      // router.push('/wallet_aux/withdraw_success');
     } catch (error) {
-      Alert.alert('Error', 'Failed to add bank details. Please try again.');
-      console.error('Error adding bank details:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to add/update bank details. Please try again.',
+      });
+      console.error('Error adding/updating bank details:', error);
     } finally {
       setLoading(false);
     }
