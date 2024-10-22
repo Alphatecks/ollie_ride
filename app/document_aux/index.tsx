@@ -19,12 +19,13 @@ const Index = () => {
 			icon = {<AntDesign name="exclamationcircle" size={24} color="#E4C41D" />}
 			/>
 			<DocumentCard 
+			title = "Uploaded Your NIN"
 			subtitle = "Upload a photo of your driving license"
 			status = "review"
 			icon = {<MaterialIcons name="access-time-filled" size={24} color="black" />}
 			/>
 			<DocumentCard 
-			subtitle = "Upload a photo of your driving license"
+			title = "We approved your driving license"
 			status = "done"
 			icon = {<AntDesign name="checkcircle" size={24} color="green" />}
 			/>

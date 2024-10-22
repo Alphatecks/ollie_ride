@@ -27,9 +27,9 @@ const NotificationCardBase: React.FC<NotificationCardBaseProps> = ({
 
   return (
     <TouchableOpacity style={tw`flex-row justify-between items-center rounded-md my-2`}>
-      <View style={tw`flex-row gap-2 items-center`}>
+      <View style={tw`flex-row gap-2 items-center flex-1`}>
         <Avatar name={name} source={{ uri: imageUrl || url }} />
-        <View>
+        <View style={tw`flex-1`}>
           <Text style={tw`poppins`}>{name}</Text>
           <View style={tw`flex-row items-center gap-2`}>
             <Text style={tw`poppins text-gray-400`}>{phoneNumber}</Text>
@@ -97,9 +97,9 @@ export const NotificationCardDriving: React.FC<NotificationCardDrivingProps> = (
 
   return (
     <TouchableOpacity style={tw`flex-row justify-between items-center rounded-md my-2`}>
-      <View style={tw`flex-row gap-2 items-center`}>
+      <View style={tw`flex-row gap-2 items-center flex-1`}>
         <Avatar name={name} source={{ uri: imageUrl || url }} />
-        <View>
+        <View style={tw`flex-1`}>
           <Text style={tw`poppins`}>{name}</Text>
           <View style={tw`flex-row items-center gap-2`}>
             <Text style={tw`poppins text-gray-400`}>{phoneNumber}</Text>

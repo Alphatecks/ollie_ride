@@ -25,7 +25,7 @@ import tw from "@/tailwind"; // TailwindCSS for styling
 
 import { getNearbyPlaces } from "@/utils/googleAPI"
 
-
+import Toast from "react-native-toast-message"
 
 // Rider avatar URL
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
@@ -84,7 +84,7 @@ export default function Index() {
         console.log("Getting nearby places...")
         const allNearbyPlaces = await getNearbyPlaces(userLocation.coords.latitude, userLocation.coords.longitude)
 
-        // console.log("From Index: ", allNearbyPlaces)
+        console.log("From Index: ", allNearbyPlaces)
         setRiders(allNearbyPlaces.slice(0, 5))
       }
     };
@@ -131,6 +131,8 @@ export default function Index() {
 
   // Function to open the bottom sheet when a rider is clicked
   const handleRiderMarkerClicked = (rider) => {
+    resetAllTripState()
+
     bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
     console.log("The clicked rider: ", rider); // Log the clicked rider data
     setSelectedRider(rider)
@@ -142,6 +144,11 @@ export default function Index() {
     // Remove the Rider acceptance component from view
     setIsRiderMarkerClicked(false)
 
+    Toast.show({
+      type: "success",
+      text1: "You have started a trip!."
+    })
+
     console.log("Trip started")
   }
 
@@ -149,6 +156,11 @@ export default function Index() {
     setIsDriverAtRiderLocation(true)
     // Remove from view {Flow 2}
     setIsRiderAccepted(false)
+
+    Toast.show({
+      type: "success",
+      text1: "Arrived at location. Sending OTP..."
+    })
 
     console.log("Driver At Customer Location, requesting OTP")
   }
@@ -223,6 +235,15 @@ export default function Index() {
 
   }
 
+  const handleOnRejectPressed = () => {
+    resetAllTripState()
+    Toast.show({
+      type: "error",
+      text1: "Rider request rejected."
+    })
+    console.log("Rejected")
+  }
+
   const resetAllTripState = () => {
     console.log("Ok button from alert pressed")
     // Close bottomsheet
@@ -278,7 +299,7 @@ export default function Index() {
           <View>    
             <NotificationCardBase
               key={selectedRider?.id}
-              name={selectedRider?.fullName}
+              name={selectedRider?.fullName.slice(0, 30)}
               phoneNumber={selectedRider?.phoneNumber}
               time={selectedRider?.time}
             />
@@ -289,7 +310,9 @@ export default function Index() {
             <Text poppins style={tw`my-4`} >Price Range: N4000 - N5000 </Text>
             <View style={tw`flex-row gap-2`}>
               <Button label = "Accept" poppins style={tw`btn flex-grow`} onPress = {handleRiderAccepted} />
-              <Button label = "Reject" poppins style={tw`btn flex-grow bg-[#BFC8D4] text-red-300`} color = "#0C3569"/>
+              <Button label = "Reject" poppins 
+              onPress = {handleOnRejectPressed}
+              style={tw`btn flex-grow bg-[#BFC8D4] text-red-300`} color = "#0C3569"/>
             </View>
           </View>
 
