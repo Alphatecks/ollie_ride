@@ -54,7 +54,7 @@ const SignUp = () => {
                 totalTimeOnline: 0,
                 totalDistanceCovered: 0,
                 totalTips: 0,
-                aceeptanceRate: 0,
+                acceptanceRate: 0,
                 cancellationRate: 0,
                 totalTimeSpentOnTrip: 0
             });

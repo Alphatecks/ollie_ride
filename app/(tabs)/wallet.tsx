@@ -8,8 +8,13 @@ import { BarChart } from "react-native-gifted-charts";
 import { doc, getDoc, onSnapshot } from 'firebase/firestore'; // Firestore methods
 import { auth, db } from '@/firebaseConfig'; // Firebase setup
 
+
+console.log(auth.currentUser)
+
+
 const Wallet = () => {
   const [totalBalance, setTotalBalance] = useState<number>(0);
+  const [userData, setUserData] = useState()
   const [loading, setLoading] = useState(true); // Set loading to true initially
   const router = useRouter();
 
@@ -25,8 +30,9 @@ const Wallet = () => {
           // Fetch the current balance first
           const userDocSnapshot = await getDoc(userDocRef);
           if (userDocSnapshot.exists()) {
-            const userData = userDocSnapshot.data();
-            setTotalBalance(userData.totalBalance || 0);
+            const _userData = userDocSnapshot.data();
+            setTotalBalance(_userData.totalBalance || 0);
+            setUserData(_userData)
           }
 
           // Now set up the real-time listener
@@ -73,7 +79,7 @@ const Wallet = () => {
         <View style={tw`flex-grow`}>
           <Text poppins style={tw`text-gray-500`}>Wallet Balance</Text>
           <Text poppinsMedium h2>${totalBalance.toFixed(2)}</Text>
-          <Text poppins>Today’s earnings: $30.51</Text>
+          <Text poppins>Today’s earnings: ${userData?.todayEarnings} </Text>
         </View>
         <View style={tw`flex-grow justify-center`}>
           <Button
@@ -111,15 +117,15 @@ const Wallet = () => {
       <View style={tw`flex-row gap-4 justify-evenly my-3`}>
         <View>
           <Text poppins style={tw`text-gray-500`}>Total Trips</Text>
-          <Text poppinsMedium>78</Text>
+          <Text poppinsMedium>{ userData.totalTrips }</Text>
         </View>
         <View>
           <Text poppins style={tw`text-gray-500`}>Time Online</Text>
-          <Text poppinsMedium>78 Days</Text>
+          <Text poppinsMedium>{ userData.totalTimeOnline } Days</Text>
         </View>
         <View>
           <Text poppins style={tw`text-gray-500`}>Distance Covered</Text>
-          <Text poppinsMedium>700 km</Text>
+          <Text poppinsMedium>{ userData.totalDistanceCovered } km</Text>
         </View>
       </View>
 

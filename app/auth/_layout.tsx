@@ -46,6 +46,12 @@ const Layout = () => {
 				headerStyle: {elevation: 0, border: 0},
 			}} 
 			/>
+			<Stack.Screen name="update_profile" options = {{ 
+				headerShown: true, 
+				title: "Update Profile",
+				headerStyle: {elevation: 0, border: 0},
+			}} 
+			/>
 		</Stack>
 	)
 }

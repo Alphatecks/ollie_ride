@@ -82,10 +82,10 @@ export default function Index() {
         // Get nearby Places of the users current location
 
         console.log("Getting nearby places...")
-        // const allNearbyPlaces = await getNearbyPlaces(userLocation.coords.latitude, userLocation.coords.longitude)
+        const allNearbyPlaces = await getNearbyPlaces(userLocation.coords.latitude, userLocation.coords.longitude)
 
         // console.log("From Index: ", allNearbyPlaces)
-        // setRiders(allNearbyPlaces)
+        setRiders(allNearbyPlaces.slice(0, 5))
       }
     };
 

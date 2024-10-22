@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import { View, Text, Button, Avatar } from 'react-native-ui-lib'
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,7 +12,8 @@ import * as ImagePicker from 'expo-image-picker';
 
 import { auth, db, storage } from "@/firebaseConfig"
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { updateProfile } from 'firebase/auth';
+import { updateProfile, onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 
 import { useRouter } from "expo-router"
 
@@ -28,12 +29,61 @@ import Toast from "react-native-toast-message"
 // });
 
 
+// console.log(auth.currentUser)
+
 const Profile = () => {
 	const router = useRouter()
 
 	const [avatarUri, setAvatarUri] = useState<string | null>(null); // Local avatar state
 
-	const user = auth.currentUser
+	const [user, setUser] = useState(auth.currentUser); // Store the current user
+	const [userData, setUserData] = useState()
+	const [loading, setLoading] = useState(false)
+
+  // Listen for user state changes (e.g., update in displayName)
+  useEffect(() => {
+
+  	 const fetchBalance = async () => {
+      // const currentUser = auth.currentUser;
+
+      if (user) {
+        const userDocRef = doc(db, 'users', user.uid);
+
+        try {
+          // Fetch the current balance first
+          const userDocSnapshot = await getDoc(userDocRef);
+          if (userDocSnapshot.exists()) {
+            const _userData = userDocSnapshot.data();
+            setUserData(_userData)
+          }
+
+          // Now set up the real-time listener
+          const unsubscribe = onSnapshot(userDocRef, (docSnapshot) => {
+            if (docSnapshot.exists()) {
+              const userData = docSnapshot.data();
+            }
+          });
+
+          setLoading(false); // Stop loading once data is fetched and listener is set up
+          return () => unsubscribe(); // Cleanup listener on unmount
+        } catch (error) {
+          console.error('Error fetching totalBalance:', error);
+          setLoading(false); // Stop loading in case of an error
+        }
+      }
+    };
+
+    fetchBalance()
+
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+	    currentUser.reload(); 
+	    if (currentUser && currentUser.displayName !== user?.displayName) {
+	      setUser(currentUser); // Update user state if displayName has changed
+	    }
+	  });
+
+    return unsubscribe; // Cleanup listener on unmount
+  }, [auth, auth.currentUser.displayName]);
 
 	const pickImage = async () => {
     // Ask for permission to access media library
@@ -124,23 +174,23 @@ const Profile = () => {
 							<MaterialIcons name="star" size={16} color="white" />
 							<Text style={tw`text-white poppins`}> 4.0 </Text>
 						</View>
-						<Text style={tw`poppinsMedium text-white`}>{user.displayName}</Text>
+						<Text style={tw`poppinsMedium text-white`}>{auth.currentUser.displayName}</Text>
 					</View>
-					<Text style={tw`text-white`} onPress = {()=> router.push("auth/driver_verification")} >Edit</Text>
+					<Text style={tw`text-white py-3`} onPress = {()=> router.push("auth/update_profile")} >Edit</Text>
 				</View>
 				<View style={tw`p-4`}>
 				<View style={tw`bg-white shadow-md -mt-10 rounded-md p-3 gap-2`}>
 					<Text poppins center>Trips Completed</Text>
-					<Text poppinsMedium center>233 trips over 2 years</Text>
+					<Text poppinsMedium center>{userData?.totalTrips} trips over {userData?.totalTimeSpentOnTrip} years</Text>
 					<View style={tw`h-[1px] bg-gray-300 my-3`}></View>
 					<View style={tw`flex-row gap-2 justify-around`}>
 						<View>
 							<Text poppins style={tw`text-gray-400`}>Acceptance Rate</Text>
-							<Text poppinsMedium center>70%</Text>
+							<Text poppinsMedium center>{ userData?.acceptanceRate }%</Text>
 						</View>
 						<View>
 							<Text poppins style={tw`text-gray-400`}>Cancelation Rate</Text>
-							<Text poppinsMedium center>70%</Text>
+							<Text poppinsMedium center>{ userData?.cancellationRate }%</Text>
 						</View>
 					</View>
 				</View>
