@@ -15,7 +15,6 @@ import NotificationCardBase from "@/components/notification/NotificationCardBase
 import { NotificationCardDriving } from "@/components/notification/NotificationCardBase";
 
 import DoubleLocationCard from "@/components/home/DoubleLocationCard";
-import { ridersData2 as riders } from "@/constants/Data"
 
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'; // Importing Gorhom Bottom Sheet for the drawer
 
@@ -35,7 +34,7 @@ const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspo
 export default function Index() {
   // State to hold the user's current location
   const [location, setLocation] = useState(null);
-  const [riders, setRiders] = useState([]);
+  const [trips, setTrips] = useState([]);
   // Rider Acceptance Flow
 
 
@@ -63,9 +62,7 @@ export default function Index() {
   });
   const [errorMsg, setErrorMsg] = useState(null); // Error message for location permission
 
-  const [riderList, setRiderList] = useState([]); // List of riders with distances
-
-  const [selectedRider, setSelectedRider] = useState({}); // List of riders with distances
+  const [selectedTrip, setSelectedTrip] = useState({}); // List of riders with distances
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -92,7 +89,7 @@ export default function Index() {
         try {
           const trips = await fetchAvailableTrips();
           console.log('Fetched trips:', trips);
-          setRiders(trips)
+          setTrips(trips)
         } catch (error) {
           console.error('Failed to fetch trips:', error);
         }
@@ -137,15 +134,15 @@ export default function Index() {
   };
 
   // Function to open the bottom sheet when a rider is clicked
-  const handleRiderMarkerClicked = (rider) => {
+  const handleTripMarkerClicked = (trip) => {
 
     bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
-    console.log("The clicked rider: ", rider); // Log the clicked rider data
-    setSelectedRider(rider)
+    console.log("The clicked trip: ", trip); // Log the clicked rider data
+    setSelectedTrip(trip)
 
   };
 
-  const handleRiderAccepted = () => {
+  const handleTripAccepted = () => {
     console.log("accepted")
   }
 
@@ -159,12 +156,12 @@ export default function Index() {
         region={region}
         mapType="standard"
       >
-       {Array.isArray(riders) && riders.map((rider) => (
+       {Array.isArray(trips) && trips.map((trip) => (
           <Marker
-            key={rider.id}
-            coordinate={{ latitude: rider.latitude, longitude: rider.longitude }}
-            title={`Rider ${rider.id}`}
-            onPress={() => handleRiderMarkerClicked(rider)}
+            key={trip.id}
+            coordinate={{ latitude: trip.latitude, longitude: trip.longitude }}
+            title={`Trip ${trip.id}`}
+            onPress={() => handleTripMarkerClicked(trip)}
             
           > 
           <Image source={{ uri: url }}  
@@ -187,18 +184,20 @@ export default function Index() {
          
           <View>    
             <NotificationCardBase
-              key={selectedRider?.id}
-              name={selectedRider?.riderName}
-              phoneNumber={selectedRider?.phoneNumber}
-              time={selectedRider?.time}
+              key={selectedTrip?.id}
+              name={selectedTrip?.riderName}
+              phoneNumber={selectedTrip?.phoneNumber}
+              time={selectedTrip?.time}
             />
             <DoubleLocationCard locationDistance = "10 mins" 
-            fromLocation = {selectedRider?.fromLocation}
-            toLocation = {selectedRider?.toLocation}
+            fromLocation = {selectedTrip?.fromLocation}
+            toLocation = {selectedTrip?.toLocation}
             />
             <Text poppins style={tw`my-4`} >Price Range: N4000 - N5000 </Text>
             <View style={tw`flex-row gap-2`}>
-              <Button label = "Accept" poppins style={tw`btn flex-grow`} onPress = {handleRiderAccepted(selectedRider)} />
+              <Button label = "Accept" poppins style={tw`btn flex-grow`} 
+              // onPress = {handleRiderAccepted(selectedTrip)} 
+              />
               <Button label = "Reject" poppins 
               // onPress = {handleOnRejectPressed}
               style={tw`btn flex-grow bg-[#BFC8D4] text-red-300`} color = "#0C3569"/>
