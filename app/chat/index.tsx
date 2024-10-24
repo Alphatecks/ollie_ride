@@ -17,10 +17,10 @@ const ChatListScreen = () => {
     // Fetch all conversations where the current user is a participant
     const q = query(
       collection(db, 'conversations'),
-      where('users', 'array-contains', user.uid)
+      where('drivers', 'array-contains', user.uid)
     );
 
-    
+
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const fetchedConversations = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -78,7 +78,7 @@ const ChatListScreen = () => {
             );
           }}
         />
-    }
+      }
     </View>
   );
 };

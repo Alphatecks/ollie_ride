@@ -23,7 +23,7 @@ const DriverVerification = () => {
 
         const checkApproved = async() => {
             try{
-                const userDocRef = doc(db, "users", user.uid)
+                const userDocRef = doc(db, "drivers", user.uid)
 
                  unsubscribe = onSnapshot((userDocRef), (docSnapshot)=>{
                     if (docSnapshot.exists()){

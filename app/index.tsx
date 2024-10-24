@@ -35,7 +35,7 @@ const Index = () => {
 
           try {
             // Reference to the user's document in the "users" collection
-            const docRef = doc(db, "users", currentUser.uid);
+            const docRef = doc(db, "drivers", currentUser.uid);
 
             // Get the document snapshot
             const docSnapShot = await getDoc(docRef);

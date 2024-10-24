@@ -30,7 +30,7 @@ const Withdraw = () => {
         }
 
         // Fetch totalBalance
-        const userDocRef = doc(db, 'users', currentUser.uid);
+        const userDocRef = doc(db, 'drivers', currentUser.uid);
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
           const userData = userDoc.data();
@@ -40,7 +40,7 @@ const Withdraw = () => {
         }
 
         // Fetch bank accounts
-        const bankAccountsRef = collection(db, 'users', currentUser.uid, 'bankAccounts');
+        const bankAccountsRef = collection(db, 'drivers', currentUser.uid, 'bankAccounts');
         const snapshot = await getDocs(bankAccountsRef);
         if (!snapshot.empty) {
           const accounts = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));

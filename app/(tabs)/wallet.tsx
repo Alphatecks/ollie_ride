@@ -24,7 +24,7 @@ const Wallet = () => {
       const currentUser = auth.currentUser;
 
       if (currentUser) {
-        const userDocRef = doc(db, 'users', currentUser.uid);
+        const userDocRef = doc(db, 'drivers', currentUser.uid);
 
         try {
           // Fetch the current balance first
@@ -91,7 +91,7 @@ const Wallet = () => {
           />
         </View>
       </View>
-      
+
       {/* Bar Chart and Other Stats */}
       <View style={tw`items-center my-4`}>
         <Text poppins>Dec 18 - 16</Text>
@@ -117,15 +117,15 @@ const Wallet = () => {
       <View style={tw`flex-row gap-4 justify-evenly my-3`}>
         <View>
           <Text poppins style={tw`text-gray-500`}>Total Trips</Text>
-          <Text poppinsMedium>{ userData.totalTrips }</Text>
+          <Text poppinsMedium>{userData.totalTrips}</Text>
         </View>
         <View>
           <Text poppins style={tw`text-gray-500`}>Time Online</Text>
-          <Text poppinsMedium>{ userData.totalTimeOnline } Days</Text>
+          <Text poppinsMedium>{userData.totalTimeOnline} Days</Text>
         </View>
         <View>
           <Text poppins style={tw`text-gray-500`}>Distance Covered</Text>
-          <Text poppinsMedium>{ userData.totalDistanceCovered } km</Text>
+          <Text poppinsMedium>{userData.totalDistanceCovered} km</Text>
         </View>
       </View>
 

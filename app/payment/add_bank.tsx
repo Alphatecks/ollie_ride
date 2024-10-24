@@ -46,7 +46,7 @@ const AddBankDetails = () => {
       }
 
       // Reference to the user's "bankAccounts" subcollection
-      const bankAccountsRef = collection(db, 'users', currentUser.uid, 'bankAccounts');
+      const bankAccountsRef = collection(db, 'drivers', currentUser.uid, 'bankAccounts');
 
       // Query to check if the bank account already exists
       const q = query(bankAccountsRef, where('bankAccount', '==', bankAccount));
@@ -66,7 +66,7 @@ const AddBankDetails = () => {
       } else {
         // If the account exists, update it with setDoc()
         const existingAccountDoc = querySnapshot.docs[0]; // Get the first matching document
-        const docRef = doc(db, 'users', currentUser.uid, 'bankAccounts', existingAccountDoc.id);
+        const docRef = doc(db, 'drivers', currentUser.uid, 'bankAccounts', existingAccountDoc.id);
         await setDoc(docRef, {
           bankName,
           bankAccount,

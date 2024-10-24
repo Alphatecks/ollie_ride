@@ -47,7 +47,7 @@ const Profile = () => {
       // const currentUser = auth.currentUser;
 
       if (user) {
-        const userDocRef = doc(db, 'users', user.uid);
+        const userDocRef = doc(db, 'drivers', user.uid);
 
         try {
           // Fetch the current balance first
@@ -76,7 +76,7 @@ const Profile = () => {
     fetchBalance()
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-	    currentUser.reload(); 
+	    // currentUser.reload(); 
 	    if (currentUser && currentUser.displayName !== user?.displayName) {
 	      setUser(currentUser); // Update user state if displayName has changed
 	    }
@@ -113,7 +113,7 @@ const Profile = () => {
 
     try {
       // Create a reference to store the image in Firebase Storage
-      const imageRef = ref(storage, `users/${user.uid}/profile.jpg`);
+      const imageRef = ref(storage, `drivers/${user.uid}/profile.jpg`);
 
       // Fetch the image file from the local URI
       const response = await fetch(imageUri);

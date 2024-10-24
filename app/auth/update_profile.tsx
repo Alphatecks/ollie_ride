@@ -23,7 +23,7 @@ const UpdateProfileScreen = () => {
       if (!user) return;
 
       try {
-        const userDocRef = doc(db, 'users', user.uid);
+        const userDocRef = doc(db, 'drivers', user.uid);
         const userDoc = await getDoc(userDocRef);
 
         if (userDoc.exists()) {
@@ -59,7 +59,7 @@ const UpdateProfileScreen = () => {
       await updateProfile(user, { displayName: `${firstName} ${lastName}` });
 
       // Update Firestore user document
-      const userDocRef = doc(db, 'users', user.uid);
+      const userDocRef = doc(db, 'drivers', user.uid);
       await updateDoc(userDocRef, {
         firstName,
         lastName,

@@ -65,6 +65,8 @@ export const ridersData2 = [
     time: "21:27:08",
     toLocation: "FCCP+WF9, Umuahia",
   },
+
+
   {
     fromLocation: "ICE PHYZI HQ",
     fullName: "ICE PHYZI HQ",
@@ -75,6 +77,7 @@ export const ridersData2 = [
     time: "21:27:08",
     toLocation: "FCJM+8JM, Amaigbo",
   },
+  
   {
     fromLocation: "LionPrime",
     fullName: "LionPrime",
@@ -227,7 +230,7 @@ export const ridersData2 = [
   },
   {
     fromLocation: "Integrated Vetenary Services /Pest Control",
-    fullName: "Integrated Vetenary Services /Pest Control",
+    fullName: "Sixtus Anyanwu",
     id: 20,
     latitude: 5.473369900000001,
     longitude: 7.432634800000001,

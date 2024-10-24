@@ -27,7 +27,7 @@ export default function TabLayout() {
     const fetchOnlineStatus = async () => {
       try {
         if (user) {
-          const userRef = doc(db, 'users', user.uid);
+          const userRef = doc(db, 'drivers', user.uid);
           const docSnap = await getDoc(userRef);
           if (docSnap.exists()) {
             const userData = docSnap.data();
@@ -46,7 +46,7 @@ export default function TabLayout() {
   const updateOnlineStatus = async () => {
     try {
       setIsLoading(true)
-      const userRef = doc(db, 'users', user.uid);
+      const userRef = doc(db, 'drivers', user.uid);
       await updateDoc(userRef, { isOnline: !isOnline });
       setIsOnline((prevStatus) => !prevStatus); // Toggle local state
       console.log('Toggled the isOnline State');

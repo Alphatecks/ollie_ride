@@ -23,7 +23,7 @@ const AccountList = () => {
     }
 
     // Reference to the "bankAccounts" subcollection
-    const bankAccountsRef = collection(db, 'users', currentUser.uid, 'bankAccounts');
+    const bankAccountsRef = collection(db, 'drivers', currentUser.uid, 'bankAccounts');
 
     // Set up real-time listener with onSnapshot
     const unsubscribe = onSnapshot(bankAccountsRef, (snapshot) => {

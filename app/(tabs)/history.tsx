@@ -27,7 +27,7 @@ const History = () => {
       const currentUser = auth.currentUser;
 
       if (currentUser) {
-        const tripHistoryRef = collection(db, 'users', currentUser.uid, 'tripHistory');
+        const tripHistoryRef = collection(db, 'drivers', currentUser.uid, 'tripHistory');
         try {
           const tripHistorySnapshot = await getDocs(tripHistoryRef);
           const trips = tripHistorySnapshot.docs.map(doc => ({

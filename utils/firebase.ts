@@ -74,7 +74,7 @@ export async function getAllCollectionsData() {
   const dbData = {};
 
   // Manually specify collection names
-  const collectionNames = ['users', 'conversations', 'rides', "cars"]; // Add your collection names here
+  const collectionNames = ['users', 'drivers', 'conversations', 'rides', "cars"]; // Add your collection names here
 
   // Iterate through each collection and get the documents
   for (const collectionName of collectionNames) {

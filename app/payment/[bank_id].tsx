@@ -19,7 +19,7 @@ const AccountList = () => {
     const fetchBankDetails = async () => {
       setLoading(true);
       try {
-        const docRef = doc(db, 'users', auth.currentUser.uid, 'bankAccounts', bank_id);
+        const docRef = doc(db, 'drivers', auth.currentUser.uid, 'bankAccounts', bank_id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setBankDetails(docSnap.data()); // Set the bank details to state
@@ -40,7 +40,7 @@ const AccountList = () => {
   const handleUpdateBankDetails = async () => {
     setLoading(true);
     try {
-      const docRef = doc(db, 'users', auth.currentUser.uid, 'bankAccounts', bank_id);
+      const docRef = doc(db, 'drivers', auth.currentUser.uid, 'bankAccounts', bank_id);
       await updateDoc(docRef, {
         bankName: bankDetails.bankName,
         bankAccount: bankDetails.bankAccount,
@@ -68,7 +68,7 @@ const AccountList = () => {
           style: 'destructive',
           onPress: async () => {
             try {
-              const docRef = doc(db, 'users', auth.currentUser.uid, 'bankAccounts', bank_id);
+              const docRef = doc(db, 'drivers', auth.currentUser.uid, 'bankAccounts', bank_id);
               await deleteDoc(docRef);
               Alert.alert('Success', 'Bank account deleted successfully');
               router.back(); // Navigate back after deletion
