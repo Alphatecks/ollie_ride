@@ -27,7 +27,7 @@ import {createTrip, fetchAvailableTrips} from "@/utils/booking"
 
 import Toast from "react-native-toast-message"
 
-import { Slot, useRouter } from "expo-router"
+import { Slot } from "expo-router"
 
 // Rider avatar URL
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
@@ -35,9 +35,6 @@ const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspo
 
 export default function Index() {
   // State to hold the user's current location
-
-  const router = useRouter()
-
   const [location, setLocation] = useState(null);
   const [trips, setTrips] = useState([]);
   // Rider Acceptance Flow
@@ -141,10 +138,9 @@ export default function Index() {
   // Function to open the bottom sheet when a rider is clicked
   const handleTripMarkerClicked = (trip) => {
 
-    router.push("bottomsheet")
-    // bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
-    // console.log("The clicked trip: ", trip); // Log the clicked rider data
-    // setSelectedTrip(trip)
+    bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
+    console.log("The clicked trip: ", trip); // Log the clicked rider data
+    setSelectedTrip(trip)
 
   };
 

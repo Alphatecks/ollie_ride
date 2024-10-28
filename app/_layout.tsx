@@ -169,6 +169,7 @@ function RootLayoutNav() {
         <Stack.Screen name="payment" options={{ headerShown: false }} />
         <Stack.Screen name="history_aux" options={{ headerShown: false }} />
         <Stack.Screen name="chat" options={{ headerShown: false }} />
+        <Stack.Screen name="bottomsheet" options={{ headerShown: false }} />
       </Stack>
       <Toast />
     </ GestureHandlerRootView>

@@ -141,8 +141,8 @@ export default function Index() {
   // Function to open the bottom sheet when a rider is clicked
   const handleTripMarkerClicked = (trip) => {
 
-    router.push("bottomsheet")
-    // bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
+    
+    bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
     // console.log("The clicked trip: ", trip); // Log the clicked rider data
     // setSelectedTrip(trip)
 
@@ -187,28 +187,7 @@ export default function Index() {
         index={-1} 
       >
         <BottomSheetView style={tw`p-4`}>
-          <View>    
-            <NotificationCardBase
-              key={selectedTrip?.id}
-              name={selectedTrip?.riderName}
-              phoneNumber={selectedTrip?.phoneNumber}
-              time={selectedTrip?.time}
-            />
-            <DoubleLocationCard locationDistance = "10 mins" 
-            fromLocation = {selectedTrip?.fromLocation}
-            toLocation = {selectedTrip?.toLocation}
-            />
-            <Text poppins style={tw`my-4`} >Price Range: N4000 - N5000 </Text>
-            <View style={tw`flex-row gap-2`}>
-              <Button label = "Accept" poppins style={tw`btn flex-grow`} 
-              // onPress = {handleRiderAccepted(selectedTrip)} 
-              />
-              <Button label = "Reject" poppins 
-              // onPress = {handleOnRejectPressed}
-              style={tw`btn flex-grow bg-[#BFC8D4] text-red-300`} color = "#0C3569"/>
-            </View>
-          </View>
-
+        	<Slot />
         </BottomSheetView>
       </BottomSheet>
     </View>

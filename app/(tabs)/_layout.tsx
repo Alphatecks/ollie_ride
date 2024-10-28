@@ -72,6 +72,37 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
+          headerShown: true,
+          tabBarLabel: "Home",
+          tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
+          header: () => {
+            return (
+              <View style={[
+                tw`h-[70px] bg-white items-center`,
+                { paddingTop: insets.top || 10 }
+              ]}>
+                <TouchableOpacity style={tw`${isOnline ? "bg-ollie-base" : "bg-gray-800 opacity-80"} w-30 rounded-full`}
+                  onPress={updateOnlineStatus}>
+                  {isLoading ?
+                    <ActivityIndicator size = "large" color = "white" />
+                    :
+                    <View style={tw`flex-row items-center justify-around`}>
+                      <Text style={tw`text-white p-2`} poppins center>
+                        {isOnline ? "Online" : "Offline"}
+                      </Text>
+                      <Ionicons name="car-sharp" size={24}  style={tw`text-ollie-base bg-white rounded-full`} />
+                    </View>
+                  }
+                </TouchableOpacity>
+              </View>
+            );
+          },
+        }}
+      />
+
+     {/* <Tabs.Screen
+        name="stack"
+        options={{
           title: 'Home',
           headerShown: true,
           header: () => {
@@ -98,7 +129,7 @@ export default function TabLayout() {
           },
           tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
         }}
-      />
+      />*/}
       <Tabs.Screen
         name="wallet"
         options={{
