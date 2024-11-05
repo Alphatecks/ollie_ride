@@ -92,6 +92,9 @@ export default function Index() {
         // setRiders(allNearbyPlaces.slice(0, 5))
         // Test create a trip
         try {
+          // Create a test trips on first mount
+
+
           const trips = await fetchAvailableTrips();
           console.log('Fetched trips:', trips);
           setTrips(trips)
@@ -141,9 +144,15 @@ export default function Index() {
   // Function to open the bottom sheet when a rider is clicked
   const handleTripMarkerClicked = (trip) => {
 
-    
+    router.push({
+      pathname: "(tabs)/bottomsheet/page1", // Ensure the route is correct in your file structure
+      params: {
+        trip, // Convert the trip object to a string for route params
+      },
+    });
+
     bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
-    // console.log("The clicked trip: ", trip); // Log the clicked rider data
+    console.log("The clicked trip: ", trip); // Log the clicked rider data
     // setSelectedTrip(trip)
 
   };

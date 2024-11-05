@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from 'react'
+import React, { useRef, useCallback, useState, useEffect } from 'react'
 import { View, Text } from 'react-native'
 import { Stack, useRouter, Slot } from "expo-router"
 import tw from "@/tailwind"
@@ -13,6 +13,10 @@ const Layout = () => {
 
 	// console.log(router)
 
+
+	useEffect(()=>{
+		
+	}, [])
 	  // Bottom sheet reference
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = ["25%", "50%", "70%", "90%"]; // Snap points for the bottom sheet

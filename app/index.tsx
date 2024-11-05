@@ -45,7 +45,7 @@ const Index = () => {
 
               // Check if the user is approved
               if (userData.isApproved) {
-                router.replace("(tabs)"); // Redirect to tabs if approved
+                router.replace("(tabs)/bottomsheet"); // Redirect to tabs if approved
               } else {
                 router.replace("auth/driver_verification"); // Redirect to awaiting approval screen
               }
@@ -73,23 +73,6 @@ const Index = () => {
 	// useEffect(()=>{
 	// 	if (auth.currentUser) return router.replace("(tabs)")
 	// }, [auth.currentUser])
-   const setupTrades = async () => {
-   try {
-      console.log("Setting up trades:");
-      const res = await addDoc(collection(db, "Trades"), {
-         USDT_amount: 500,
-         rate: 10.5,
-         transaction_time_limit: "2024-09-20T10:00:00Z",
-         trade_status: "open",
-         transaction: "", // Reference to a Transaction (to be linked later)
-         user: "", // Reference to a user (to be linked later)
-      });
-      console.log("Done", res);
-   } catch (error) {
-      console.error("Error setting up trades: ", error);
-      Alert.alert("Error", "Failed to set up trades. Please try again later.");
-   }
-}
 
 
 	return (
@@ -98,7 +81,7 @@ const Index = () => {
                 <Welcome width={356} />
                 <View>
                     <Text h2 poppinsMedium center onPress = {()=> router.push("(tabs)")} >Welcome</Text>
-                    <Text poppinsLight center onPress={setupTrades} >Have a better driving experience</Text>
+                    <Text poppinsLight center >Have a better driving experience</Text>
                 </View>
             </View>
             <View style={tw`gap-y-3`} >

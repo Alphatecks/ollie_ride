@@ -6,10 +6,15 @@ import {
   doc, 
   updateDoc, 
   getDoc, 
-  onSnapshot 
+  onSnapshot,
+  deleteDoc, 
+  query, where, getDocs 
 } from 'firebase/firestore';
-import { query, where, getDocs } from 'firebase/firestore';
+
 import { db } from '@/firebaseConfig';  // Ensure this is your Firebase config file
+
+import {ridersData2} from "@/constants/Data"
+
 
 // Utility to create a trip (called by rider)
 export const createTrip = async (
@@ -140,3 +145,47 @@ export const fetchAvailableTrips = async () => {
   }
 };
 
+
+
+const createRandomTrips = async (riderId: string) => {
+  for (const trip of ridersData2) {
+    try {
+      const tripAmount = Math.floor(Math.random() * 1000);  // Random trip amount for each trip
+      const tripId = await createTrip(
+        riderId,
+        trip.fromLocation,
+        trip.toLocation,
+        tripAmount,
+        trip.latitude,
+        trip.longitude,
+        "Chijioke Ikpeazu",
+      );
+      console.log('Created trip ID:', tripId);
+    } catch (error) {
+      console.error('Error creating trip:', error);
+    }
+  }
+};
+
+// createRandomTrips("BP5nwkIUtwMu9SNETECp3a91Dgu1")
+
+
+// Function to delete all documents in the 'trips' collection
+export const deleteAllTrips = async () => {
+  try {
+    const tripsCollectionRef = collection(db, 'trips');
+    const tripsSnapshot = await getDocs(tripsCollectionRef);
+    
+    const deletePromises = tripsSnapshot.docs.map((tripDoc) => 
+      deleteDoc(doc(db, 'trips', tripDoc.id))
+    );
+
+    await Promise.all(deletePromises);
+    console.log('All trips deleted successfully');
+  } catch (error) {
+    console.error('Error deleting trips:', error);
+    throw error;
+  }
+};
+
+// deleteAllTrips()

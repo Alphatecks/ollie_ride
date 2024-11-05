@@ -70,7 +70,7 @@ export default function TabLayout() {
         tabBarStyle: tw`h-[70px] py-2`
       }}>
       <Tabs.Screen
-        name="index"
+        name="bottomsheet"
         options={{
           headerShown: true,
           tabBarLabel: "Home",

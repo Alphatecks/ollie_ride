@@ -14,19 +14,19 @@ import { setLogLevel } from "firebase/app";
 // Firebase configuration
 const firebaseConfig = {
 
-  apiKey: "AIzaSyDyYIgmy9Vt_z6ydTfzq-Y4M0A9ygEtBC4",
+  apiKey: "AIzaSyDeW7D-ugoBFmI7t8tKG4ZQG4WoBurT_uw",
 
-  authDomain: "ollie-ride-7abb8.firebaseapp.com",
+  authDomain: "ollie-ride-e8bef.firebaseapp.com",
 
-  projectId: "ollie-ride-7abb8",
+  projectId: "ollie-ride-e8bef",
 
-  storageBucket: "ollie-ride-7abb8.appspot.com",
+  storageBucket: "ollie-ride-e8bef.appspot.com",
 
-  messagingSenderId: "460810931103",
+  messagingSenderId: "897100260977",
 
-  appId: "1:460810931103:web:3ba78182dadce210598baa",
+  appId: "1:897100260977:web:d2b6bc0c16a3ec79119dd0",
 
-  measurementId: "G-QTVFPQTSYQ"
+  measurementId: "G-K4R72NHZTX"
 
 };
 

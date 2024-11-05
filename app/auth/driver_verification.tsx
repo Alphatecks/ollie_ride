@@ -84,7 +84,7 @@ const DriverVerification = () => {
          <Button label="Continue" 
          poppins
          outline
-         onPress={()=> router.push("(tabs)")} 
+         onPress={()=> router.push("(tabs)/bottomsheet")} 
          style={tw`btn`}
 
          // disabled = {!email || !password ? true: false}
