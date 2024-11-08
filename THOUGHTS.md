@@ -96,3 +96,6 @@ Correct code:
 ```
 
 79% at 5:40pm
+
+
+Decoded Route Coordinates:  [{"latitude": 5.47891, "longitude": 7.43086}, {"latitude": 5.47884, "longitude": 7.43061}, {"latitude": 5.4788, "longitude": 7.43056}, {"latitude": 5.47866, "longitude": 7.43037}, {"latitude": 5.47858, "longitude": 7.43022}, {"latitude": 5.47843, "longitude": 7.42988}, {"latitude": 5.47825, "longitude": 7.42955}, {"latitude": 5.47827, "longitude": 7.42947}, {"latitude": 5.47837, "longitude": 7.42925}, {"latitude": 5.47841, "longitude": 7.42918}, {"latitude": 5.47837, "longitude": 7.42899}, {"latitude": 5.47838, "longitude": 7.42878}, {"latitude": 5.4779, "longitude": 7.42868}, {"latitude": 5.4775, "longitude": 7.42861}, {"latitude": 5.47731, "longitude": 7.42864}, {"latitude": 5.47688, "longitude": 7.42882}, {"latitude": 5.47626, "longitude": 7.42849}, {"latitude": 5.47559, "longitude": 7.42811}, {"latitude": 5.47557, "longitude": 7.4281}, {"latitude": 5.47557, "longitude": 7.42812}, {"latitude": 5.47549, "longitude": 7.42855}, {"latitude": 5.47541, "longitude": 7.42863}, {"latitude": 5.47524, "longitude": 7.42867}, {"latitude": 5.47502, "longitude": 7.42883}, {"latitude": 5.47498, "longitude": 7.42889}, {"latitude": 5.47478, "longitude": 7.42888}, {"latitude": 5.47474, "longitude": 7.42884}, {"latitude": 5.47467, "longitude": 7.4287}, {"latitude": 5.47466, "longitude": 7.42843}]

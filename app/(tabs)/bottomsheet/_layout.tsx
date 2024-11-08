@@ -25,22 +25,6 @@ const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspo
 // type Coordinates = { latitude: number; longitude: number };
 
 
-// (async () => {
-//   const origin: Coordinates = { latitude: 40.712776, longitude: -74.005974 }; // Example: New York City, NY
-//   const destination: Coordinates = { latitude: 34.052235, longitude: -118.243683 }; // Example: Los Angeles, CA
-  
-//   const directions = await getDirections(origin, destination);
-  
-//   if (directions) {
-//     console.log("Distance:", directions.distance);
-//     console.log("Duration:", directions.duration);
-//     console.log("Steps:", directions.steps);
-//     console.log("Polyline:", directions.polyline);
-//   } else {
-//     console.log("Directions could not be retrieved.");
-//   }
-// })();
-
 
 export default function Index() {
   const router = useRouter();
@@ -87,45 +71,46 @@ export default function Index() {
     fetchLocation();
   }, []);
 
-  // Fetch directions whenever selectedTrip or location changes
   useEffect(() => {
-    console.log("Inside second useEffect")
+    console.log("Inside second useEffect");
+  
     const _getDirections = async () => {
-      console.log(location, selectedTrip);
-    
-      if (location) {
-        // Driver location coords
-
-        const { latitude, longitude } = location.coords; 
-
+      console.log("User location, selected Trip", location, selectedTrip);
+  
+      if (location && selectedTrip) {
+        // Ensure the location and selected trip are valid
+        const { latitude, longitude } = location.coords; // Assuming location is a valid object with coords
         const destination = { latitude: selectedTrip.latitude, longitude: selectedTrip.longitude };
-
-        console.log("Inside if block", latitude, longitude, destination)
-    
+  
+        console.log("Inside if block", latitude, longitude, destination);
+  
         try {
           const directions = await getDirections({ latitude, longitude }, destination);
-          console.log("Directions: ", directions)
-
-          if (directions && directions.polyline && directions.polyline) {
+          console.log("Directions: ", directions);
+  
+          if (directions && directions.polyline) {
             // Decode the polyline into an array of coordinates
             const decodedCoordinates = polyline.decode(directions.polyline).map(([lat, lng]) => ({
               latitude: lat,
               longitude: lng,
             }));
-
-            console.log("Decoded cordinates: ", decodedCoordinates)
-    
+  
+            console.log("Decoded coordinates: ", decodedCoordinates);
+  
             setRouteCoordinates(decodedCoordinates); // Update the state with the decoded coordinates
             console.log("Decoded Route Coordinates: ", decodedCoordinates); // Log the decoded coordinates
           }
         } catch (error) {
           console.error("Failed to fetch directions:", error);
         }
+      } else {
+        console.log("Location or selectedTrip is missing:", location, selectedTrip);
       }
     };
-
+  
     _getDirections();
-  }, [location]);
+  }, [location, selectedTrip]); // Dependencies are location and selectedTrip
+  
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log('handleSheetChanges', index);
@@ -138,12 +123,6 @@ export default function Index() {
     bottomSheetRef.current?.close();
   };
 
-  const handleInputChange = (value: string, index: number) => {
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-    console.log(newOtp);
-  };
 
   const handleTripMarkerClicked = (trip: Trip) => {
     setTrip(trip);
