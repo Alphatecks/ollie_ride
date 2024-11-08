@@ -4,7 +4,7 @@ import { Trip } from '@/types';
 interface TripState {
   trip: Trip | null;
   setTrip: (newTrip: Trip) => void;
-  updateTripStatus: (status: string, driverId: string) => void;
+  updateTripStatus: (status: string, driverId: string, tripAccessCode: number) => void;
 }
 
 const useTripStore = create<TripState>((set) => ({
@@ -13,9 +13,9 @@ const useTripStore = create<TripState>((set) => ({
   setTrip: (newTrip) => set({ trip: newTrip }),
 
   // Update only the trip's status and driverId
-  updateTripStatus: (status, driverId) =>
+  updateTripStatus: (status: string, driverId: string, tripAccessCode: number) =>
     set((state) => ({
-      trip: state.trip ? { ...state.trip, status, driverId } : null,
+      trip: state.trip ? { ...state.trip, status, driverId, tripAccessCode } : null,
     })),
 }));
 

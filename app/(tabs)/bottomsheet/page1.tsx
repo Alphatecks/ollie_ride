@@ -8,12 +8,15 @@ import tw from '@/tailwind';
 import useTripStore from '@/store/useTripStore';
 import { auth, db } from '@/firebaseConfig';
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { generateAccessCode } from '@/utils/utils';
 
 const AcceptTrip = () => {
   const trip = useTripStore((state) => state.trip);
   const updateTripStatus = useTripStore((state) => state.updateTripStatus);
   const router = useRouter();
   const [isAccepted, setIsAccepted] = useState(false);
+
+
 
   useEffect(() => {
     if (!trip?.id) return;
@@ -39,14 +42,21 @@ const AcceptTrip = () => {
       const user = auth.currentUser;
       if (!user) throw new Error("User not authenticated");
 
+      // Generate access code for the trip
+
+      const tripAccessCode = generateAccessCode()
+
+      console.log(tripAccessCode)
+
       const tripRef = doc(db, "trips", trip.id);
       await updateDoc(tripRef, {
         status: "TRIP_ACCEPTED",
         driverId: user.uid,
+        tripAccessCode,
       });
 
       // Update Zustand store with new trip status and driverId
-      updateTripStatus("TRIP_ACCEPTED", user.uid);
+      updateTripStatus("TRIP_ACCEPTED", user.uid, tripAccessCode);
 
       console.log("Trip accepted successfully!", trip.id, "From Zustand: ", trip);
     } catch (error) {
@@ -83,6 +93,7 @@ const AcceptTrip = () => {
             label="Reject"
             style={tw`btn flex-grow bg-[#BFC8D4] text-red-300`}
             color="#0C3569"
+            onPress = {()=> router.push("/(tabs)/bottomsheet/page2")}
           />
         </View>
       </View>

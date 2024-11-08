@@ -19,5 +19,6 @@ export interface Timestamp {
     updatedAt: Timestamp;
     riderPhoneNumber: string;
     riderCurrentLocation: string;
+    tripAccessCode: number;
   }
   
