@@ -1,6 +1,4 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+
 import {ActivityIndicator, Alert, TouchableOpacity} from "react-native"
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
@@ -9,12 +7,6 @@ import Avatar from 'react-native-ui-lib/avatar'
 import Text from 'react-native-ui-lib/text'
 import {TextField} from 'react-native-ui-lib'
 import Button from 'react-native-ui-lib/button'
-
-import { getDistanceFromLatLonInMeters } from "@/utils/calculations"; // Utility to calculate distance between two lat/lon points
-import NotificationCardBase from "@/components/notification/NotificationCardBase";
-import { NotificationCardDriving } from "@/components/notification/NotificationCardBase";
-
-import DoubleLocationCard from "@/components/home/DoubleLocationCard";
 
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'; // Importing Gorhom Bottom Sheet for the drawer
 
@@ -29,6 +21,9 @@ import Toast from "react-native-toast-message"
 
 import { Slot, useRouter } from "expo-router"
 
+import useTripStore from '@/store/useTripStore';
+import { Trip } from '@/types';
+
 // Rider avatar URL
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
 
@@ -40,6 +35,9 @@ export default function Index() {
 
   const [location, setLocation] = useState(null);
   const [trips, setTrips] = useState([]);
+
+  const setTrip = useTripStore((state) => state.setTrip);
+
   // Rider Acceptance Flow
 
 
@@ -96,7 +94,7 @@ export default function Index() {
 
 
           const trips = await fetchAvailableTrips();
-          console.log('Fetched trips:', trips);
+          // console.log('Fetched trips:', trips);
           setTrips(trips)
         } catch (error) {
           console.error('Failed to fetch trips:', error);
@@ -141,21 +139,20 @@ export default function Index() {
     console.log(newOtp)
   };
 
-  // Function to open the bottom sheet when a rider is clicked
-  const handleTripMarkerClicked = (trip) => {
 
+  const handleTripMarkerClicked = (trip: Trip) => {
+  
+    // Update the trip in Zustand store
+    setTrip(trip);
+  
+    // Navigate to the bottom sheet
     router.push({
-      pathname: "(tabs)/bottomsheet/page1", // Ensure the route is correct in your file structure
-      params: {
-        trip, // Convert the trip object to a string for route params
-      },
+      pathname: "/(tabs)/bottomsheet/page1",
     });
-
-    bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
-    console.log("The clicked trip: ", trip); // Log the clicked rider data
-    // setSelectedTrip(trip)
-
+  
+    bottomSheetRef.current?.snapToIndex(0);
   };
+  
 
   const handleTripAccepted = () => {
     console.log("accepted")

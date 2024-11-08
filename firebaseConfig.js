@@ -67,7 +67,7 @@ export const db = initializeFirestore(app, {
 export const storage = getStorage(app);
 
 // Set Firestore Log Level for debugging (development use only)
-setFirestoreLogLevel('debug');
+// setFirestoreLogLevel('debug');
 
 
 

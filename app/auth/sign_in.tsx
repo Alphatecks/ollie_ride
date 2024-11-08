@@ -25,7 +25,7 @@ const SignIn = () => {
 
    useFocusEffect(
      useCallback(() => {
-       if (user) router.replace("(tabs)")
+       if (user) router.replace("/(tabs)/bottomsheet")
        return () => {
          console.log('This route is now unfocused.');
        };
@@ -45,7 +45,7 @@ const SignIn = () => {
 
             setLoading(false)
 
-            router.replace("(tabs)");
+            router.replace("/(tabs)/bottomsheet");
 	        // Handle successful sign-up (e.g., navigate to home screen)
 	    } catch (error) {
             setLoading(false)

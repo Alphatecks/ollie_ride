@@ -137,7 +137,7 @@ export const fetchAvailableTrips = async () => {
       ...doc.data(),
     }));
 
-    console.log('Available trips fetched:', availableTrips);
+    // console.log('Available trips fetched:', availableTrips);
     return availableTrips;
   } catch (error) {
     console.error('Error fetching available trips:', error);
