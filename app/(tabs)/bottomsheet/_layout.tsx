@@ -19,6 +19,10 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 
 import polyline from '@mapbox/polyline'; // Import the polyline library
 
+import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { db } from "@/firebaseConfig";
+
+
 
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
 
@@ -69,6 +73,25 @@ export default function Index() {
     };
 
     fetchLocation();
+  }, []);
+
+  useEffect(() => {
+    // Firestore listener for trips without a driver
+    const tripsCollection = collection(db, 'trips');
+    const tripsQuery = query(tripsCollection, where('driverId', '==', null));
+
+    const unsubscribe = onSnapshot(tripsQuery, (querySnapshot) => {
+      const updatedAvailableTrips = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Trip[];
+
+      setAvailableTrips(updatedAvailableTrips);
+      console.log('Available trips updated:', updatedAvailableTrips);
+    });
+
+    // Cleanup listener on unmount
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
