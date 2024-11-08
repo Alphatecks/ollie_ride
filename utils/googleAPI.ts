@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Function to fetch nearby places based on user's current location
-export const getNearbyPlaces = async (latitude, longitude, radius = 1000, placeType) => {
+export const getNearbyPlaces = async (latitude: number, longitude: number, radius: number = 1000, placeType) => {
   const apiKey = 'AIzaSyCwiyu1HxfDQFf5A9U4g_m4YLI21EzVuLg';
 
   const baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';

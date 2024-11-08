@@ -1,79 +1,73 @@
-
-import {ActivityIndicator, Alert, TouchableOpacity} from "react-native"
-
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { View, TextInput, Image } from "react-native";
-import Avatar from 'react-native-ui-lib/avatar'
-import Text from 'react-native-ui-lib/text'
-import {TextField} from 'react-native-ui-lib'
-import Button from 'react-native-ui-lib/button'
+import Text from 'react-native-ui-lib/text';
+import { TextField } from 'react-native-ui-lib';
+import Button from 'react-native-ui-lib/button';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import MapView, { Marker, PROVIDER_GOOGLE, Polyline, Region } from 'react-native-maps';
+import * as Location from 'expo-location';
+import tw from "@/tailwind";
+import { getNearbyPlaces } from "@/utils/googleAPI";
+import { createTrip, fetchAvailableTrips } from "@/utils/booking";
+import { getDirections } from "@/utils/getDirections"
 
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'; // Importing Gorhom Bottom Sheet for the drawer
-
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'; // MapView and Marker from react-native-maps for showing the map and rider markers
-import * as Location from 'expo-location'; // Importing expo-location for handling location permissions and fetching user location
-import tw from "@/tailwind"; // TailwindCSS for styling
-
-import { getNearbyPlaces } from "@/utils/googleAPI"
-import {createTrip, fetchAvailableTrips} from "@/utils/booking"
-
-import Toast from "react-native-toast-message"
-
-import { Slot, useRouter } from "expo-router"
-
+import Toast from "react-native-toast-message";
+import { Slot, useRouter } from "expo-router";
 import useTripStore from '@/store/useTripStore';
 import { Trip } from '@/types';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
-// Rider avatar URL
+import polyline from '@mapbox/polyline'; // Import the polyline library
+
+
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
+
+// type Coordinates = { latitude: number; longitude: number };
+
+
+// (async () => {
+//   const origin: Coordinates = { latitude: 40.712776, longitude: -74.005974 }; // Example: New York City, NY
+//   const destination: Coordinates = { latitude: 34.052235, longitude: -118.243683 }; // Example: Los Angeles, CA
+  
+//   const directions = await getDirections(origin, destination);
+  
+//   if (directions) {
+//     console.log("Distance:", directions.distance);
+//     console.log("Duration:", directions.duration);
+//     console.log("Steps:", directions.steps);
+//     console.log("Polyline:", directions.polyline);
+//   } else {
+//     console.log("Directions could not be retrieved.");
+//   }
+// })();
 
 
 export default function Index() {
-  // State to hold the user's current location
-
-  const router = useRouter()
-
-  const [location, setLocation] = useState(null);
-  const [trips, setTrips] = useState([]);
-
-  const setTrip = useTripStore((state) => state.setTrip);
-
-  // Rider Acceptance Flow
-
-
-  /*
-    TRIP_AVAILABLE
-    TRIP_ACCEPTED
-    DRIVER_AT_CUSTOMER_LOCATION
-    ACCESSCODE_SENT
-    ACCESSCODE_VALID
-    TRIP_STARTED
-    TRIP_ENROUTE
-    TRIP_FINISHED
-    TRIP_CANCELED
-  */
-
-  const [otp, setOtp] = useState(["", "", "", ""]);
-
-
-  // Initial region to display on the map
-  const [region, setRegion] = useState({
+  const router = useRouter();
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [availableTrips, setAvailableTrips] = useState<Trip[]>([]);
+  const [region, setRegion] = useState<Region>({
     latitude: 5.4788823,
     longitude: 7.4309201,
-    latitudeDelta: 0.015, // Zoom level (latitudinal)
-    longitudeDelta: 0.0121, // Zoom level (longitudinal)
+    latitudeDelta: 0.015,
+    longitudeDelta: 0.0121,
   });
-  const [errorMsg, setErrorMsg] = useState(null); // Error message for location permission
-
-  const [selectedTrip, setSelectedTrip] = useState({}); // List of riders with distances
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [routeCoordinates, setRouteCoordinates] = useState<{ latitude: number; longitude: number }[]>([]); // For polyline
+  const setTrip = useTripStore((state) => state.setTrip);
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = ["25%", "50%", "70%", "90%"];
 
   useEffect(() => {
+    console.log("Inside first useEffect...")
     const fetchLocation = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
       } else {
-        let userLocation = await Location.getCurrentPositionAsync({});
+        const userLocation = await Location.getCurrentPositionAsync({});
         setLocation(userLocation);
         setRegion({
           latitude: userLocation.coords.latitude,
@@ -81,85 +75,93 @@ export default function Index() {
           latitudeDelta: 0.005,
           longitudeDelta: 0.005,
         });
-        // Get nearby Places of the users current location
-
-        console.log("Getting nearby places...")
-        // const allNearbyPlaces = await getNearbyPlaces(userLocation.coords.latitude, userLocation.coords.longitude)
-
-        // console.log("From Index: ", allNearbyPlaces)
-        // setRiders(allNearbyPlaces.slice(0, 5))
-        // Test create a trip
         try {
-          // Create a test trips on first mount
-
-
-          const trips = await fetchAvailableTrips();
-          // console.log('Fetched trips:', trips);
-          setTrips(trips)
+          const _availableTrips = await fetchAvailableTrips();
+          setAvailableTrips(_availableTrips);
         } catch (error) {
           console.error('Failed to fetch trips:', error);
         }
-
       }
     };
 
-    fetchLocation(); // Call the async function inside useEffect
-  }, []); // Ensure it's an empty dependency array
+    fetchLocation();
+  }, []);
 
+  // Fetch directions whenever selectedTrip or location changes
+  useEffect(() => {
+    console.log("Inside second useEffect")
+    const _getDirections = async () => {
+      console.log(location, selectedTrip);
+    
+      if (location) {
+        // Driver location coords
 
+        const { latitude, longitude } = location.coords; 
 
-  // Bottom sheet reference
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = ["25%", "50%", "70%", "90%"]; // Snap points for the bottom sheet
+        const destination = { latitude: selectedTrip.latitude, longitude: selectedTrip.longitude };
 
-  // Handle bottom sheet changes (logs the index when the sheet changes position)
+        console.log("Inside if block", latitude, longitude, destination)
+    
+        try {
+          const directions = await getDirections({ latitude, longitude }, destination);
+          console.log("Directions: ", directions)
+
+          if (directions && directions.polyline && directions.polyline) {
+            // Decode the polyline into an array of coordinates
+            const decodedCoordinates = polyline.decode(directions.polyline).map(([lat, lng]) => ({
+              latitude: lat,
+              longitude: lng,
+            }));
+
+            console.log("Decoded cordinates: ", decodedCoordinates)
+    
+            setRouteCoordinates(decodedCoordinates); // Update the state with the decoded coordinates
+            console.log("Decoded Route Coordinates: ", decodedCoordinates); // Log the decoded coordinates
+          }
+        } catch (error) {
+          console.error("Failed to fetch directions:", error);
+        }
+      }
+    };
+
+    _getDirections();
+  }, [location]);
+
   const handleSheetChanges = useCallback((index: number) => {
     console.log('handleSheetChanges', index);
-    /*
-    if the index === -1 that means the bottom sheet is closed set all state flows to false to 
-    start afresh.
-    FUTURE: Save state of the flow so user can restart where they left off
-    */
-
-    if (index === -1){
-
+    if (index === -1) {
+      // Reset flow state logic if needed
     }
   }, []);
 
   const handleBottomSheetClose = () => {
-    /* This close the bottom sheet is opened. */
-      bottomSheetRef.current?.close();
+    bottomSheetRef.current?.close();
   };
 
-
-  const handleInputChange = (value, index) => {
+  const handleInputChange = (value: string, index: number) => {
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
-    console.log(newOtp)
+    console.log(newOtp);
   };
-
 
   const handleTripMarkerClicked = (trip: Trip) => {
-  
-    // Update the trip in Zustand store
     setTrip(trip);
-  
-    // Navigate to the bottom sheet
-    router.push({
-      pathname: "/(tabs)/bottomsheet/page1",
-    });
-  
+    setSelectedTrip(trip);
+    router.push({ pathname: "/(tabs)/bottomsheet/page1" });
     bottomSheetRef.current?.snapToIndex(0);
   };
-  
-
-  const handleTripAccepted = () => {
-    console.log("accepted")
-  }
 
   return (
     <View style={tw`bg-white flex-1`}>
+      <View style={tw`bg-green-600 flex-row items-center gap-4`}>
+        <View style={tw`gap-2 bg-green-500 p-3 items-center`}>
+          <AntDesign name="arrowup" size={24} color="white" />
+          <Text poppinsMedium style={tw`text-white`}>200m</Text>
+        </View>
+        <Text poppins style={tw`text-white text-2xl flex-1`}>Turn to the left TB Square.</Text>
+      </View>
+
       <MapView
         style={tw`flex-1`}
         provider={PROVIDER_GOOGLE}
@@ -168,20 +170,25 @@ export default function Index() {
         region={region}
         mapType="standard"
       >
-       {Array.isArray(trips) && trips.map((trip) => (
+        {Array.isArray(availableTrips) && availableTrips.map((trip) => (
           <Marker
             key={trip.id}
             coordinate={{ latitude: trip.latitude, longitude: trip.longitude }}
             title={`Trip ${trip.id}`}
             onPress={() => handleTripMarkerClicked(trip)}
-            
-          > 
-          <Image source={{ uri: url }}  
-          style={tw`h-12 w-12 rounded-full border-2 border-white`} />
-
+          >
+            <Image source={{ uri: url }} style={tw`h-12 w-12 rounded-full border-2 border-white`} />
           </Marker>
         ))}
-
+        
+        {/* Render the polyline for the directions */}
+        {routeCoordinates.length > 0 && (
+          <Polyline
+            coordinates={routeCoordinates}
+            strokeColor="#007AFF" // Polyline color
+            strokeWidth={4}       // Polyline width
+          />
+        )}
       </MapView>
 
       <BottomSheet
@@ -190,13 +197,12 @@ export default function Index() {
         snapPoints={snapPoints}
         enablePanDownToClose={true}
         initialSnapIndex={-1}
-        index={-1} 
+        index={-1}
       >
         <BottomSheetView style={tw`p-4`}>
-        	<Slot />
+          <Slot />
         </BottomSheetView>
       </BottomSheet>
     </View>
   );
 }
-
