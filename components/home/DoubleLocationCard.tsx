@@ -9,7 +9,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 interface DoubleLocationCardProps {
 	fromLocation: string;
 	toLocation: string;
-	locationDistance: number;
+	locationDistance: number | string;
 }
 
 const DoubleLocationCard: React.FC<DoubleLocationCardProps> = ({ fromLocation, toLocation, locationDistance }) => {

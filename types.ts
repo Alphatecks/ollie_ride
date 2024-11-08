@@ -17,5 +17,7 @@ export interface Timestamp {
     toLocation: string;
     tripAmount: number;
     updatedAt: Timestamp;
+    riderPhoneNumber: string;
+    riderCurrentLocation: string;
   }
   
