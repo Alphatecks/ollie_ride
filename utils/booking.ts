@@ -128,6 +128,7 @@ export const fetchAvailableTrips = async () => {
   const tripsQuery = query(
     tripsCollection, 
     where('driverId', '==', null),
+    where("status", "==", "TRIP_AVAILABLE")
   );
 
   try {

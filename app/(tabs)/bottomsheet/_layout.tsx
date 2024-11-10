@@ -21,6 +21,8 @@ import polyline from '@mapbox/polyline'; // Import the polyline library
 
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
+import NotificationCardBase from "@/components/notification/NotificationCardBase";
+import DoubleLocationCard from "@/components/home/DoubleLocationCard";
 
 
 
@@ -48,6 +50,8 @@ export default function Index() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = ["25%", "50%", "70%", "90%"];
 
+  // const [currentTrip, setCurrentTrip] = useState<Trip>()
+
   useEffect(() => {
     console.log("Inside first useEffect...")
     const fetchLocation = async () => {
@@ -66,6 +70,8 @@ export default function Index() {
         try {
           const _availableTrips = await fetchAvailableTrips();
           setAvailableTrips(_availableTrips);
+
+          // console.log("AVAILABLE TRIPS:", _availableTrips)
         } catch (error) {
           console.error('Failed to fetch trips:', error);
         }
@@ -98,7 +104,6 @@ export default function Index() {
     console.log("Inside second useEffect");
   
     const _getDirections = async () => {
-      console.log("User location, selected Trip", location, selectedTrip);
   
       if (location && selectedTrip) {
         // Ensure the location and selected trip are valid
@@ -109,7 +114,7 @@ export default function Index() {
   
         try {
           const directions = await getDirections({ latitude, longitude }, destination);
-          console.log("Directions: ", directions);
+          // console.log("Directions: ", directions);
   
           if (directions && directions.polyline) {
             // Decode the polyline into an array of coordinates
@@ -121,13 +126,13 @@ export default function Index() {
             console.log("Decoded coordinates: ", decodedCoordinates);
   
             setRouteCoordinates(decodedCoordinates); // Update the state with the decoded coordinates
-            console.log("Decoded Route Coordinates: ", decodedCoordinates); // Log the decoded coordinates
+            // console.log("Decoded Route Coordinates: ", decodedCoordinates); // Log the decoded coordinates
           }
         } catch (error) {
           console.error("Failed to fetch directions:", error);
         }
       } else {
-        console.log("Location or selectedTrip is missing:", location, selectedTrip);
+        // console.log("Location or selectedTrip is missing:", location, selectedTrip);
       }
     };
   
@@ -148,10 +153,12 @@ export default function Index() {
 
 
   const handleTripMarkerClicked = (trip: Trip) => {
-    setTrip(trip);
+    // If clicked get the trip id and set it to sellectedTrip
+
     setSelectedTrip(trip);
-    router.push({ pathname: "/(tabs)/bottomsheet/page1" });
-    bottomSheetRef.current?.snapToIndex(0);
+    console.log("Selected Trip:", trip)
+    bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
+
   };
 
   return (
@@ -202,7 +209,32 @@ export default function Index() {
         index={-1}
       >
         <BottomSheetView style={tw`p-4`}>
-          <Slot />
+
+          {/* If trip status is available show the below */}
+
+          {selectedTrip?.status === "TRIP_AVAILABLE" &&
+           <View>    
+           <NotificationCardBase
+             key={selectedTrip?.id}
+             name={selectedTrip?.riderName}
+             phoneNumber={selectedTrip?.phoneNumber}
+             time={selectedTrip?.time}
+           />
+           <DoubleLocationCard locationDistance = "10 mins" 
+           fromLocation = {selectedTrip?.fromLocation}
+           toLocation = {selectedTrip?.toLocation}
+           />
+           <Text poppins style={tw`my-4`} >Price Range: N4000 - N5000 </Text>
+           <View style={tw`flex-row gap-2`}>
+             <Button label = "Accept" poppins style={tw`btn flex-grow`} 
+            //  onPress = {handleRiderAccepted(selectedTrip)}
+             />
+             <Button label = "Reject" poppins 
+            //  onPress = {handleOnRejectPressed}
+             style={tw`btn flex-grow bg-[#BFC8D4] text-red-300`} color = "#0C3569"/>
+           </View>
+         </View>
+          }
         </BottomSheetView>
       </BottomSheet>
     </View>
