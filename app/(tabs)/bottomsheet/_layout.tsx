@@ -23,6 +23,7 @@ import { collection, query, where, onSnapshot, updateDoc, doc } from "firebase/f
 import { auth, db } from "@/firebaseConfig";
 import NotificationCardBase, { NotificationCardDriving } from "@/components/notification/NotificationCardBase";
 import DoubleLocationCard from "@/components/home/DoubleLocationCard";
+import { generateAccessCode } from "@/utils/utils";
 
 
 
@@ -45,7 +46,8 @@ export default function Index() {
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [routeCoordinates, setRouteCoordinates] = useState<{ latitude: number; longitude: number }[]>([]); // For polyline
-  const setTrip = useTripStore((state) => state.setTrip);
+
+
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = ["25%", "50%", "70%", "90%"];
 
@@ -151,7 +153,7 @@ export default function Index() {
     };
   
     _getDirections();
-  }, [location, selectedTrip]); // Dependencies are location and selectedTrip
+  }, [location]); // Dependencies are location and selectedTrip
   
 
   const handleSheetChanges = useCallback((index: number) => {
@@ -165,6 +167,12 @@ export default function Index() {
     bottomSheetRef.current?.close();
   };
 
+  const handleInputChange = (value, index) => {
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+    console.log(newOtp)
+  };
 
   const handleTripMarkerClicked = (trip: Trip) => {
     // If clicked get the trip id and set it to sellectedTrip
@@ -176,18 +184,40 @@ export default function Index() {
   };
 
   const handleTripAccepted = async(selectedTrip: Trip) => {
+    // IF trip is accepted then generate trip access code that will be sent to the rider
+
     console.log("Trips was accepted")
+    const tripAccessCode = generateAccessCode()
+
     const selectedTripRef = doc(db, "trips", selectedTrip?.id)
+
     try{
       await updateDoc(selectedTripRef, {
         status: "TRIP_ACCEPTED",
-        driverId: auth?.currentUser?.uid
+        driverId: auth?.currentUser?.uid,
+        tripAccessCode
       })
       console.log(`Trip ${selectedTrip.id} was set.`)
     }
     catch(e){
       console.log(e)
     }
+  }
+
+  const handleIsDriverAtRiderLocation = async (selectedTrip: Trip) => {
+    const selectedTripRef = doc(db, "trips", selectedTrip?.id)
+    
+    try{
+      await updateDoc(selectedTripRef, {
+        status: "TRIP_DRIVER_AT_CUSTOMER_LOCATION"
+      })
+      
+      console.log("Driver is at location.")
+    }catch(e){
+      console.log(e)
+    }
+
+
   }
 
   return (
@@ -197,7 +227,7 @@ export default function Index() {
           <AntDesign name="arrowup" size={24} color="white" />
           <Text poppinsMedium style={tw`text-white`}>200m</Text>
         </View>
-        <Text poppins style={tw`text-white text-2xl flex-1`}>Turn to the left TB Square.</Text>
+        <Text poppins style={tw`text-white text-2xl flex-1`}>Turn to the left TB Square. {selectedTrip?.tripAccessCode} </Text>
       </View>
 
       <MapView
@@ -282,7 +312,7 @@ export default function Index() {
               toLocation = {selectedTrip?.toLocation}
               />
               <Button label = "Navigate To Customer Location" poppins style={tw`btn my-3`}
-              // onPress = {handleIsDriverAtRiderLocation}
+              onPress = {()=> handleIsDriverAtRiderLocation(selectedTrip)}
               />
             </View>
             </View>
@@ -290,7 +320,35 @@ export default function Index() {
 
           {selectedTrip?.status === "TRIP_DRIVER_AT_CUSTOMER_LOCATION" &&
             <View>
-              <Text>You are at the customer location!!</Text>
+              <Text>You are at the customer location!! {selectedTrip?.id} </Text>
+              <View style={tw`gap-4`}>
+            <Text poppinsMedium h2 center>Enter Access Code</Text>     
+            <Text poppins center>We sent a code to the Rider </Text>     
+            <View style={tw`flex flex-row gap-2 justify-center`}>
+            {otp.map((value, index) => (
+              <TextField
+                key={index}
+                style={tw`border-[1px] border-gray-400 py-4 rounded w-12 text-2xl text-center`}
+                poppins
+                labelColor="#3C2F3D"
+                enableErrors
+                keyboardType="numeric"
+                maxLength={1}
+                value={value}
+                onChangeText={(text) => handleInputChange(text, index)}
+              />
+            ))}
+          </View>
+          <Text poppinsMedium center p1>Didn't get Access Code?</Text>     
+          <Text poppinsMedium center style={tw`text-blue-500 underline`}
+          // onPress = {handleResendOTP}
+          >Resend Code</Text> 
+
+          <Button label = "Verify Code" poppins style={tw`btn my-3`}
+          // onPress = {handleVerifyOTP}
+          />
+
+          </View>
             </View>
           }
         </BottomSheetView>
