@@ -44,7 +44,7 @@ export default function Index() {
   });
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", ""]);
   const [routeCoordinates, setRouteCoordinates] = useState<{ latitude: number; longitude: number }[]>([]); // For polyline
 
 
@@ -167,12 +167,35 @@ export default function Index() {
     bottomSheetRef.current?.close();
   };
 
-  const handleInputChange = (value, index) => {
+  const handleInputChange = async (value: string, index: number, selectedTrip: Trip) => {
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
-    console.log(newOtp)
+  
+    if (newOtp.length === 5) {
+      // Convert OTP array to a single number
+      const otpAsNumber = Number(newOtp.join(""));
+      console.log("OTP as number:", otpAsNumber);
+
+      if (otpAsNumber === selectedTrip?.tripAccessCode){
+        console.log("The same")
+
+        try{
+          const selectedTripRef = doc(db, "trips", selectedTrip?.id)
+  
+          await updateDoc(selectedTripRef, {
+            status: "TRIP_CODE_VALID"
+          })
+          console.log("Updated Status of status to: TRIP_CODE_VALID")
+        }
+        catch(e){
+          console.log(e)
+        }
+      }
+      
+    }
   };
+  
 
   const handleTripMarkerClicked = (trip: Trip) => {
     // If clicked get the trip id and set it to sellectedTrip
@@ -335,7 +358,7 @@ export default function Index() {
                 keyboardType="numeric"
                 maxLength={1}
                 value={value}
-                onChangeText={(text) => handleInputChange(text, index)}
+                onChangeText={(text) => handleInputChange(text, index, selectedTrip)}
               />
             ))}
           </View>
@@ -349,6 +372,11 @@ export default function Index() {
           />
 
           </View>
+          </View>
+          }
+          {selectedTrip?.status === "TRIP_CODE_VALID" &&
+            <View> 
+              <Text>Start trip</Text>
             </View>
           }
         </BottomSheetView>
