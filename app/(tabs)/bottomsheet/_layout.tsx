@@ -19,9 +19,9 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 
 import polyline from '@mapbox/polyline'; // Import the polyline library
 
-import { collection, query, where, onSnapshot } from "firebase/firestore";
-import { db } from "@/firebaseConfig";
-import NotificationCardBase from "@/components/notification/NotificationCardBase";
+import { collection, query, where, onSnapshot, updateDoc, doc } from "firebase/firestore";
+import { auth, db } from "@/firebaseConfig";
+import NotificationCardBase, { NotificationCardDriving } from "@/components/notification/NotificationCardBase";
 import DoubleLocationCard from "@/components/home/DoubleLocationCard";
 
 
@@ -29,7 +29,6 @@ import DoubleLocationCard from "@/components/home/DoubleLocationCard";
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
 
 // type Coordinates = { latitude: number; longitude: number };
-
 
 
 export default function Index() {
@@ -53,6 +52,7 @@ export default function Index() {
   // const [currentTrip, setCurrentTrip] = useState<Trip>()
 
   useEffect(() => {
+
     console.log("Inside first useEffect...")
     const fetchLocation = async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -82,9 +82,23 @@ export default function Index() {
   }, []);
 
   useEffect(() => {
+    if (!selectedTrip) return;
+  
+    const selectedTripRef = doc(db, 'trips', selectedTrip.id);
+    const unsubscribe = onSnapshot(selectedTripRef, (doc) => {
+      if (doc.exists()) {
+        setSelectedTrip({ id: doc.id, ...doc.data() } as Trip);
+      }
+    });
+  
+    return () => unsubscribe();
+  }, [selectedTrip?.id]);
+  
+
+  useEffect(() => {
     // Firestore listener for trips without a driver
     const tripsCollection = collection(db, 'trips');
-    const tripsQuery = query(tripsCollection, where('driverId', '==', null));
+    const tripsQuery = query(tripsCollection, where('driverId', '==', null), where("status", "==", "TRIP_AVAILABLE"));
 
     const unsubscribe = onSnapshot(tripsQuery, (querySnapshot) => {
       const updatedAvailableTrips = querySnapshot.docs.map((doc) => ({
@@ -123,7 +137,7 @@ export default function Index() {
               longitude: lng,
             }));
   
-            console.log("Decoded coordinates: ", decodedCoordinates);
+            // console.log("Decoded coordinates: ", decodedCoordinates);
   
             setRouteCoordinates(decodedCoordinates); // Update the state with the decoded coordinates
             // console.log("Decoded Route Coordinates: ", decodedCoordinates); // Log the decoded coordinates
@@ -160,6 +174,21 @@ export default function Index() {
     bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
 
   };
+
+  const handleTripAccepted = async(selectedTrip: Trip) => {
+    console.log("Trips was accepted")
+    const selectedTripRef = doc(db, "trips", selectedTrip?.id)
+    try{
+      await updateDoc(selectedTripRef, {
+        status: "TRIP_ACCEPTED",
+        driverId: auth?.currentUser?.uid
+      })
+      console.log(`Trip ${selectedTrip.id} was set.`)
+    }
+    catch(e){
+      console.log(e)
+    }
+  }
 
   return (
     <View style={tw`bg-white flex-1`}>
@@ -213,11 +242,12 @@ export default function Index() {
           {/* If trip status is available show the below */}
 
           {selectedTrip?.status === "TRIP_AVAILABLE" &&
-           <View>    
+           <View>   
+            <Text>{selectedTrip?.id}</Text> 
            <NotificationCardBase
              key={selectedTrip?.id}
              name={selectedTrip?.riderName}
-             phoneNumber={selectedTrip?.phoneNumber}
+             phoneNumber={selectedTrip?.phoneNumber || "908739432354"}
              time={selectedTrip?.time}
            />
            <DoubleLocationCard locationDistance = "10 mins" 
@@ -227,13 +257,41 @@ export default function Index() {
            <Text poppins style={tw`my-4`} >Price Range: N4000 - N5000 </Text>
            <View style={tw`flex-row gap-2`}>
              <Button label = "Accept" poppins style={tw`btn flex-grow`} 
-            //  onPress = {handleRiderAccepted(selectedTrip)}
+             onPress = {()=> handleTripAccepted(selectedTrip)}
+
              />
              <Button label = "Reject" poppins 
             //  onPress = {handleOnRejectPressed}
              style={tw`btn flex-grow bg-[#BFC8D4] text-red-300`} color = "#0C3569"/>
            </View>
          </View>
+          }
+
+          {selectedTrip?.status === "TRIP_ACCEPTED" &&
+            <View>
+              <Text>This trip has been accepted {selectedTrip?.id}</Text>
+              <View>
+              <NotificationCardDriving
+                name={selectedTrip?.riderName}
+                phoneNumber={selectedTrip?.phoneNumber}
+                time={selectedTrip?.time}
+                // onCancelIconPressed = {handleOnCancelIconPressed}
+              />
+              <DoubleLocationCard locationDistance = "10 mins" 
+              fromLocation = {selectedTrip?.fromLocation}
+              toLocation = {selectedTrip?.toLocation}
+              />
+              <Button label = "Navigate To Customer Location" poppins style={tw`btn my-3`}
+              // onPress = {handleIsDriverAtRiderLocation}
+              />
+            </View>
+            </View>
+          }
+
+          {selectedTrip?.status === "TRIP_DRIVER_AT_CUSTOMER_LOCATION" &&
+            <View>
+              <Text>You are at the customer location!!</Text>
+            </View>
           }
         </BottomSheetView>
       </BottomSheet>
