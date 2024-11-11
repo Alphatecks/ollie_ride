@@ -20,5 +20,11 @@ export interface Timestamp {
     riderPhoneNumber: string;
     riderCurrentLocation: string;
     tripAccessCode: number;
+    tripStartedTime?: Date;
+    tripEndedTime?: Date | null;
+    isTripEnroute?: boolean;
+    isTripPaid?: boolean;
+    paidWithCash?: boolean;
+    isPaymentVerified?: boolean
   }
   

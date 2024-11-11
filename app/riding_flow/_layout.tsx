@@ -13,12 +13,17 @@ const Layout = () => {
 		<Stack screenOptions={{ 
 			headerTitleStyle: {fontFamily: "Poppins_400Regular", fontSize: 20},
 			headerTitleAlign: "center",
+			title: "Payment Details",
 			headerLeft: ({color}) => (<AntDesign name="left" size={24} color={color} onPress = {()=> router.back()} />)
 		 }} >
-			<Stack.Screen name="withdraw" options = {{ 
+			<Stack.Screen name="rate_rider" options = {{ 
 				headerShown: true, 
-				title: "payment_details",
-				headerStyle: {elevation: 0, border: 0},
+				title: "Rate Rider",
+			}} 
+			/>
+			<Stack.Screen name="download_receipt" options = {{ 
+				headerShown: true, 
+				title: "Download Receipt",
 			}} 
 			/>
 {/*			<Stack.Screen name="withdraw_success" options = {{ 

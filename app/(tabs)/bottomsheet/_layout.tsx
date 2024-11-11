@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { View, TextInput, Image } from "react-native";
+import { View, TextInput, Image, ActivityIndicator } from "react-native";
 import Text from 'react-native-ui-lib/text';
 import { TextField } from 'react-native-ui-lib';
 import Button from 'react-native-ui-lib/button';
@@ -218,7 +218,10 @@ export default function Index() {
       await updateDoc(selectedTripRef, {
         status: "TRIP_ACCEPTED",
         driverId: auth?.currentUser?.uid,
-        tripAccessCode
+        tripAccessCode,
+        isTripPaid: false,
+        paidWithCash: false,
+        isPaymentVerified: false,
       })
       console.log(`Trip ${selectedTrip.id} was set.`)
     }
@@ -243,14 +246,91 @@ export default function Index() {
 
   }
 
+  const handleTripStarted = async (selectedTrip: Trip) => {
+    console.log("Trip started button pressed")
+    // On click set the status to "TRIP_STARTED", get the current time and set it to tripStartedTime
+    const currentTime = new Date()
+
+    console.log(currentTime)
+
+    const selectedTripRef = doc(db, "trips", selectedTrip?.id)
+    
+    try{
+      await updateDoc(selectedTripRef, {
+        status: "TRIP_STARTED",
+        tripStartedTime: currentTime,
+        tripEndedTime: null,
+        isTripEnroute: true,
+      })
+      console.log("Trip status updated to started.")
+
+    }catch(e){
+      console.log(e)
+    }
+
+  }
+  
+  const handleReachedRiderDestination = async (selectedTrip: Trip) => {
+    console.log("Trip has ended")
+    const currentTime = new Date()
+
+    console.log(currentTime)
+
+    const selectedTripRef = doc(db, "trips", selectedTrip?.id)
+    
+    try{
+      await updateDoc(selectedTripRef, {
+        status: "TRIP_ENDED",
+        tripEndedTime: currentTime,
+        isTripEnroute: false,
+      })
+      console.log("Trip status updated to started.")
+
+    }catch(e){
+      console.log(e)
+    }
+
+  }
+  const handlePaidWithCash = async (selectedTrip: Trip) => {
+    console.log("Trip was paid with cash")
+    const currentTime = new Date()
+
+    console.log(currentTime)
+
+    const selectedTripRef = doc(db, "trips", selectedTrip?.id)
+    
+    try{
+      await updateDoc(selectedTripRef, {
+        tripPaymentTime: currentTime,
+        isTripPaid: true,
+        paidWithCash: true,
+      })
+      console.log("Trip status updated to started.")
+
+      // Push to the Payment verification route
+
+      router.push("/riding_flow/payment_details")
+
+    }catch(e){
+      console.log(e)
+    }
+
+  }
+
+
+
   return (
     <View style={tw`bg-white flex-1`}>
       <View style={tw`bg-green-600 flex-row items-center gap-4`}>
-        <View style={tw`gap-2 bg-green-500 p-3 items-center`}>
+        <View style={tw`gap-2 bg-green-500 p-3 items-center`}
+        >
           <AntDesign name="arrowup" size={24} color="white" />
           <Text poppinsMedium style={tw`text-white`}>200m</Text>
         </View>
-        <Text poppins style={tw`text-white text-2xl flex-1`}>Turn to the left TB Square. {selectedTrip?.tripAccessCode} </Text>
+        <Text poppins style={tw`text-white text-2xl flex-1`}
+        onPress = {()=> router.push("/riding_flow/payment_details")}
+
+        >Turn to the left TB Square. {selectedTrip?.tripAccessCode} </Text>
       </View>
 
       <MapView
@@ -375,9 +455,79 @@ export default function Index() {
           </View>
           }
           {selectedTrip?.status === "TRIP_CODE_VALID" &&
-            <View> 
-              <Text>Start trip</Text>
+              <View>
+              <NotificationCardDriving
+                name={selectedTrip?.riderName}
+                phoneNumber={selectedTrip?.phoneNumber}
+                time={selectedTrip?.time}
+                // onCancelIconPressed = {handleOnCancelIconPressed}
+              />
+              <DoubleLocationCard locationDistance = "10 mins" 
+              fromLocation = {selectedTrip?.fromLocation}
+              toLocation = {selectedTrip?.toLocation}
+              />
+              <Button 
+              label = "Start Trip"
+              poppins style={tw`btn my-3 ${selectedTrip?.isTripEnroute && "bg-[#D5A419]"}`}
+              onPress = {()=> handleTripStarted(selectedTrip)}
+              />
+             
+              {selectedTrip?.isTripEnroute &&
+                <Text poppinsMedium 
+                style={tw`text-blue-500 my-2`}
+                // onPress = {handleReachedRiderDestination}
+                >Arrived Destination?</Text>
+              }
+              
             </View>
+          }
+
+          {selectedTrip?.status === "TRIP_STARTED" &&
+              <View>
+              <NotificationCardDriving
+                name={selectedTrip?.riderName}
+                phoneNumber={selectedTrip?.phoneNumber}
+                time={selectedTrip?.time}
+                // onCancelIconPressed = {handleOnCancelIconPressed}
+              />
+              <DoubleLocationCard locationDistance = "10 mins" 
+              fromLocation = {selectedTrip?.fromLocation}
+              toLocation = {selectedTrip?.toLocation}
+              />
+              <Button 
+              label = "Enroute"
+              poppins style={tw`btn my-3 ${selectedTrip?.isTripEnroute && "bg-[#D5A419]"}`}
+              />
+             
+              {selectedTrip?.isTripEnroute &&
+                <Text poppinsMedium 
+                style={tw`text-blue-500 my-2`}
+                onPress = {()=> handleReachedRiderDestination(selectedTrip)}
+                >Arrived Destination?</Text>
+              }
+              
+            </View>
+          }
+
+          {
+            selectedTrip?.status === "TRIP_ENDED" &&
+            <View>
+              <View style={tw`items-center gap-3`}>
+                <AntDesign name="checkcircle" size={100} color="green" />
+                <Text poppinsMedium>Arrived at Rider's Destination</Text>
+                <Text poppins>{selectedTrip?.fromLocation}</Text>
+              </View>
+              <View>
+                <ActivityIndicator size = "large" style={tw`my-3`} />
+              </View>
+              <Text poppinsMedium style={tw`my-3`} center p1 >Awaiting Payment from Customer...</Text>
+
+              <Text poppinsMedium 
+                center
+                style={tw`text-blue-500 my-2`}
+                onPress = {()=> handlePaidWithCash(selectedTrip)}
+                >Paid with cash?</Text>
+          </View>
           }
         </BottomSheetView>
       </BottomSheet>
