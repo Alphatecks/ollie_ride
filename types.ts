@@ -25,6 +25,7 @@ export interface Timestamp {
     isTripEnroute?: boolean;
     isTripPaid?: boolean;
     paidWithCash?: boolean;
-    isPaymentVerified?: boolean
+    isPaymentVerified?: boolean;
+    showAccessCode: boolean;
   }
   

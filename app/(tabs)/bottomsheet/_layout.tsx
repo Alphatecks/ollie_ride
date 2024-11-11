@@ -62,6 +62,9 @@ export default function Index() {
         setErrorMsg('Permission to access location was denied');
       } else {
         const userLocation = await Location.getCurrentPositionAsync({});
+
+        console.log("User location: ", userLocation)
+
         setLocation(userLocation);
         setRegion({
           latitude: userLocation.coords.latitude,
@@ -117,6 +120,11 @@ export default function Index() {
   }, []);
 
   useEffect(() => {
+
+    if (selectedTrip?.status !== "TRIP_ACCEPTED") {
+      console.log("Trip not started yet!!")
+    }
+
     console.log("Inside second useEffect");
   
     const _getDirections = async () => {
@@ -184,7 +192,8 @@ export default function Index() {
           const selectedTripRef = doc(db, "trips", selectedTrip?.id)
   
           await updateDoc(selectedTripRef, {
-            status: "TRIP_CODE_VALID"
+            status: "TRIP_CODE_VALID",
+            showAccessCode: false
           })
           console.log("Updated Status of status to: TRIP_CODE_VALID")
         }
@@ -222,6 +231,7 @@ export default function Index() {
         isTripPaid: false,
         paidWithCash: false,
         isPaymentVerified: false,
+        showAccessCode: true,
       })
       console.log(`Trip ${selectedTrip.id} was set.`)
     }
@@ -317,10 +327,39 @@ export default function Index() {
 
   }
 
+  const handleOnCancelIconPressed = async (selectedTrip: Trip) => {
+    // If tips is cancled reset back the status and remove driverId, then close bottom sheet
 
+    console.log("Cancel pressed!!")
+
+    const selectedTripRef = doc(db, "trips", selectedTrip?.id)
+
+    try{
+      await updateDoc(selectedTripRef, {
+        status: "TRIP_AVAILABLE",
+        driverId: null,
+        isTripPaid: false,
+        tripAccessCode: null,
+        showAccessCode: false,
+      })
+      console.log("Trip status updated to started.")
+      
+      handleBottomSheetClose()
+
+    }catch(e){
+      console.log(e)
+    }
+
+  }
+
+  const handleOpenOngoingTrip = (selectedTrip: Trip) => {
+    bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
+  }
 
   return (
     <View style={tw`bg-white flex-1`}>
+      
+      {selectedTrip?.status === "TRIP_STARTED" &&
       <View style={tw`bg-green-600 flex-row items-center gap-4`}>
         <View style={tw`gap-2 bg-green-500 p-3 items-center`}
         >
@@ -332,6 +371,14 @@ export default function Index() {
 
         >Turn to the left TB Square. {selectedTrip?.tripAccessCode} </Text>
       </View>
+      }
+
+      {selectedTrip?.showAccessCode &&
+        <View style={tw`py-3 bg-green-500`}>
+          <Text poppinsMedium center style={tw`text-white`}>Access code: {selectedTrip?.tripAccessCode}</Text>
+        </View>
+      
+      }
 
       <MapView
         style={tw`flex-1`}
@@ -351,6 +398,16 @@ export default function Index() {
             <Image source={{ uri: url }} style={tw`h-12 w-12 rounded-full border-2 border-white`} />
           </Marker>
         ))}
+
+        {selectedTrip?.status === "TRIP_ACCEPTED" && 
+         <Marker
+         key={selectedTrip.id}
+         coordinate={{ latitude: location?.coords?.latitude, longitude: location?.coords?.longitude }}
+         title={`Open Ongoing Trip: ${selectedTrip.id}`}
+         description="Click to open up the trip"
+         onPress={() => handleOpenOngoingTrip(selectedTrip)}
+        />
+        }
         
         {/* Render the polyline for the directions */}
         {routeCoordinates.length > 0 && (
@@ -394,7 +451,7 @@ export default function Index() {
 
              />
              <Button label = "Reject" poppins 
-            //  onPress = {handleOnRejectPressed}
+             onPress = {handleBottomSheetClose}
              style={tw`btn flex-grow bg-[#BFC8D4] text-red-300`} color = "#0C3569"/>
            </View>
          </View>
@@ -402,13 +459,13 @@ export default function Index() {
 
           {selectedTrip?.status === "TRIP_ACCEPTED" &&
             <View>
-              <Text>This trip has been accepted {selectedTrip?.id}</Text>
+              {/* <Text>This trip has been accepted {selectedTrip?.id}</Text> */}
               <View>
               <NotificationCardDriving
                 name={selectedTrip?.riderName}
                 phoneNumber={selectedTrip?.phoneNumber}
                 time={selectedTrip?.time}
-                // onCancelIconPressed = {handleOnCancelIconPressed}
+                onCancelIconPressed = { ()=> handleOnCancelIconPressed(selectedTrip)}
               />
               <DoubleLocationCard locationDistance = "10 mins" 
               fromLocation = {selectedTrip?.fromLocation}
