@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import tw from '@/tailwind';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import TripCard from '@/components/history/TripCard';
-import { collection, getDocs } from 'firebase/firestore'; // Firestore methods
+import { collection, getDocs, query, where } from 'firebase/firestore'; // Firestore methods
 import { auth, db } from '@/firebaseConfig'; // Firebase setup
 
 interface TripData {
@@ -25,23 +25,36 @@ const History = () => {
   useEffect(() => {
     const fetchTripHistory = async () => {
       const currentUser = auth.currentUser;
+      
+      const tripsCollection = collection(db, 'trips');
+
+      const tripsQuery = query(
+        tripsCollection,
+        where('status', '==', 'TRIP_ENDED'),
+        where('driverId', '==', currentUser?.uid)
+      );
+
 
       if (currentUser) {
-        const tripHistoryRef = collection(db, 'drivers', currentUser.uid, 'tripHistory');
+
         try {
-          const tripHistorySnapshot = await getDocs(tripHistoryRef);
-          const trips = tripHistorySnapshot.docs.map(doc => ({
+          const querySnapshot = await getDocs(tripsQuery);
+          const endedTrips = querySnapshot.docs.map((doc) => ({
             id: doc.id,
-            rider: doc.data().rider,
-            tripTotal: doc.data().tripTotal,
-            riderImageUrl: doc.data().riderImageUrl,
+            ...doc.data(),
           }));
 
-          setTripData(trips);
+          console.log(endedTrips)
+      
+          console.log('Ended trips for current user:', endedTrips);
+          return endedTrips;
         } catch (error) {
-          console.error('Error fetching trip history:', error);
+          console.error('Error fetching ended trips:', error);
+          throw error;
         }
+
       }
+
       setLoading(false);
     };
 

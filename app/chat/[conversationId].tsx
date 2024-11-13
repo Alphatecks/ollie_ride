@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { GiftedChat, Bubble, Time } from 'react-native-gifted-chat';
 import { collection, query, orderBy, onSnapshot, addDoc } from 'firebase/firestore';
 import { db, auth } from '@/firebaseConfig';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
@@ -55,58 +54,11 @@ const ChatScreen = () => {
     });
   }, [conversationId]);
 
-  // Customizing the bubble
-  const renderCustomBubble = (props) => {
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          right: tw`bg-[#8ED7FF4D] poppins border-[1px] border-ollie-base my-2`,
-          left: tw`bg-gray-200 my-2`,
-        }}
-        textStyle={{
-          right: tw`text-gray-700 poppins`,
-          left: tw`text-gray-800 poppins`,
-        }}
-      />
-    );
-  };
 
-  // Customizing the time
-  const renderCustomTime = (props) => {
-    return (
-      <Time
-        {...props}
-        timeTextStyle={{
-          right: tw`text-sm text-gray-500`,  // Customize sent message time
-          left: tw`text-sm text-gray-500`,   // Customize received message time
-        }}
-      />
-    );
-  };
 
   return (
     <View style={styles.container}>
-      {isLoading ? (
-        // Show loading spinner while messages are being fetched
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
-          <Text poppinsMedium style={styles.loadingText}>Loading messages...</Text>
-        </View>
-      ) : (
-        // Show chat once messages are loaded
-        <GiftedChat
-          messages={messages}
-          renderBubble={renderCustomBubble}
-          renderTime={renderCustomTime}  // Use the custom time renderer
-          onSend={(messages) => onSend(messages)}
-          textInputStyle={tw`poppins border-[0.8px] border-gray-500 px-3 rounded-md`}
-          user={{
-            _id: user.uid, // Current user's ID
-            name: currentUserName, // Current user's name
-          }}
-        />
-      )}
+      <Text>This is the chat ui.</Text>
     </View>
   );
 };
