@@ -22,15 +22,15 @@ const Layout = () => {
 			}} 
 			/>
 			<Stack.Screen name="download_receipt" options = {{ 
-				headerShown: true, 
+				headerShown: false, 
 				title: "Download Receipt",
 			}} 
 			/>
-			<Stack.Screen name="agora" options = {{ 
+			{/* <Stack.Screen name="agora" options = {{ 
 				headerShown: true, 
 				title: "Agora",
 			}} 
-			/>
+			/> */}
 
 {/*			<Stack.Screen name="withdraw_success" options = {{ 
 				headerShown: false, 

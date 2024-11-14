@@ -161,7 +161,7 @@ export default function Index() {
     };
   
     _getDirections();
-  }, [location]); // Dependencies are location and selectedTrip
+  }, [location?.coords.latitude, location?.coords.longitude]); // Dependencies are location and selectedTrip
   
 
   const handleSheetChanges = useCallback((index: number) => {

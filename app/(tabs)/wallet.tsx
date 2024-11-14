@@ -78,7 +78,7 @@ const Wallet = () => {
       <View style={tw`flex-row gap-4 border border-[0.8px] p-4 rounded-md border-blue-900 my-3`}>
         <View style={tw`flex-grow`}>
           <Text poppins style={tw`text-gray-500`}>Wallet Balance</Text>
-          <Text poppinsMedium h2>${totalBalance.toFixed(2)}</Text>
+          <Text poppinsMedium h2 onPress = {()=> router.push("/riding_flow/download_receipt")} >${totalBalance.toFixed(2)}</Text>
           <Text poppins>Today’s earnings: ${userData?.todayEarnings} </Text>
         </View>
         <View style={tw`flex-grow justify-center`}>
@@ -95,7 +95,7 @@ const Wallet = () => {
       {/* Bar Chart and Other Stats */}
       <View style={tw`items-center my-4`}>
         <Text poppins>Dec 18 - 16</Text>
-        <Text poppinsMedium h2 onPress = {()=>router.push("/riding_flow/agora")} >$120.34</Text>
+        <Text poppinsMedium h2 >$120.34</Text>
       </View>
 
       <View style={tw`my-4`}>
