@@ -25,14 +25,20 @@ export {
   ErrorBoundary,
 } from 'expo-router';
 
-// export const unstable_settings = {
-//   // Ensure that reloading on `/modal` keeps a back button present.
-//   initialRouteName: '(tabs)',
-// };
+import {
+  StreamVideo,
+  StreamVideoClient,
+} from '@stream-io/video-react-native-sdk';
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+type User = {
+  id: string;
+  name: string;
+  image: string;
+}
 
 
 // Setup RNUILIB
@@ -66,52 +72,6 @@ Typography.loadTypographies({
   
 const btnStyle = tw`bg-blue-900 rounded-md py-5 my-10 text-white`
 
-// console.log(btnStyle)
-  // Loading custom themes
-// ThemeManager.setComponentTheme('Button', (props, context) => {
-//     if (props.square) {
-//       return {
-//         borderRadius: 0,
-//         padding: 70,
-//         paddingBottom: 12,
-//         width: "100%",
-//         marginVertical: 4,
-//         backgroundColor: props.outline ? '#014D3D' : '#e67e00',
-//       };
-//     }
-//     if (props.rounded) {
-//       return {
-//         borderRadius: 5,
-//         padding: 70,
-//         paddingBottom: 12,
-//         marginVertical: 4,
-//         backgroundColor: props.outline ? '#008955' : '#e67e00',
-//         color: props.outline ? '#008955' : 'white',
-//         borderColor: props.outline ? '#008955' : '',
-//       };
-//     }
-//     if (props.outline) {
-//       return {
-//         borderRadius: 4,
-//         padding: 70,
-//         paddingBottom: 12,
-//         color: '#1D0BBB',
-//         borderColor: '#1D0BBB',
-//       };
-//     }
-//     if (props.default) {
-//       return {
-//         borderRadius: 0,
-//         padding: 70,
-//         paddingBottom: 100,
-//         width: "100%",
-//         height: 100,
-//         marginVertical: 10,
-//         backgroundColor: props.outline ? '#014D3D' : '#e67e00',
-//       }
-//     }
-
-//   });
 
   const TextFieldStyle = tw`border-[1px] border-[#B3B3B3] p-3 w-full rounded-md`;
 
@@ -155,10 +115,22 @@ function RootLayoutNav() {
 
   useDeviceContext(tw); // <- 👋
 
+  
+  const user: User = {
+    id: "User111",
+    name: 'John Malkovich',
+    image: 'https://robohash.org/John',
+  };
+
+  const client = new StreamVideoClient({ apiKey: "kr9y2trtec48", user, token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidXNlcjExMSJ9.xhYqRBeTjA2NUQuh7HOJXsWvNnksC8xOjwDC-qDUEjc" });
+
+
+
 
   return (
     <>
     <GestureHandlerRootView style={{ flex: 1 }}>
+    <StreamVideo client={client}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -171,6 +143,7 @@ function RootLayoutNav() {
         <Stack.Screen name="chat" options={{ headerShown: false }} />
         <Stack.Screen name="bottomsheet" options={{ headerShown: false }} />
       </Stack>
+      </StreamVideo>
       <Toast />
     </ GestureHandlerRootView>
     </>
