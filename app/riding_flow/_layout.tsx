@@ -26,6 +26,11 @@ const Layout = () => {
 				title: "Download Receipt",
 			}} 
 			/>
+			<Stack.Screen name="cancel_ride" options = {{ 
+				headerShown: true, 
+				title: "Cancel Ride",
+			}} 
+			/>
 			{/* <Stack.Screen name="agora" options = {{ 
 				headerShown: true, 
 				title: "Agora",

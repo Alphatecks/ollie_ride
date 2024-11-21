@@ -30,6 +30,33 @@ import {
   StreamVideoClient,
 } from '@stream-io/video-react-native-sdk';
 
+import { StreamCall, User as UserType, Logger  } from '@stream-io/video-react-native-sdk';
+
+
+
+const myLogger: Logger = (logLevel, message, ...args) => {
+  // Do something with the log message
+  console.log(message)
+};
+
+const user: UserType = {
+  id: 'user',
+};
+const apiKey = 'tqe95ajdwr9v';
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidXNlciIsImV4cCI6MTczNTcxOTgwN30.XH1H99QXlUissdCLzzsIRTLMnkdqXaTpzMYuXqB3CCE"
+
+
+// const handleConnect = async() => {
+//   const client = new StreamVideoClient({ apiKey, user, token });
+//   const call = client.call('default', 'my-first-call');
+//   // call.join({ create: true });
+//   await call.getOrCreate();
+
+//   // console.log("Client: ", client)
+// }
+
+// handleConnect()
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -115,17 +142,13 @@ function RootLayoutNav() {
 
   useDeviceContext(tw); // <- 👋
 
-  
-  const user: User = {
-    id: "User111",
-    name: 'John Malkovich',
-    image: 'https://robohash.org/John',
-  };
 
-  const client = new StreamVideoClient({ apiKey: "kr9y2trtec48", user, token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidXNlcjExMSJ9.xhYqRBeTjA2NUQuh7HOJXsWvNnksC8xOjwDC-qDUEjc" });
+  const client = new StreamVideoClient({ apiKey, user, token });
+  const call = client.call('default', 'my-first-call');
+  // call.join({ create: true });
+  call.getOrCreate();
 
-
-
+  console.log("Client: ", client)
 
   return (
     <>
@@ -136,6 +159,7 @@ function RootLayoutNav() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="auth" options={{ headerShown: false }} />
         <Stack.Screen name="riding_flow" options={{ headerShown: false }} />
+        <Stack.Screen name="help_center" options={{ headerShown: false }} />
         <Stack.Screen name="wallet_aux" options={{ headerShown: false }} />
         <Stack.Screen name="document_aux" options={{ headerShown: false }} />
         <Stack.Screen name="payment" options={{ headerShown: false }} />

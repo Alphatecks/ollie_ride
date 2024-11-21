@@ -15,9 +15,12 @@ import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 
 
 
+
 const Index = () => {
 	 const router = useRouter()
    const [errorMsg, setErrorMsg] = useState(null); // Error message for location permission
+
+
 
    useFocusEffect(
      useCallback(() => {

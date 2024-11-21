@@ -197,14 +197,25 @@ const Profile = () => {
 				</View>
 				{/* Profile Options */}
 				<View style={tw`p-3 gap-7`}>
-					<ProfileOptionsCard title = "Payment" href="payment" icon = {<MaterialCommunityIcons name="file-document-outline" size={24} color="black" />}/>
+					<ProfileOptionsCard 
+						title = "Payment" 
+						href="payment" 
+						icon = {<MaterialCommunityIcons 
+						name="file-document-outline" 
+						size={24} color="black" />}
+					/>
 					<ProfileOptionsCard title = "Documents" href = "document_aux" icon = {<FontAwesome5 name="coins" size={24} color="black" />} />
-					<ProfileOptionsCard title = "Settings"  
-					disabled = {true}
-					icon={<MaterialCommunityIcons name="cog-outline" size={24} color="black" />} />
-					<ProfileOptionsCard title = "Help Center" 
-					disabled = {true}
-					icon={<MaterialCommunityIcons name="headset" size={24} color="black" />} />
+					<ProfileOptionsCard 
+						title = "Settings"  
+						disabled = {true}
+						icon={<MaterialCommunityIcons name="cog-outline" size={24} color="black" />} 
+					/>
+					<ProfileOptionsCard 
+						title = "Help Center" 
+						href='help_center'
+						icon={<MaterialCommunityIcons 
+						name="headset" size={24} color="black" />} 
+					/>
 					<ProfileOptionsLogoutCard title = "Log Out"  
 					handlePress = {handleLogout}
 					textStyle = "text-red-500" icon = {<AntDesign name="logout" size={24} color="red" />} 

@@ -5,14 +5,21 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import Text from 'react-native-ui-lib/text';
 import tw from "@/tailwind";
 
+
+type Message = {
+  _id: string,
+  text: string,
+  createdAt: Date
+}
+
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // Loading state
 
   const user = auth.currentUser;
   const chatPartnerId = "1d2oSROhUPgAGizAEnCiSn5G4NL2";
-  const currentUserName = user.displayName;
-  const conversationId = [user.uid, chatPartnerId].sort().join("_");
+  const currentUserName = user?.displayName;
+  const conversationId = [user?.uid, chatPartnerId].sort().join("_");
 
   useEffect(() => {
     setIsLoading(true); // Start loading when fetching messages

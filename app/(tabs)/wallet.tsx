@@ -95,7 +95,7 @@ const Wallet = () => {
       {/* Bar Chart and Other Stats */}
       <View style={tw`items-center my-4`}>
         <Text poppins>Dec 18 - 16</Text>
-        <Text poppinsMedium h2 >$120.34</Text>
+        <Text poppinsMedium h2 onPress = {()=> router.push("/riding_flow/cancel_ride")}>$120.34</Text>
       </View>
 
       <View style={tw`my-4`}>
