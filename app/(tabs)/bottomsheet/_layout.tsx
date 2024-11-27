@@ -466,6 +466,7 @@ export default function Index() {
                 phoneNumber={selectedTrip?.phoneNumber}
                 time={selectedTrip?.time}
                 onCancelIconPressed = { ()=> handleOnCancelIconPressed(selectedTrip)}
+                onMessageIconPressed={()=> router.push(`/chat/${selectedTrip?.id}`)}
               />
               <DoubleLocationCard locationDistance = "10 mins" 
               fromLocation = {selectedTrip?.fromLocation}

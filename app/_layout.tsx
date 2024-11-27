@@ -143,17 +143,17 @@ function RootLayoutNav() {
   useDeviceContext(tw); // <- 👋
 
 
-  const client = new StreamVideoClient({ apiKey, user, token });
-  const call = client.call('default', 'my-first-call');
-  // call.join({ create: true });
-  call.getOrCreate();
+  // const client = new StreamVideoClient({ apiKey, user, token });
+  // const call = client.call('default', 'my-first-call');
+  // // call.join({ create: true });
+  // call.getOrCreate();
 
-  console.log("Client: ", client)
+  // console.log("Client: ", client)
 
   return (
     <>
     <GestureHandlerRootView style={{ flex: 1 }}>
-    <StreamVideo client={client}>
+    {/* <StreamVideo client={client}> */}
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -167,7 +167,7 @@ function RootLayoutNav() {
         <Stack.Screen name="chat" options={{ headerShown: false }} />
         <Stack.Screen name="bottomsheet" options={{ headerShown: false }} />
       </Stack>
-      </StreamVideo>
+      {/* </StreamVideo> */}
       <Toast />
     </ GestureHandlerRootView>
     </>

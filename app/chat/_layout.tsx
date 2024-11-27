@@ -21,7 +21,7 @@ const Layout = () => {
 				headerStyle: {elevation: 0, border: 0},
 			}} 
 			/>	
-			<Stack.Screen name="[conversationId]" options = {{ 
+			<Stack.Screen name="[tripId]" options = {{ 
 				headerShown: true, 
 				title: "Chats",
 				headerStyle: {elevation: 0, border: 0},

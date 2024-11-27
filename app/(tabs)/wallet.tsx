@@ -7,6 +7,7 @@ import { useRouter } from "expo-router";
 import { BarChart } from "react-native-gifted-charts";
 import { doc, getDoc, onSnapshot } from 'firebase/firestore'; // Firestore methods
 import { auth, db } from '@/firebaseConfig'; // Firebase setup
+import { DriverData } from '@/types';
 
 
 console.log(auth.currentUser)
@@ -14,7 +15,7 @@ console.log(auth.currentUser)
 
 const Wallet = () => {
   const [totalBalance, setTotalBalance] = useState<number>(0);
-  const [userData, setUserData] = useState()
+  const [userData, setUserData] = useState<DriverData>()
   const [loading, setLoading] = useState(true); // Set loading to true initially
   const router = useRouter();
 
@@ -31,6 +32,7 @@ const Wallet = () => {
           const userDocSnapshot = await getDoc(userDocRef);
           if (userDocSnapshot.exists()) {
             const _userData = userDocSnapshot.data();
+            console.log(_userData)
             setTotalBalance(_userData.totalBalance || 0);
             setUserData(_userData)
           }
@@ -117,15 +119,15 @@ const Wallet = () => {
       <View style={tw`flex-row gap-4 justify-evenly my-3`}>
         <View>
           <Text poppins style={tw`text-gray-500`}>Total Trips</Text>
-          <Text poppinsMedium>{userData.totalTrips}</Text>
+          <Text poppinsMedium>{userData?.totalTrips}</Text>
         </View>
         <View>
           <Text poppins style={tw`text-gray-500`}>Time Online</Text>
-          <Text poppinsMedium>{userData.totalTimeOnline} Days</Text>
+          <Text poppinsMedium>{userData?.totalTimeOnline} Days</Text>
         </View>
         <View>
           <Text poppins style={tw`text-gray-500`}>Distance Covered</Text>
-          <Text poppinsMedium>{userData.totalDistanceCovered} km</Text>
+          <Text poppinsMedium>{userData?.totalDistanceCovered} km</Text>
         </View>
       </View>
 

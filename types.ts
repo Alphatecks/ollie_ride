@@ -1,4 +1,8 @@
 // types.ts
+
+import { Timestamp as FirebaseTimestamp } from 'firebase/firestore';
+
+
 export interface Timestamp {
     seconds: number;
     nanoseconds: number;
@@ -29,3 +33,35 @@ export interface Timestamp {
     showAccessCode: boolean;
   }
   
+
+  export interface DriverData {
+    acceptanceRate: number;
+    cancellationRate: number;
+    firstName: string;
+    isApproved: boolean;
+    lastName: string;
+    phoneNumber: string;
+    role: string;
+    todayEarnings: number;
+    totalBalance: number;
+    totalDistanceCovered: number;
+    totalTimeOnline: number;
+    totalTimeSpentOnTrip: number;
+    totalTips: number;
+    totalTrips: number;
+  }
+
+export interface Message {
+  id: string;
+  senderId: string;
+  text: string;
+  timestamp: FirebaseTimestamp;
+}
+
+export interface Chat {
+  id: string; // tripId
+  tripId: string;
+  driverId: string;
+  riderId: string;
+  createdAt: FirebaseTimestamp;
+}

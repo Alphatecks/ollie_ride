@@ -34,21 +34,21 @@ export async function getDirections(origin: Coordinates, destination: Coordinate
 // getDirections({}, {})
 
 // Test the getDirections function with mock coordinates
-(async () => {
-    const origin: Coordinates = { latitude: 40.712776, longitude: -74.005974 }; // Example: New York City, NY
-    const destination: Coordinates = { latitude: 34.052235, longitude: -118.243683 }; // Example: Los Angeles, CA
+// (async () => {
+//     const origin: Coordinates = { latitude: 40.712776, longitude: -74.005974 }; // Example: New York City, NY
+//     const destination: Coordinates = { latitude: 34.052235, longitude: -118.243683 }; // Example: Los Angeles, CA
     
-    const directions = await getDirections(origin, destination);
+//     const directions = await getDirections(origin, destination);
     
-    if (directions) {
-      console.log("Distance:", directions.distance);
-      console.log("Duration:", directions.duration);
-      console.log("Steps:", directions.steps);
-      console.log("Polyline:", directions.polyline);
-    } else {
-      console.log("Directions could not be retrieved.");
-    }
-  })();
+//     if (directions) {
+//       console.log("Distance:", directions.distance);
+//       console.log("Duration:", directions.duration);
+//       console.log("Steps:", directions.steps);
+//       console.log("Polyline:", directions.polyline);
+//     } else {
+//       console.log("Directions could not be retrieved.");
+//     }
+//   })();
 
 
 
