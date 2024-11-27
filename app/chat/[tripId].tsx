@@ -20,6 +20,7 @@ const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [messageSending, setMessageSending] = useState(false);
 
   // Fetch the riderId dynamically based on the tripId
   useEffect(() => {
@@ -77,21 +78,23 @@ const ChatScreen = () => {
       return;
     }
   
-    setLoading(true);
     const chatId = `${riderId}_${driverId}`; // Chat document ID
     try {
       // Reference to the subcollection `messages` under the specific chat document
+      setMessageSending(true);
       await addDoc(collection(db, 'chats', chatId, 'messages'), {
         senderId: driverId,
         message: message.trim(),
         timestamp: new Date(),
       });
       setMessage('');
+
+      setMessageSending(false)
     } catch (error) {
       Alert.alert('Error', 'Failed to send message.');
       console.error(error);
     } finally {
-      setLoading(false);
+      setMessageSending(false);
     }
   };
 
@@ -115,7 +118,11 @@ const ChatScreen = () => {
               </View>
             )}
           />
-          <View style={tw`flex-row items-center p-4 bg-white border-t border-gray-200`}>
+          {messageSending && 
+          <ActivityIndicator size={12} />
+          }
+
+          <View style={tw`flex-row items-center p-4 bg-white`}>
             <TextInput
               style={tw`flex-1 mr-2 border border-gray-300 p-2 rounded poppins`}
               value={message}

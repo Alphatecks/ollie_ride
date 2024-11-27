@@ -44,10 +44,11 @@ const History = () => {
             ...doc.data(),
           }));
 
-          console.log(endedTrips)
+          setTripData(endedTrips)
       
           console.log('Ended trips for current user:', endedTrips);
-          return endedTrips;
+          setLoading(false)
+
         } catch (error) {
           console.error('Error fetching ended trips:', error);
           throw error;
@@ -63,10 +64,14 @@ const History = () => {
 
   const renderItem = ({ item }: { item: TripData }) => (
     <TripCard
-      userName={item.rider}
-      tripTotal={item.tripTotal}
+      userName={item.riderName}
+      tripTotal={item.tripAmount}
       userImageUri={item.riderImageUrl}
-      handlePress={() => router.push(`history_aux/${item.id}`)}
+      rating={5.0}
+      handlePress={() => router.push({
+        pathname: `/history_aux/${item.id}`,
+        params: item
+      })}
     />
   );
 
