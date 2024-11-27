@@ -11,6 +11,7 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db, auth } from "@/firebaseConfig"; // Adjust the import based on your setup
 import { NotificationCardMessage } from "@/components/notification/NotificationCardBase";
 import { Trip } from '@/types';
+import { ChatBubble } from '@/components/chat/Chat';
 
 const Notifications = () => {
   const [ongoingTrip, setOngoingTrip] = useState<Trip | []>([]);
@@ -91,6 +92,15 @@ const Notifications = () => {
           </View>
         </View>
       )}
+
+      <View style={tw`my-3 gap-1`}>
+        <View style={tw`flex-row justify-end`}>
+          <View style={tw`border-[0.8px] bg-[#8ED7FF4D] border-ollie-base p-3 rounded-l-lg rounded-br-lg`}>
+            <Text poppins style={tw``}>This is a message.</Text>
+          </View>
+        </View>
+        <Text poppins style={tw`text-right`}>9:67pm</Text>
+      </View>
 
       {/* Notifications */}
       <View style={tw`my-8 gap-4`}>

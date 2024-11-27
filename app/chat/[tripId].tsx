@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, FlatList, Alert } from 'react-native';
+import { View, TextInput, FlatList, Alert, ActivityIndicator } from 'react-native';
+import { Text, TextField } from 'react-native-ui-lib';
 import tw from '@/tailwind';
 import { collection, onSnapshot, addDoc, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '@/firebaseConfig';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { TouchableOpacity } from 'react-native-ui-lib';
 import { Ionicons } from '@expo/vector-icons';
+import { ChatBubble } from '@/components/chat/Chat';
 
 const ChatScreen = () => {
   const router = useRouter();
@@ -24,14 +26,17 @@ const ChatScreen = () => {
     const fetchRiderId = async () => {
       if (!tripId) return;
       try {
+        setLoading(true)
         const tripDoc = await getDoc(doc(db, 'trips', tripId));
         if (tripDoc.exists()) {
           setRiderId(tripDoc.data().riderId);
         } else {
           Alert.alert('Error', 'Trip not found.');
         }
+        setLoading(false)
       } catch (error) {
         Alert.alert('Error', 'Failed to fetch rider ID.');
+        setLoading(false)
       }
     };
     fetchRiderId();
@@ -89,39 +94,44 @@ const ChatScreen = () => {
       setLoading(false);
     }
   };
-  
 
+  
   return (
-    <View style={tw`flex-1 bg-gray-100`}>
-      <FlatList
-        data={messages}
-        keyExtractor={(item) => item.id}
-        inverted // Scroll to the bottom by default
-        renderItem={({ item }) => (
-          <View style={tw`p-4`}>
-            <Text style={tw`text-gray-800 font-bold`}>{item.senderId}</Text>
-            <Text style={tw`text-gray-700`}>{item.message}</Text>
-            <Text style={tw`text-xs text-gray-400`}>
-              {new Date(item.timestamp?.toDate()).toLocaleString()}
-            </Text>
+    <View style={tw`flex-1 bg-white`}>
+      {loading ?
+        <View style={tw`bg-white flex-1 justify-center items-center`}>
+          <ActivityIndicator size={90} color={"green"} />
+        </View>
+        	:
+        <View style={tw`flex-1`}>
+        
+          <FlatList
+            data={messages}
+            keyExtractor={(item) => item.id}
+            inverted // Scroll to the bottom by default
+            renderItem={({ item }) => (
+              <View style={tw`p-2 items-end`}>
+                <ChatBubble message={item?.message} messageDate={new Date(item.timestamp?.toDate()).toLocaleString()} />
+              </View>
+            )}
+          />
+          <View style={tw`flex-row items-center p-4 bg-white border-t border-gray-200`}>
+            <TextInput
+              style={tw`flex-1 mr-2 border border-gray-300 p-2 rounded poppins`}
+              value={message}
+              onChangeText={setMessage}
+              placeholder="Type your message..."
+            />
+            <TouchableOpacity
+              style={tw`p-2 rounded-full bg-blue-500`}
+              onPress={handleSendMessage}
+              disabled={loading}
+            >
+              <Ionicons name="send" size={24} color="white" />
+            </TouchableOpacity>
           </View>
-        )}
-      />
-      <View style={tw`flex-row items-center p-4 bg-white border-t border-gray-200`}>
-        <TextInput
-          style={tw`flex-1 mr-2 border border-gray-300 p-2 rounded`}
-          value={message}
-          onChangeText={setMessage}
-          placeholder="Type your message..."
-        />
-        <TouchableOpacity
-          style={tw`p-2 rounded-full bg-blue-500`}
-          onPress={handleSendMessage}
-          disabled={loading}
-        >
-          <Ionicons name="send" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
+        </View>
+    }
     </View>
   );
 };
