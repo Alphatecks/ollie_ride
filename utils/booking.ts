@@ -190,3 +190,65 @@ export const deleteAllTrips = async () => {
 };
 
 // deleteAllTrips()
+
+
+type NotificationMessage = {
+  driverId: string,
+  title: string,
+  subtitle: string,
+  type: string,
+}
+
+
+export const createNotification = async (driverId: string, title: string, subtitle: string, type: string) => {
+  // This helps in creating notification on notifications -> driverid -> notification -> autogen -> {notificationData}
+  try {
+    const userId = driverId;
+    if (!userId) {
+      console.error("User not authenticated");
+      return;
+    }
+
+    // Reference to the subcollection and document
+    const docRef = doc(collection(db, "notifications", userId, "notification"));
+
+    await setDoc(docRef, {
+      title,
+      subtitle,
+      type
+    });
+
+    console.log("Notification created successfully...");
+  } catch (error) {
+    console.error("Error creating notification:", error);
+  }
+};
+
+
+export const getNotifications = async (driverId: string) => {
+  try {
+    if (!driverId) {
+      console.error("Driver ID is required");
+      return [];
+    }
+
+    // Reference to the driver's notifications subcollection
+    const notificationsRef = collection(db, "notifications", driverId, "notification");
+
+    // Fetch all documents in the notifications subcollection
+    const querySnapshot = await getDocs(notificationsRef);
+
+    // Map the documents to an array of notification objects
+    const notifications = querySnapshot.docs.map((doc) => ({
+      id: doc.id, // Include document ID if needed
+      ...doc.data(),
+    }));
+
+    console.log("Fetched notifications:", notifications);
+    return notifications;
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    return [];
+  }
+};
+

@@ -100,5 +100,7 @@
 #### TODOS
 
 - Fix the Keyboard avoiding view not working on upload_car_details.tsx
-- Refactor upload_car_details.tsx to show images directly from the image picker instead of uploading first to firebase.
-
+- Refactor upload_car_details.tsx to show images directly from the image picker instead of uploading first to firebase. [DONE]
+- Calculate distance from location to destination using google distance calc API for trips in home bottomsheet
+- Implement the rating field to add rating after trip is completed.
+- Add functionality to show badge on notification bottom bar icon if there is a notification.

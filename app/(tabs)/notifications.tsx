@@ -7,49 +7,56 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useRouter } from "expo-router";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, onSnapshot, query, where, doc, addDoc, setDoc } from "firebase/firestore";
 import { db, auth } from "@/firebaseConfig"; // Adjust the import based on your setup
 import { NotificationCardMessage } from "@/components/notification/NotificationCardBase";
 import { Trip } from '@/types';
 import { ChatBubble } from '@/components/chat/Chat';
+import { getNotifications } from '@/utils/booking';
 
 const Notifications = () => {
   const [ongoingTrip, setOngoingTrip] = useState<Trip | []>([]);
   const [notifications, setNotifications] = useState<any[]>([]);
   const router = useRouter();
   const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
+  const driver = auth?.currentUser
+
+
+  // getNotifications(auth?.currentUser?.uid)
+
+  // createNotification(auth?.currentUser?.uid)
 
   useEffect(() => {
-	const currentUserId = auth?.currentUser?.uid; // Replace with the actual logic to get the current user's ID
+    const currentUserId = auth?.currentUser?.uid; // Replace with the actual logic to get the current user's ID
   
-	// Subscribe to trips with specific statuses and the current driver's ID
-	const tripQuery = query(
-	  collection(db, "trips"), 
-	  where("status", "in", ["TRIP_ACCEPTED", "TRIP_STARTED", "TRIP_COMPLETED"]), // Adjust statuses as needed
-	  where("driverId", "==", currentUserId) // Filter by current driver's ID
-	);
+    if (!currentUserId) return;
   
-	const unsubscribe = onSnapshot(tripQuery, (snapshot) => {
-	  const trips = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-	  console.log("Trps: ", trips)
-	  setOngoingTrip(trips?.length > 0 ? trips[0] : []); // Assuming one ongoing trip at a time
-	});
+    // Subscribe to trips
+    const tripQuery = query(
+      collection(db, "trips"),
+      where("status", "in", ["TRIP_ACCEPTED", "TRIP_STARTED", "TRIP_COMPLETED"]),
+      where("driverId", "==", currentUserId)
+    );
   
-	return () => unsubscribe(); // Cleanup subscription
-  }, []);
+    const tripUnsubscribe = onSnapshot(tripQuery, (snapshot) => {
+      const trips = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setOngoingTrip(trips?.length > 0 ? trips[0] : []); // Assuming one ongoing trip at a time
+    });
   
-
-  useEffect(() => {
     // Subscribe to notifications
-    const notificationsQuery = collection(db, "notifications"); // Adjust the collection name
-    const unsubscribe = onSnapshot(notificationsQuery, (snapshot) => {
-      const fetchedNotifications = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const notificationsQuery = collection(db, "notifications", currentUserId, "notification");
+    const notificationsUnsubscribe = onSnapshot(notificationsQuery, (snapshot) => {
+      const fetchedNotifications = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setNotifications(fetchedNotifications);
     });
-
-    return () => unsubscribe();
+  
+    // Cleanup both subscriptions
+    return () => {
+      tripUnsubscribe();
+      notificationsUnsubscribe();
+    };
   }, []);
+  
 
   return (
     <View style={tw`bg-white flex-1 p-3`}>
@@ -96,13 +103,13 @@ const Notifications = () => {
       {/* Notifications */}
       <View style={tw`my-8 gap-4`}>
         <Text poppinsMedium>Notifications</Text>
-        <View style={tw`p-3`}>
+        <View style={tw`p-3 gap-2`}>
           {notifications.map((notification) => (
             <NotificationCardMessage
               key={notification.id}
-              title={notification.title}
+              title={notification.message}
+              message={notification.subtitle}
               time={notification.time}
-              message={notification.message}
               imageUrl={notification.imageUrl || url}
             />
           ))}

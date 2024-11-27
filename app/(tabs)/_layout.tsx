@@ -13,6 +13,7 @@ import tw from "@/tailwind";
 import { useDeviceContext } from 'twrnc';
 import Text from "react-native-ui-lib/text";
 import Entypo from '@expo/vector-icons/Entypo';
+import { Badge } from 'react-native-ui-lib';
 
 
 export default function TabLayout() {
@@ -100,36 +101,7 @@ export default function TabLayout() {
         }}
       />
 
-     {/* <Tabs.Screen
-        name="stack"
-        options={{
-          title: 'Home',
-          headerShown: true,
-          header: () => {
-            return (
-              <View style={[
-                tw`h-[70px] bg-white items-center`,
-                { paddingTop: insets.top || 10 }
-              ]}>
-                <TouchableOpacity style={tw`${isOnline ? "bg-ollie-base" : "bg-gray-800 opacity-80"} w-30 rounded-full`}
-                  onPress={updateOnlineStatus}>
-                  {isLoading ?
-                    <ActivityIndicator size = "large" color = "white" />
-                    :
-                    <View style={tw`flex-row items-center justify-around`}>
-                      <Text style={tw`text-white p-2`} poppins center>
-                        {isOnline ? "Online" : "Offline"}
-                      </Text>
-                      <Ionicons name="car-sharp" size={24}  style={tw`text-ollie-base bg-white rounded-full`} />
-                    </View>
-                  }
-                </TouchableOpacity>
-              </View>
-            );
-          },
-          tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
-        }}
-      />*/}
+
       <Tabs.Screen
         name="wallet"
         options={{
@@ -143,7 +115,11 @@ export default function TabLayout() {
         options={{
           title: 'History',
           headerShown: true,
-          tabBarIcon: ({ color }) => <MaterialIcons name="history" size={28} color={color} />,
+          tabBarIcon: ({ color }) => 
+            <View>
+              <MaterialIcons name="history" size={28} color={color} />
+            </View>
+          ,
         }}
       />
       <Tabs.Screen
@@ -151,7 +127,12 @@ export default function TabLayout() {
         options={{
           title: 'Notifications',
           headerShown: true,
-          tabBarIcon: ({ color }) => <MaterialIcons name="notifications" size={24} color={color} />,
+          tabBarIcon: ({ color }) => 
+          <View>
+              <Badge backgroundColor='green' size={10}/>
+              <MaterialIcons name="notifications" size={24} color={color} />
+          </View>
+          ,
         }}
       />
       <Tabs.Screen
