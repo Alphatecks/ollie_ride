@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { View, TextInput, Image, ActivityIndicator } from "react-native";
+import { View, TextInput, Image, ActivityIndicator, Alert } from "react-native";
 import Text from 'react-native-ui-lib/text';
 import { TextField } from 'react-native-ui-lib';
 import Button from 'react-native-ui-lib/button';
@@ -11,7 +11,7 @@ import { getNearbyPlaces } from "@/utils/googleAPI";
 import { createTrip, fetchAvailableTrips } from "@/utils/booking";
 import { getDirections } from "@/utils/getDirections"
 
-import Toast from "react-native-toast-message";
+import Toast, { InfoToast } from "react-native-toast-message";
 import { Slot, useRouter } from "expo-router";
 import useTripStore from '@/store/useTripStore';
 import { Trip } from '@/types';
@@ -25,6 +25,10 @@ import NotificationCardBase, { NotificationCardDriving } from "@/components/noti
 import DoubleLocationCard from "@/components/home/DoubleLocationCard";
 import { generateAccessCode } from "@/utils/utils";
 
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import AnimatedIcon from "@/components/general/AnimatedIcon";
+import PulsingCarIcon from "@/components/general/PulseIcon";
+
 
 
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
@@ -36,6 +40,7 @@ export default function Index() {
   const router = useRouter();
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [availableTrips, setAvailableTrips] = useState<Trip[]>([]);
+  const [acceptedTrips, setAcceptedTrips] = useState<Trip[]>([]);
   const [region, setRegion] = useState<Region>({
     latitude: 5.4788823,
     longitude: 7.4309201,
@@ -114,8 +119,33 @@ export default function Index() {
       setAvailableTrips(updatedAvailableTrips);
       console.log('Available trips updated:', updatedAvailableTrips);
     });
+    
+    return () => unsubscribe();
+  }, []);
 
-    // Cleanup listener on unmount
+  useEffect(() => {
+    // Firestore listener for trips with specific statuses
+    const tripsCollection = collection(db, 'trips');
+    const tripsQuery = query(
+      tripsCollection,
+      where('status', 'in', ['TRIP_STARTED', 'TRIP_ACCEPTED']),
+      where("driverId", "==", auth.currentUser?.uid)
+    );
+
+    const unsubscribe = onSnapshot(tripsQuery, (querySnapshot) => {
+      const matchingTrips = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Trip[];
+
+      if (matchingTrips.length > 0) {
+        console.log('Trips with status TRIP_STARTED or TRIP_ACCEPTED:', matchingTrips);
+        setAcceptedTrips(matchingTrips)
+      } else {
+        console.log('No trips with the specified statuses found.');
+      }
+    });
+
     return () => unsubscribe();
   }, []);
 
@@ -208,7 +238,11 @@ export default function Index() {
 
   const handleTripMarkerClicked = (trip: Trip) => {
     // If clicked get the trip id and set it to sellectedTrip
-
+    console.log(acceptedTrips.length, " is already accepted.")
+    if (acceptedTrips?.length > 1) {
+      Alert.alert("Too many trips.", `Please finish the accepted trip with ID:  ${acceptedTrips?.[0].id} before starting a fresh one.`)
+      return
+    }
     setSelectedTrip(trip);
     console.log("Selected Trip:", trip)
     bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
@@ -356,6 +390,15 @@ export default function Index() {
     bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
   }
 
+  const handleMarkerPress = (trip: Trip) => {
+    setSelectedTrip(trip); // Update the selected trip
+    const isSheetOpen = bottomSheetRef.current?.isActive(); // Check if the bottom sheet is open
+    if (!isSheetOpen) {
+      bottomSheetRef.current?.snapToIndex(0); // Open the bottom sheet to the first snap point
+    }
+  };
+  
+
   return (
     <View style={tw`bg-white flex-1`}>
       
@@ -379,6 +422,13 @@ export default function Index() {
         </View>
       
       }
+      {selectedTrip &&
+        <View style={tw`py-3 bg-green-500`}>
+          <FontAwesome name="car" size={24} color="black" />
+        </View>
+      
+      }
+ 
 
       <MapView
         style={tw`flex-1`}
@@ -388,6 +438,7 @@ export default function Index() {
         region={region}
         mapType="standard"
       >
+      
         {Array.isArray(availableTrips) && availableTrips.map((trip) => (
           <Marker
             key={trip.id}
@@ -418,6 +469,10 @@ export default function Index() {
           />
         )}
       </MapView>
+
+      <View style={tw`py-3 absolute top-2 left-3`}>
+          <PulsingCarIcon handlePress={()=> bottomSheetRef.current?.expand()} />
+      </View>
 
       <BottomSheet
         ref={bottomSheetRef}
