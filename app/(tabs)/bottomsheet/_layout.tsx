@@ -50,6 +50,7 @@ export default function Index() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
   const [otp, setOtp] = useState(["", "", "", "", ""]);
+  const [showAccessCodeUI, setShowAccessCodeUI] = useState(false)
   const [routeCoordinates, setRouteCoordinates] = useState<{ latitude: number; longitude: number }[]>([]); // For polyline
 
 
@@ -216,7 +217,6 @@ export default function Index() {
       console.log("OTP as number:", otpAsNumber);
 
       if (otpAsNumber === selectedTrip?.tripAccessCode){
-        console.log("The same")
 
         try{
           const selectedTripRef = doc(db, "trips", selectedTrip?.id)
@@ -226,6 +226,8 @@ export default function Index() {
             showAccessCode: false
           })
           console.log("Updated Status of status to: TRIP_CODE_VALID")
+
+          setShowAccessCodeUI(false)
         }
         catch(e){
           console.log(e)
@@ -242,6 +244,9 @@ export default function Index() {
     if (acceptedTrips?.length > 1) {
       Alert.alert("Too many trips.", `Please finish the accepted trip with ID:  ${acceptedTrips?.[0].id} before starting a fresh one.`)
       return
+    }
+    if(selectedTrip?.status === "TRIP_ACCEPTED" || "TRIP_CODE_VALID"){
+      console.log("Trip accepted already.")
     }
     setSelectedTrip(trip);
     console.log("Selected Trip:", trip)
@@ -268,6 +273,8 @@ export default function Index() {
         showAccessCode: true,
       })
       console.log(`Trip ${selectedTrip.id} was set.`)
+
+      setShowAccessCodeUI(true)
     }
     catch(e){
       console.log(e)
@@ -349,11 +356,10 @@ export default function Index() {
         isTripPaid: true,
         paidWithCash: true,
       })
-      console.log("Trip status updated to started.")
 
       // Push to the Payment verification route
 
-      router.push("/riding_flow/payment_details")
+      router.push({pathname: "/riding_flow/payment_details", params: selectedTrip})
 
     }catch(e){
       console.log(e)
@@ -394,7 +400,7 @@ export default function Index() {
     // If the pulsing car icon is clicked get the accepted trips of a driver and set it to the selected trip
     // Then open up the bottomsheet
     if (acceptedTrips){
-      console.log(acceptedTrips[0])
+      console.log(acceptedTrips)
       setSelectedTrip(acceptedTrips[0])
       bottomSheetRef.current?.expand()
     }
@@ -419,7 +425,7 @@ export default function Index() {
       </View>
       }
 
-      {selectedTrip?.showAccessCode &&
+      {showAccessCodeUI &&
         <View style={tw`py-3 bg-green-500`}>
           <Text poppinsMedium center style={tw`text-white`}>Access code: {selectedTrip?.tripAccessCode}</Text>
         </View>
@@ -570,6 +576,7 @@ export default function Index() {
                 name={selectedTrip?.riderName}
                 phoneNumber={selectedTrip?.phoneNumber}
                 time={selectedTrip?.time}
+                onMessageIconPressed={()=> router.push(`/chat/${selectedTrip?.id}`)}
                 // onCancelIconPressed = {handleOnCancelIconPressed}
               />
               <DoubleLocationCard locationDistance = "10 mins" 
@@ -578,7 +585,7 @@ export default function Index() {
               />
               <Button 
               label = "Start Trip"
-              poppins style={tw`btn my-3 ${selectedTrip?.isTripEnroute && "bg-[#D5A419]"}`}
+              poppins style={tw`btn my-3 ${selectedTrip?.isTripEnroute ? "bg-[#D5A419]" : ""}`}
               onPress = {()=> handleTripStarted(selectedTrip)}
               />
              
@@ -598,6 +605,7 @@ export default function Index() {
                 name={selectedTrip?.riderName}
                 phoneNumber={selectedTrip?.phoneNumber}
                 time={selectedTrip?.time}
+                onMessageIconPressed = {()=> router.push(`/chat/${selectedTrip.id}`)}
                 // onCancelIconPressed = {handleOnCancelIconPressed}
               />
               <DoubleLocationCard locationDistance = "10 mins" 
@@ -609,6 +617,7 @@ export default function Index() {
               poppins style={tw`btn my-3 ${selectedTrip?.isTripEnroute && "bg-[#D5A419]"}`}
               />
              
+              <Text>{selectedTrip?.id}</Text>
               {selectedTrip?.isTripEnroute &&
                 <Text poppinsMedium 
                 style={tw`text-blue-500 my-2`}
