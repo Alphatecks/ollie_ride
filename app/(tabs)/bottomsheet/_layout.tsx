@@ -390,12 +390,15 @@ export default function Index() {
     bottomSheetRef.current?.snapToIndex(0);  // Open the bottom sheet to the first snap point
   }
 
-  const handleMarkerPress = (trip: Trip) => {
-    setSelectedTrip(trip); // Update the selected trip
-    const isSheetOpen = bottomSheetRef.current?.isActive(); // Check if the bottom sheet is open
-    if (!isSheetOpen) {
-      bottomSheetRef.current?.snapToIndex(0); // Open the bottom sheet to the first snap point
+  const handleCarIconPress = () => {
+    // If the pulsing car icon is clicked get the accepted trips of a driver and set it to the selected trip
+    // Then open up the bottomsheet
+    if (acceptedTrips){
+      console.log(acceptedTrips[0])
+      setSelectedTrip(acceptedTrips[0])
+      bottomSheetRef.current?.expand()
     }
+
   };
   
 
@@ -419,12 +422,6 @@ export default function Index() {
       {selectedTrip?.showAccessCode &&
         <View style={tw`py-3 bg-green-500`}>
           <Text poppinsMedium center style={tw`text-white`}>Access code: {selectedTrip?.tripAccessCode}</Text>
-        </View>
-      
-      }
-      {selectedTrip &&
-        <View style={tw`py-3 bg-green-500`}>
-          <FontAwesome name="car" size={24} color="black" />
         </View>
       
       }
@@ -470,8 +467,8 @@ export default function Index() {
         )}
       </MapView>
 
-      <View style={tw`py-3 absolute top-2 left-3`}>
-          <PulsingCarIcon handlePress={()=> bottomSheetRef.current?.expand()} />
+      <View style={tw`py-3 absolute top-20 left-3`}>
+          <PulsingCarIcon handlePress={handleCarIconPress} />
       </View>
 
       <BottomSheet
