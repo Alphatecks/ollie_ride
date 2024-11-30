@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { ScrollView, View } from 'react-native'
 import Text from "react-native-ui-lib/text"
 import tw from "@/tailwind"
@@ -8,15 +8,35 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 import Car from "@/assets/car.svg"
 import NotificationCardBase from '@/components/notification/NotificationCardBase';
-import { auth } from '@/firebaseConfig';
+import { auth, db } from '@/firebaseConfig';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLocalSearchParams } from 'expo-router';
+import { doc, getDoc } from 'firebase/firestore';
+import { Trip } from '@/types';
 
 const DownloadReceipt = () => {
-	const [currentValue, setCurrentValue] = useState<string>('Cash');
-    const [reviewText, setReviewText] = useState<string>('');
+
+    const params = useLocalSearchParams()
+
+    const [trip, setTrip] = useState<Trip>(null)
+
+    console.log(params)
 
     const currentUser = auth.currentUser
+
+    useEffect(()=>{
+        const fetchTripDetails = async() => {
+            const selectedTripRef = doc(db, "trips", params.id)
+            const trip = await getDoc(selectedTripRef)
+            if (trip.exists()){
+                console.log("Trip data: ", trip.data())
+                setTrip(trip.data())
+            }
+        }
+
+        fetchTripDetails()
+    }, [])
 
 	return (
         <SafeAreaView style={tw`bg-white p-3 flex-1 justify-between`}>
@@ -36,7 +56,7 @@ const DownloadReceipt = () => {
                     <View style={tw`flex-row justify-evenly my-3 items-center`}>
                         <View style={tw`gap-2 border-r p-2 pr-3 border-gray-300`}>
                             <Text poppins style={tw`text-xs`}>Earnings</Text>
-                            <Text poppinsMedium>N300</Text>
+                            <Text poppinsMedium>N{trip?.tripAmount}</Text>
                         </View>
                         <View style={tw`gap-2 border-r p-2 pr-3 border-gray-300 items-center`}>
                             <Text poppins style={tw`text-sm`}>Ride Time</Text>
@@ -55,8 +75,8 @@ const DownloadReceipt = () => {
                         <View style={tw`h-3 w-3 bg-ollie-base rounded-full`}></View>
                     </View>
                     <View style={tw`flex-row justify-evenly my-3`}>
-                        <Text poppins style={tw`text-gray-400 flex-1`}>12, Tavern Street, AB Avenue, Ikoyi</Text>
-                        <Text poppins style={tw`text-gray-400 flex-1 text-right`}>12, Tavern Street, AB Avenue, Ikoyi</Text>
+                        <Text poppins style={tw`text-gray-400 flex-1`}>{trip?.fromLocation}</Text>
+                        <Text poppins style={tw`text-gray-400 flex-1 text-right`}>{trip?.toLocation}</Text>
                     </View>
 
                     <View style={tw`gap-2 my-2`}>
@@ -74,7 +94,7 @@ const DownloadReceipt = () => {
                         </View>
                         <View style={tw`flex-row justify-between`}>
                             <Text poppins>Rating</Text>
-                            <Text poppinsMedium>4.0</Text>
+                            <Text poppinsMedium>{trip?.rating}</Text>
                         </View>
                     </View>
                     <View style={tw`items-center`}>
