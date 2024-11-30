@@ -31,6 +31,7 @@ export interface Timestamp {
     paidWithCash?: boolean;
     isPaymentVerified?: boolean;
     showAccessCode: boolean;
+    rating: number;
   }
   
 

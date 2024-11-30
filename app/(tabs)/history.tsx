@@ -8,6 +8,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import TripCard from '@/components/history/TripCard';
 import { collection, getDocs, query, where } from 'firebase/firestore'; // Firestore methods
 import { auth, db } from '@/firebaseConfig'; // Firebase setup
+import { Trip } from '@/types';
 
 interface TripData {
   id: string;
@@ -17,7 +18,7 @@ interface TripData {
 }
 
 const History = () => {
-  const [tripData, setTripData] = useState<TripData[]>([]);
+  const [tripData, setTripData] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -62,12 +63,12 @@ const History = () => {
     fetchTripHistory();
   }, []);
 
-  const renderItem = ({ item }: { item: TripData }) => (
+  const renderItem = ({ item }: { item: Trip }) => (
     <TripCard
       userName={item.riderName}
       tripTotal={item.tripAmount}
       userImageUri={item.riderImageUrl}
-      rating={5.0}
+      rating={item?.rating}
       handlePress={() => router.push({
         pathname: `/history_aux/${item.id}`,
         params: item
