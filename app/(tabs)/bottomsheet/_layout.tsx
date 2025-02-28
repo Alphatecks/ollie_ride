@@ -54,6 +54,7 @@ export default function Index() {
   const [routeCoordinates, setRouteCoordinates] = useState<{ latitude: number; longitude: number }[]>([]); // For polyline
 
 
+
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = ["25%", "50%", "70%", "90%"];
 
@@ -475,6 +476,9 @@ export default function Index() {
 
       <View style={tw`py-3 absolute top-20 left-3`}>
           <PulsingCarIcon handlePress={handleCarIconPress} />
+      </View>
+      <View style={tw`py-3 absolute top-50 left-3`}>
+          <Button label="Go to bottomsheet" onPress={() => {router.push("/bottomsheet2")}} />
       </View>
 
       <BottomSheet

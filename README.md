@@ -104,3 +104,62 @@
 - Calculate distance from location to destination using google distance calc API for trips in home bottomsheet
 - Implement the rating field to add rating after trip is completed.
 - Add functionality to show badge on notification bottom bar icon if there is a notification.
+
+
+
+
+<!-- Use this to detect when a screen is focused best for redirecting if user is authoirsed -->
+
+``` js
+useFocusEffect(
+  useCallback(() => {
+    console.log("Screen is focused!");
+
+    return () => {
+      console.log("Screen lost focus!");
+    };
+  }, [])
+);
+
+```
+
+### To open and close a bottom sheet
+
+```js
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = ["25%", "50%", "70%", "90%"]; // Snap points for the bottom sheet
+
+  // Handle bottom sheet changes (logs the index when the sheet changes position)
+
+	const handleBottomSheetClose = () => {
+		bottomSheetRef.current?.close();
+	};
+	
+   const handleBottomSheetOpen = () => {
+         bottomSheetRef.current?.snapToIndex(0); // Collapse instead of -1
+      };
+
+      // This below is used to determine when the index changes, you know when its closed or not
+      // -1 means its closed 0 and above corresponds to index of ["25%", "50%", "70%", "90%"]
+   const handleSheetChanges = useCallback((index: number) => {
+		console.log('handleSheetChanges', index);
+		if (index === -1){
+		}
+	}, []);
+
+   <BottomSheet
+         ref={bottomSheetRef}
+         onChange={handleSheetChanges}
+         snapPoints={snapPoints}
+         enablePanDownToClose={true}
+         initialSnapIndex={-1}
+         index={-1} 
+      >
+         <BottomSheetView style={tw`p-4`}>
+         <View>    
+               <Slot />
+            </View>
+         </BottomSheetView>
+      </BottomSheet>
+		
+```
