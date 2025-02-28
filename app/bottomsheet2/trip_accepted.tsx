@@ -1,16 +1,16 @@
 // app/trip_available.tsx
 
-import { View, Image, Alert } from "react-native";
+import { View } from "react-native";
 import Text from 'react-native-ui-lib/text';
 import Button from 'react-native-ui-lib/button';
 import tw from "@/tailwind";
 import { Trip } from "@/types";
-import NotificationCardBase from "@/components/notification/NotificationCardBase";
-import DoubleLocationCard from "@/components/home/DoubleLocationCard";
+import { NotificationCardDriving } from "@/components/notification/NotificationCardBase";
 import { doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "@/firebaseConfig";
-import { generateAccessCode } from "@/utils/utils";
+import { generateAccessCode}  from "@/utils/utils";
 import { useRouter } from "expo-router";
+import TimeIndicator from "@/components/home/TimeIndicator";
 
 interface TripAvailableProps {
   trip: Trip;
@@ -46,25 +46,21 @@ const TripAvailable = ({ trip, onClose, onTripAccepted }: TripAvailableProps) =>
   // };
 
   return (
-    <View>
-      <Text>{trip?.id}</Text>
-      <NotificationCardBase
-        key={trip?.id || "1"}
-        name={trip?.riderName || "John Doe"}
-        imageUrl={trip?.riderProfileImage || url}
-        phoneNumber={trip?.phoneNumber || "908739432354"}
-        time={trip?.time || "12:00 PM"}
-      />
-      <DoubleLocationCard
-        locationDistance="10 mins"
-        fromLocation={trip?.fromLocation || "Lagos"}
-        toLocation={trip?.toLocation || "Abuja"}
-      />
-      <Text poppins style={tw`my-4`}>Price Range: N4000 - N5000 </Text>
-      <View style={tw`flex-row gap-2`}>
-        <Button label="Accept" poppins style={tw`btn flex-grow`} />
-        <Button label="Reject" poppins onPress={onClose} style={tw`btn flex-grow bg-[#BFC8D4] text-red-300`} color="#0C3569" />
-      </View>
+    <View style={tw`justify-between gap-20`}>
+		<NotificationCardDriving
+			name={trip?.riderName || "John Doe"}
+			phoneNumber={trip?.phoneNumber || "908739432354"}
+		
+		/>
+		<View style={tw`gap-5`}>
+			<TimeIndicator />
+			
+			<Button label="Navigate To Customer Location" 
+			poppins style={tw`btn flex-grow`}
+			onPress = {()=> router.push("/bottomsheet2/start_trip")}
+			/>
+		</View>
+
     </View>
   );
 }
