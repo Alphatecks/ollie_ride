@@ -74,7 +74,7 @@ const AwaitEmail = () => {
                 <Button 
                     label="Continue" 
                     poppins
-                    onPress={() => router.push("auth/upload_car_details")} 
+                    onPress={() => router.push("/auth/upload_car_details")} 
                     style={tw`btn`}
                     disabled={!emailVerified}  // Disable button if email is not verified
                 />     

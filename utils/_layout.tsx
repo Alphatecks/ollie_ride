@@ -53,12 +53,18 @@ export default function Index() {
   const [showAccessCodeUI, setShowAccessCodeUI] = useState(false)
   const [routeCoordinates, setRouteCoordinates] = useState<{ latitude: number; longitude: number }[]>([]); // For polyline
 
+  const [nearbyPlaces, setNearbyPlaces] = useState()
 
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = ["25%", "50%", "70%", "90%"];
 
+  // const place = getNearbyPlaces(location?.coords.latitude, location?.coords.longitude)
+  // console.log(place)
+
   // const [currentTrip, setCurrentTrip] = useState<Trip>()
+
+  const appLocation = {"coords": {"accuracy": 5, "altitude": 5, "altitudeAccuracy": 0.5, "heading": 0, "latitude": 37.4219983, "longitude": -122.084, "speed": 0}, "mocked": false, "timestamp": 1740827850064}
 
   useEffect(() => {
 
@@ -80,8 +86,9 @@ export default function Index() {
           longitudeDelta: 0.005,
         });
         try {
-          const _availableTrips = await fetchAvailableTrips();
-          setAvailableTrips(_availableTrips);
+          // const _availableTrips = await fetchAvailableTrips();
+          const places = await getNearbyPlaces(location?.coords.latitude, location?.coords.longitude)
+          setAvailableTrips(places);
 
           // console.log("AVAILABLE TRIPS:", _availableTrips)
         } catch (error) {

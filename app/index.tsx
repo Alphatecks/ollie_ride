@@ -48,9 +48,9 @@ const Index = () => {
 
               // Check if the user is approved
               if (userData.isApproved) {
-                router.replace("(tabs)/bottomsheet"); // Redirect to tabs if approved
+                router.replace("/(tabs)/bottomsheet2"); // Redirect to tabs if approved
               } else {
-                router.replace("auth/driver_verification"); // Redirect to awaiting approval screen
+                router.replace("/auth/driver_verification"); // Redirect to awaiting approval screen
               }
             } else {
               console.log("No such document!");

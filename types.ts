@@ -30,8 +30,8 @@ export interface Timestamp {
     isTripPaid?: boolean;
     paidWithCash?: boolean;
     isPaymentVerified?: boolean;
-    showAccessCode: boolean;
-    rating: number;
+    showAccessCode?: boolean;
+    rating?: number;
   }
   
 
@@ -65,4 +65,16 @@ export interface Chat {
   driverId: string;
   riderId: string;
   createdAt: FirebaseTimestamp;
+}
+
+
+export interface Place {
+  id: number;
+  latitude: number;
+  longitude: number;
+  fromLocation: string;
+  toLocation: string;
+  fullName: string;
+  phoneNumber: string;
+  time: string;
 }

@@ -68,7 +68,7 @@ const SignUp = () => {
             await updateProfile(user, { displayName: `${firstName} ${lastName}` })
 
             setLoading(false)
-            router.push("auth/await_email_verification");
+            router.push("/auth/await_email_verification");
 
             // Handle successful sign-up (e.g., navigate to home screen)
         } catch (error) {
@@ -84,7 +84,7 @@ const SignUp = () => {
             <ScrollView showsVerticalScrollIndicator={false} >
                 <View style={tw`mb-4`} >
                     <Text style={tw`text-2xl mb-6`}
-                        onPress={() => router.push("auth/upload_car_details")}
+                        onPress={() => router.push("/auth/upload_car_details")}
                         poppinsMedium >Create an account</Text>
                     <Text poppins style={tw`text-gray-500`} >Lets guide you throught the steps of creating an account on Ollie Ride</Text>
                 </View>
