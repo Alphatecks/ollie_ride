@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, ActivityIndicator } from 'react-native'
 import { Stack, useRouter, Slot, usePathname } from "expo-router"
 import tw from "@/tailwind"
 
@@ -31,22 +31,22 @@ const Layout = () => {
 
 	// console.log(router)
 	
-useEffect(() => {
-	if (pathname === "/bottomsheet2") {
-		// Allow the bottomsheet to render and mount before opening
-		// This is a workaround for the issue where the bottomsheet opens before it is mounted
-		setTimeout(() => {
-			handleBottomSheetOpen();
-			console.log("opened in setTimeout")
-		} , 1000)
+// useEffect(() => {
+// 	if (pathname === "/bottomsheet2") {
+// 		// Allow the bottomsheet to render and mount before opening
+// 		// This is a workaround for the issue where the bottomsheet opens before it is mounted
+// 		setTimeout(() => {
+// 			handleBottomSheetOpen();
+// 			console.log("opened in setTimeout")
+// 		} , 1000)
 
-		console.log("opened in useEffect")
-		console.log("pathname from useEffect: ", pathname)
-	} else {
-		handleBottomSheetClose();
-	}
+// 		console.log("opened in useEffect")
+// 		console.log("pathname from useEffect: ", pathname)
+// 	} else {
+// 		handleBottomSheetClose();
+// 	}
 
-	}, []);
+// 	}, []);
 
  useEffect(() => {
 
@@ -106,8 +106,20 @@ useEffect(() => {
 		bottomSheetRef.current?.snapToIndex(0); // Collapse instead of -1
 	};
 
+	const handleTripMarkerClicked = (trip: Trip) => {
+		handleBottomSheetOpen()
+		console.log("Trip clicked: ", trip)
+	}
+
 	return (
 		<>	
+			{/* Check if availbale trips has been fetched! */}
+			{availableTrips.length < 0 &&
+				<View style={tw`bg-green-300 px-2 py-1 items-center justify-center`}>
+					<Text style={tw`poppins`} >Checking Available Trips in your location...</Text>
+					<ActivityIndicator />
+				</View>
+			}
 			<MapView
 			style={tw`flex-1`}
 			provider={PROVIDER_GOOGLE}
@@ -116,15 +128,15 @@ useEffect(() => {
 			region={region}
 			mapType="standard"
 			>
-				 {Array.isArray(availableTrips) && availableTrips.slice(0, 4).map((trip) => (
-          <Marker
-            key={trip.id}
-            coordinate={{ latitude: trip.latitude, longitude: trip.longitude }}
-            title={`Trip ${trip.id}`}
-            // onPress={() => handleTripMarkerClicked(trip)}
-          >
-            <Image source={{ uri: url }} style={tw`h-12 w-12 rounded-full border-2 border-white`} />
-          </Marker>
+			{Array.isArray(availableTrips) && availableTrips.slice(0, 4).map((trip) => (
+			<Marker
+				key={trip.id}
+				coordinate={{ latitude: trip.latitude, longitude: trip.longitude }}
+				title={`Trip ${trip.id}`}
+				onPress={() => handleTripMarkerClicked(trip)}
+			>
+				<Image source={{ uri: url }} style={tw`h-12 w-12 rounded-full border-2 border-white`} />
+			</Marker>
         ))}
 			</MapView>
 			

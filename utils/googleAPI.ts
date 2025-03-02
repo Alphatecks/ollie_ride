@@ -1,6 +1,8 @@
 import { Trip } from '@/types';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '@/firebaseConfig';
 
 
 const apiKey = 'AIzaSyCwiyu1HxfDQFf5A9U4g_m4YLI21EzVuLg';
@@ -74,7 +76,7 @@ export const getNearbyPlaces2 = async (
   radius: number = 1000,
   placeType?: string
 ) => {
-  await AsyncStorage.clear();
+  // await AsyncStorage.clear();
 
   const cacheKey = `places:${latitude},${longitude},${radius},${placeType || 'all'}`;
 
@@ -85,6 +87,17 @@ export const getNearbyPlaces2 = async (
       const parsedData = JSON.parse(cachedData);
       if (Date.now() - parsedData.timestamp < CACHE_EXPIRATION) {
         console.log('Returning cached data from AsyncStorage');
+        // ---------- UNCOMMENT THE BELOW TO PUSH DATA TO THE FIRESTORE -----------
+        // ------- THIS SHOULD BE DONE ONLY ONCE PLS TO AVOID USELESS DATA IN DB
+        // Push cached data to Firestore
+        // for (const trip of parsedData.data) {
+        //   await addDoc(collection(db, 'trips'), { ...trip, timestamp: Date.now() });
+        // }
+
+        // ---------- UNCOMMENT THE BELOW TO PUSH DATA TO THE FIRESTORE -----------
+
+        console.log("Pushed data to firebase first 4")
+
         return parsedData.data;
       }
     }
