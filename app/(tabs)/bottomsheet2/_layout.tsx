@@ -9,6 +9,9 @@ import * as Location from 'expo-location';
 import { getNearbyPlaces, getNearbyPlaces2 } from "@/utils/googleAPI";
 import { Trip } from '@/types';
 import { Image } from 'react-native-ui-lib';
+import { getDistanceFromLatLonInMeters } from '@/utils/calculations';
+import { collection, doc, onSnapshot, query, where } from 'firebase/firestore';
+import { db } from '@/firebaseConfig';
 
 
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
@@ -31,58 +34,98 @@ const Layout = () => {
 
 	// console.log(router)
 	
-// useEffect(() => {
-// 	if (pathname === "/bottomsheet2") {
-// 		// Allow the bottomsheet to render and mount before opening
-// 		// This is a workaround for the issue where the bottomsheet opens before it is mounted
-// 		setTimeout(() => {
-// 			handleBottomSheetOpen();
-// 			console.log("opened in setTimeout")
-// 		} , 1000)
 
-// 		console.log("opened in useEffect")
-// 		console.log("pathname from useEffect: ", pathname)
-// 	} else {
-// 		handleBottomSheetClose();
-// 	}
 
-// 	}, []);
+//  useEffect(() => {
 
- useEffect(() => {
+// 	console.log("Inside first useEffect...")
 
-	console.log("Inside first useEffect...")
+// 	const fetchLocation = async () => {
+// 	  const { status } = await Location.requestForegroundPermissionsAsync();
+// 	  if (status !== 'granted') {
+// 		console.log('Permission to access location was denied');
+// 	  } else {
+// 		const userLocation = await Location.getCurrentPositionAsync({});
 
-	const fetchLocation = async () => {
-	  const { status } = await Location.requestForegroundPermissionsAsync();
-	  if (status !== 'granted') {
-		console.log('Permission to access location was denied');
-	  } else {
-		const userLocation = await Location.getCurrentPositionAsync({});
+// 		console.log("User location: ", userLocation)
 
-		console.log("User location: ", userLocation)
-
-		setLocation(userLocation);
-		setRegion({
-		  latitude: userLocation.coords.latitude,
-		  longitude: userLocation.coords.longitude,
-		  latitudeDelta: 0.005,
-		  longitudeDelta: 0.005,
-		});
-		try {
-		  // const _availableTrips = await fetchAvailableTrips();
-		  const places = await getNearbyPlaces2(location?.coords.latitude, location?.coords.longitude)
+// 		setLocation(userLocation);
+// 		setRegion({
+// 		  latitude: userLocation.coords.latitude,
+// 		  longitude: userLocation.coords.longitude,
+// 		  latitudeDelta: 0.005,
+// 		  longitudeDelta: 0.005,
+// 		});
+// 		try {
+// 		  // const _availableTrips = await fetchAvailableTrips();
+// 		  const places = await getNearbyPlaces2(location?.coords.latitude, location?.coords.longitude)
 		 
-		//   console.log("Places from useEffect: ", places) 
-		  setAvailableTrips(places ? places : []);
+// 		//   console.log("Places from useEffect: ", places) 
+// 		  setAvailableTrips(places ? places : []);
 
-		  // console.log("AVAILABLE TRIPS:", _availableTrips)
-		} catch (error) {
-		  console.error('Failed to fetch trips:', error);
-		}
+// 		  // console.log("AVAILABLE TRIPS:", _availableTrips)
+// 		} catch (error) {
+// 		  console.error('Failed to fetch trips:', error);
+// 		}
+// 	  }
+// 	};
+
+// 	fetchLocation();
+//   }, []);
+
+useEffect(() => {
+	// Subscribe to trips on firebase and filter by 3km radius
+	const fetchLocationAndSubscribeToTrips = async () => {
+	  const { status } = await Location.requestForegroundPermissionsAsync();
+	  if (status !== "granted") {
+		console.log("Permission to access location was denied");
+		return;
+	  }
+  
+	  const userLocation = await Location.getCurrentPositionAsync({});
+	  setLocation(userLocation);
+	  setRegion({
+		latitude: userLocation.coords.latitude,
+		longitude: userLocation.coords.longitude,
+		latitudeDelta: 0.005,
+		longitudeDelta: 0.005,
+	  });
+  
+	  try {
+		// Reference the "trips" collection where driverId is null
+		const tripsCollection = collection(db, "trips");
+		const q = query(tripsCollection, where("driverId", "==", null));
+  
+		// Real-time listener
+		const unsubscribe = onSnapshot(q, (snapshot) => {
+		  const trips: Trip[] = snapshot.docs.map(doc => ({
+			id: doc.id,
+			...doc.data(),
+		  })) as Trip[];
+  
+		  // Filter trips within 3 km
+		  const nearbyTrips = trips.filter(trip =>
+			getDistanceFromLatLonInMeters(
+			  userLocation.coords.latitude,
+			  userLocation.coords.longitude,
+			  trip.latitude,
+			  trip.longitude
+			) <= 3000
+		  );
+
+		  console.log(nearbyTrips)
+  
+		  setAvailableTrips(nearbyTrips);
+		});
+  
+		// Clean up listener on unmount
+		return () => unsubscribe();
+	  } catch (error) {
+		console.error("Failed to fetch trips:", error);
 	  }
 	};
-
-	fetchLocation();
+  
+	fetchLocationAndSubscribeToTrips();
   }, []);
 
 

@@ -163,3 +163,21 @@ useFocusEffect(
       </BottomSheet>
 		
 ```
+
+
+// useEffect(() => {
+// 	if (pathname === "/bottomsheet2") {
+// 		// Allow the bottomsheet to render and mount before opening
+// 		// This is a workaround for the issue where the bottomsheet opens before it is mounted
+// 		setTimeout(() => {
+// 			handleBottomSheetOpen();
+// 			console.log("opened in setTimeout")
+// 		} , 1000)
+
+// 		console.log("opened in useEffect")
+// 		console.log("pathname from useEffect: ", pathname)
+// 	} else {
+// 		handleBottomSheetClose();
+// 	}
+
+// 	}, []);
