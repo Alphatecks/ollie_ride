@@ -12,6 +12,7 @@ import { Image } from 'react-native-ui-lib';
 import { getDistanceFromLatLonInMeters } from '@/utils/calculations';
 import { collection, doc, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '@/firebaseConfig';
+import { useTripStore } from '@/store/tripStore';
 
 
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
@@ -24,6 +25,9 @@ const Layout = () => {
 	const [location, setLocation] = useState()
 	const [availableTrips, setAvailableTrips] = useState<Trip[]>([]);
 
+
+	const { setSelectedTrip } = useTripStore();
+
 	console.log("pathname: ", pathname)
 	const [region, setRegion] = useState<Region>({
 		latitude: 5.4788823,
@@ -32,46 +36,6 @@ const Layout = () => {
 		longitudeDelta: 0.0121,
 	  });
 
-	// console.log(router)
-	
-
-
-//  useEffect(() => {
-
-// 	console.log("Inside first useEffect...")
-
-// 	const fetchLocation = async () => {
-// 	  const { status } = await Location.requestForegroundPermissionsAsync();
-// 	  if (status !== 'granted') {
-// 		console.log('Permission to access location was denied');
-// 	  } else {
-// 		const userLocation = await Location.getCurrentPositionAsync({});
-
-// 		console.log("User location: ", userLocation)
-
-// 		setLocation(userLocation);
-// 		setRegion({
-// 		  latitude: userLocation.coords.latitude,
-// 		  longitude: userLocation.coords.longitude,
-// 		  latitudeDelta: 0.005,
-// 		  longitudeDelta: 0.005,
-// 		});
-// 		try {
-// 		  // const _availableTrips = await fetchAvailableTrips();
-// 		  const places = await getNearbyPlaces2(location?.coords.latitude, location?.coords.longitude)
-		 
-// 		//   console.log("Places from useEffect: ", places) 
-// 		  setAvailableTrips(places ? places : []);
-
-// 		  // console.log("AVAILABLE TRIPS:", _availableTrips)
-// 		} catch (error) {
-// 		  console.error('Failed to fetch trips:', error);
-// 		}
-// 	  }
-// 	};
-
-// 	fetchLocation();
-//   }, []);
 
 useEffect(() => {
 	// Subscribe to trips on firebase and filter by 3km radius
@@ -99,7 +63,7 @@ useEffect(() => {
 		// Real-time listener
 		const unsubscribe = onSnapshot(q, (snapshot) => {
 		  const trips: Trip[] = snapshot.docs.map(doc => ({
-			id: doc.id,
+			tripId: doc.id,
 			...doc.data(),
 		  })) as Trip[];
   
@@ -150,8 +114,11 @@ useEffect(() => {
 	};
 
 	const handleTripMarkerClicked = (trip: Trip) => {
+		setSelectedTrip(trip);
+
 		handleBottomSheetOpen()
-		console.log("Trip clicked: ", trip)
+		// router.push({pathname: "/b", })
+		console.log("Trip clicked: ", trip.tripId)
 	}
 
 	return (

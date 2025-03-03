@@ -16,6 +16,8 @@ import { useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import TimeIndicator from "@/components/home/TimeIndicator";
 import DoubleAddress from "@/components/home/DoubleAddress";
+import { useTripStore } from "@/store/tripStore";
+
 
 interface TripAvailableProps {
   trip: Trip;
@@ -25,8 +27,18 @@ interface TripAvailableProps {
 
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
 
-const TripAvailable = ({ trip, onClose, onTripAccepted }: TripAvailableProps) => {
+const TripAvailable = () => {
+  
   const router = useRouter();
+
+  const { selectedTrip } = useTripStore();
+
+  console.log("Selected Trip: ", selectedTrip)
+
+  const trip = {}
+  const onClose = () => {
+    
+  }
 
   // const handleTripAccepted = async (selectedTrip: Trip) => {
   //   const tripAccessCode = generateAccessCode();
@@ -55,16 +67,16 @@ const TripAvailable = ({ trip, onClose, onTripAccepted }: TripAvailableProps) =>
       <View style={tw`gap-3`}>
         {/* <Text>{trip?.id}</Text> */}
         <NotificationCardBase
-          key={trip?.id || "1"}
-          name={trip?.riderName || "John Doe"}
-          imageUrl={trip?.riderProfileImage || url}
-          phoneNumber={trip?.phoneNumber || "908739432354"}
-          time={trip?.time || "12:00 PM"}
+          key={selectedTrip?.tripId || "1"}
+          name={selectedTrip?.riderName || "John Doe"}
+          imageUrl={selectedTrip?.riderProfileImage || url}
+          phoneNumber={selectedTrip?.riderPhoneNumber || "908739432354"}
+          time={selectedTrip?.createdAt || "12:00 PM"}
         />
 
-        <DoubleAddress />
+        <DoubleAddress fromLocation={selectedTrip?.fromLocation} toLocation={selectedTrip?.toLocation} />
         
-        <Text poppins style={tw`my-4`}>Price Range: N4000 - N5000 </Text>
+        <Text poppins style={tw`my-4`}>Price Range: ₦{selectedTrip?.tripAmount} </Text>
       </View>
       <View style={tw`flex-row gap-2`}>
         <Button label="Accept" poppins style={tw`btn flex-grow`}

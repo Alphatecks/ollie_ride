@@ -4,11 +4,11 @@ import LocationArrowSVG from "@/assets/locationArrow.svg";
 import tw from '@/tailwind';
 
 interface DoubleAddressProps {
-  fromAddress?: string;
-  toAddress?: string;
+  fromLocation?: string;
+  toLocation?: string;
 }
 
-const DoubleAddress: React.FC<DoubleAddressProps> = ({ fromAddress, toAddress }) => {
+const DoubleAddress: React.FC<DoubleAddressProps> = ({ fromLocation, toLocation }) => {
   return (
     <View style={tw`gap-2`}>
       <View style={tw`flex items-center`}>
@@ -16,10 +16,10 @@ const DoubleAddress: React.FC<DoubleAddressProps> = ({ fromAddress, toAddress })
       </View>
       <View style={tw`flex-row justify-between`}>
         <Text style={tw`text-sm poppins flex-1 text-center`}>
-          {fromAddress || "12, Tavern Street, AB Avenue, Ikoyi"}
+          {fromLocation || "12, Tavern Street, AB Avenue, Ikoyi"}
         </Text>
         <Text style={tw`text-sm poppins flex-1 text-center`}>
-          {toAddress || "12, Tavern Street, AB Avenue, Ikoyi"}
+          {toLocation || "12, Tavern Street, AB Avenue, Ikoyi"}
         </Text>
       </View>
     </View>

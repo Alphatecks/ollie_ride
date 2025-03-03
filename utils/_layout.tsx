@@ -143,7 +143,7 @@ export default function Index() {
 
     const unsubscribe = onSnapshot(tripsQuery, (querySnapshot) => {
       const matchingTrips = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
+        tripId: doc.id,
         ...doc.data(),
       })) as Trip[];
 

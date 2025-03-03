@@ -9,6 +9,7 @@ export interface Timestamp {
   }
   
   export interface Trip {
+    tripId: string;
     createdAt: Timestamp;
     driverId: string | null;
     fromLocation: string;
