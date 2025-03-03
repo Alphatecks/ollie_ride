@@ -5,10 +5,11 @@ import tw from '@/tailwind'
 import { doc, updateDoc } from 'firebase/firestore'
 import { db } from '@/firebaseConfig'
 import { Trip } from '@/types'
+import { useRouter } from 'expo-router'
 
 const Index = () => {
     const [otp, setOtp] = useState(["", "", "", "", ""]);
-    const [showAccessCodeUI, setShowAccessCodeUI] = useState(false)
+    // const [showAccessCodeUI, setShowAccessCodeUI] = useState(false)
     const router = useRouter()
 
     const selectedTrip = {tripAccessCode: 20932}

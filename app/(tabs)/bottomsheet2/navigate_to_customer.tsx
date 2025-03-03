@@ -57,7 +57,7 @@ const TripAvailable = ({ trip, onClose, onTripAccepted }: TripAvailableProps) =>
 			
 			<Button label="Navigate To Customer Location" 
 			poppins style={tw`btn flex-grow`}
-			onPress = {()=> router.push("/bottomsheet2/start_trip")}
+			onPress = {()=> router.push("/bottomsheet2/enter_access_code")}
 			/>
 		</View>
 

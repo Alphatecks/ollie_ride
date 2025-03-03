@@ -1,4 +1,4 @@
-import { Trip } from '@/types';
+import { Trip, TripStatus } from '@/types';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { addDoc, collection } from 'firebase/firestore';
@@ -40,7 +40,7 @@ export const getNearbyPlaces = async (latitude: number, longitude: number, radiu
       longitude: place.geometry.location.lng,
       riderId: `d6ARfL8EWYWldIvSHD7e9Ia5L4u2`,
       riderName: `Sixtus Anyanwu`,
-      status: 'pending', // Example status
+      status: TripStatus.TRIP_AVAILABLE, // Example status
       tripAmount: Math.floor(Math.random() * 5000) + 500, // Random amount between 500 and 5000
       riderPhoneNumber: place.formatted_phone_number || '09010998765',
       riderCurrentLocation: null,
@@ -96,7 +96,7 @@ export const getNearbyPlaces2 = async (
 
         // ---------- UNCOMMENT THE BELOW TO PUSH DATA TO THE FIRESTORE -----------
 
-        console.log("Pushed data to firebase first 4")
+        console.log("Pushed data to firebase.")
 
         return parsedData.data;
       }
@@ -129,7 +129,7 @@ export const getNearbyPlaces2 = async (
       tripAmount: Math.floor(Math.random() * 5000) + 500, // Random amount between 500 and 5000
       riderPhoneNumber: place.formatted_phone_number || '09010998765',
       riderCurrentLocation: null,
-      tripAccessCode: Math.floor(1000 + Math.random() * 9000), // Random 4-digit code
+      tripAccessCode: null, // Random 4-digit code
       tripStartedTime: null,
       tripEndedTime: null,
       isTripEnroute: false,

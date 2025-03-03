@@ -17,7 +17,7 @@ import { useTripStore } from '@/store/tripStore';
 
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
 
-
+// deleteAllTrips().then((res)=> console.log("Deleted!!"))
 
 const Layout = () => {
 	const router = useRouter()
@@ -26,7 +26,9 @@ const Layout = () => {
 	const [availableTrips, setAvailableTrips] = useState<Trip[]>([]);
 
 
-	const { setSelectedTrip } = useTripStore();
+	const { setSelectedTrip, selectedTrip } = useTripStore();
+
+	const tripAccessCode = selectedTrip?.tripAccessCode
 
 	console.log("pathname: ", pathname)
 	const [region, setRegion] = useState<Region>({
@@ -47,6 +49,8 @@ useEffect(() => {
 	  }
   
 	  const userLocation = await Location.getCurrentPositionAsync({});
+	//   ------ UNCOMMENT THIS TO FILL UP THE FIREBASE STORE WITH DUMMY DATA ----
+	//   getNearbyPlaces2(userLocation.coords.latitude, userLocation.coords.longitude)
 	  setLocation(userLocation);
 	  setRegion({
 		latitude: userLocation.coords.latitude,
@@ -130,6 +134,11 @@ useEffect(() => {
 					<ActivityIndicator />
 				</View>
 			}
+			{tripAccessCode &&
+				<View style={tw`bg-green-300 px-2 py-1 items-center justify-center`}>
+					<Text style={tw`poppins`} >Your trip access code: {tripAccessCode} </Text>
+				</View>
+			}
 			<MapView
 			style={tw`flex-1`}
 			provider={PROVIDER_GOOGLE}
@@ -145,7 +154,12 @@ useEffect(() => {
 				title={`Trip ${trip.id}`}
 				onPress={() => handleTripMarkerClicked(trip)}
 			>
-				<Image source={{ uri: url }} style={tw`h-12 w-12 rounded-full border-2 border-white`} />
+				<Image
+					source={{ uri: url, cache: 'only-if-cached' }} 
+					style={tw`h-12 w-12 rounded-full border-2 border-white`} 
+					resizeMode="cover"
+					/>
+				{/* <Image source={{ uri: url }} style={tw`h-12 w-12 rounded-full border-2 border-white`} /> */}
 			</Marker>
         ))}
 			</MapView>

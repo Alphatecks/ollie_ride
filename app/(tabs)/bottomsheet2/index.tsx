@@ -6,17 +6,13 @@ import Button from 'react-native-ui-lib/button';
 import tw from "@/tailwind";
 import { Trip } from "@/types";
 import NotificationCardBase from "@/components/notification/NotificationCardBase";
-import LocationArrowSVG from "@/assets/locationArrow.svg";
-import LeftArrowSVG from "@/assets/ArrowLeft.svg";
-import RightArrowSVG from "@/assets/ArrowRight.svg";
 import { doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "@/firebaseConfig";
 import { generateAccessCode } from "@/utils/utils";
 import { useRouter } from "expo-router";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import TimeIndicator from "@/components/home/TimeIndicator";
 import DoubleAddress from "@/components/home/DoubleAddress";
 import { useTripStore } from "@/store/tripStore";
+import Toast from "react-native-toast-message";
 
 
 interface TripAvailableProps {
@@ -40,27 +36,40 @@ const TripAvailable = () => {
     
   }
 
-  // const handleTripAccepted = async (selectedTrip: Trip) => {
-  //   const tripAccessCode = generateAccessCode();
-  //   const selectedTripRef = doc(db, "trips", selectedTrip?.id);
+  const handleTripAccepted = async (selectedTrip: Trip | null) => {
 
-  //   try {
-  //     await updateDoc(selectedTripRef, {
-  //       status: "TRIP_ACCEPTED",
-  //       driverId: auth?.currentUser?.uid,
-  //       tripAccessCode,
-  //       isTripPaid: false,
-  //       paidWithCash: false,
-  //       isPaymentVerified: false,
-  //       showAccessCode: true,
-  //     });
-  //     console.log(`Trip ${selectedTrip.id} was set.`);
-  //     onTripAccepted(selectedTrip);
-  //   //   router.push("/bottomsheet2/trip_accepted");
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
+    console.log(selectedTrip?.tripId)
+
+    if (!selectedTrip) {
+      Toast.show({type: "error", text1: "You didn't select any trip. "})
+      return;
+    }
+    
+    const tripAccessCode = generateAccessCode();
+    if (tripAccessCode) {
+      Toast.show({type: "success", text1: `Access code ${tripAccessCode}`})
+    }
+
+    const selectedTripRef = doc(db, "trips", selectedTrip?.tripId);
+
+
+
+    // try {
+    //   await updateDoc(selectedTripRef, {
+    //     status: "TRIP_ACCEPTED",
+    //     driverId: auth?.currentUser?.uid,
+    //     tripAccessCode,
+    //     isTripPaid: false,
+    //     paidWithCash: false,
+    //     isPaymentVerified: false,
+    //     showAccessCode: true,
+    //   });
+    //   console.log(`Trip ${selectedTrip.id} was set.`);
+    // //   router.push("/bottomsheet2/trip_accepted");
+    // } catch (e) {
+    //   console.log(e);
+    // }
+  };
 
   return (
     <View style={tw`justify-between gap-10`}>
@@ -80,7 +89,7 @@ const TripAvailable = () => {
       </View>
       <View style={tw`flex-row gap-2`}>
         <Button label="Accept" poppins style={tw`btn flex-grow`}
-        onPress={()=> router.push("/bottomsheet2/trip_accepted")}
+        onPress={()=> handleTripAccepted(selectedTrip)}
         />
         <Button label="Reject" poppins onPress={onClose} style={tw`btn flex-grow bg-[#BFC8D4] text-red-300`} color="#0C3569" />
       </View>

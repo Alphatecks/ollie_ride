@@ -7,8 +7,16 @@ export interface Timestamp {
     seconds: number;
     nanoseconds: number;
   }
-  
-  export interface Trip {
+
+export enum TripStatus {
+  TRIP_ACCEPTED = "TRIP_ACCEPTED",
+  TRIP_STARTED = "TRIP_STARTED",
+  TRIP_ENROUTE = "TRIP_ENROUTE",
+  TRIP_COMPLETED = "TRIP_COMPLETED",
+  TRIP_AVAILABLE = "TRIP_AVAILABLE",
+}
+
+export interface Trip {
     tripId: string;
     createdAt: Timestamp;
     driverId: string | null;
@@ -18,7 +26,7 @@ export interface Timestamp {
     longitude: number;
     riderId: string;
     riderName: string;
-    status: string;
+    status: TripStatus;
     toLocation: string;
     tripAmount: number;
     updatedAt: Timestamp;
