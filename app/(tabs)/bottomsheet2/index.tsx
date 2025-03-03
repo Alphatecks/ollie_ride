@@ -50,9 +50,9 @@ const TripAvailable = () => {
       Toast.show({type: "success", text1: `Access code ${tripAccessCode}`})
     }
 
-    const selectedTripRef = doc(db, "trips", selectedTrip?.tripId);
+    // const selectedTripRef = doc(db, "trips", selectedTrip?.tripId);
 
-
+    router.push("/bottomsheet2/navigate_to_customer");
 
     // try {
     //   await updateDoc(selectedTripRef, {

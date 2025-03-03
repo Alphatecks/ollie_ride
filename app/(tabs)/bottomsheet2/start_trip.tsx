@@ -6,10 +6,12 @@ import { Button } from 'react-native-ui-lib'
 import { useRouter } from 'expo-router'
 import tw from '@/tailwind'
 import DoubleAddress from '@/components/home/DoubleAddress'
+import { useTripStore } from '@/store/tripStore'
 
 const Index = () => {
     const router = useRouter()
-    const selectedTrip = {isTripEnroute: false}
+
+    const {selectedTrip} = useTripStore()
 
     const handleTripStarted = () => {
 
@@ -19,7 +21,7 @@ const Index = () => {
     <View style={tw`gap-10`}>
         <NotificationCardDriving
         name={selectedTrip?.riderName}
-        phoneNumber={selectedTrip?.phoneNumber}
+        phoneNumber={selectedTrip?.riderPhoneNumber}
         time={selectedTrip?.time}
         onMessageIconPressed={()=> router.push(`/chat/${selectedTrip?.id}`)}
         // onCancelIconPressed = {handleOnCancelIconPressed}

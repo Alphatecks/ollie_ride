@@ -26,6 +26,8 @@ const Index = () => {
     
           if (otpAsNumber === selectedTrip?.tripAccessCode){
             console.log("OTP is correct!!")
+
+            router.push("/bottomsheet2/start_trip")
             // try{
             //   const selectedTripRef = doc(db, "trips", selectedTrip?.id)
       
@@ -46,7 +48,7 @@ const Index = () => {
   return (
     <View>
        <View>
-              <Text>You are at the customer location!! {selectedTrip?.id} </Text>
+              <Text style={tw`poppins text-center`}>You are at the customer location!! {selectedTrip?.id} </Text>
               <View style={tw`gap-4`}>
             <Text poppinsMedium h2 center>Enter Access Code</Text>     
             <Text poppins center>We sent a code to the Rider </Text>     
