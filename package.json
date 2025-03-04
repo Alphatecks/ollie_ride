@@ -1,5 +1,5 @@
 {
-  "name": "ollie-ride-driver",
+  "name": "ollie-ride",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {

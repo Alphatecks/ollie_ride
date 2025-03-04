@@ -10,7 +10,6 @@
       "channel": "development",
       "env": {
       "GOOGLE_MAPS_API_KEY": "$GOOGLE_MAPS_API_KEY",
-        // For firebase env
       "apiKey": "$apiKey",
       "authDomain": "$authDomain",
       "projectId": "$projectId",
@@ -18,7 +17,6 @@
       "messagingSenderId": "$messagingSenderId",
       "appId": "$appId",
       "measurementId": "$measurementId",
-      // Firebase ends
       }
     },
     "preview": {
@@ -26,7 +24,6 @@
       "channel": "preview",
       "env": {
       "GOOGLE_MAPS_API_KEY": "$GOOGLE_MAPS_API_KEY",
-      // For firebase env
       "apiKey": "$apiKey",
       "authDomain": "$authDomain",
       "projectId": "$projectId",
@@ -34,7 +31,6 @@
       "messagingSenderId": "$messagingSenderId",
       "appId": "$appId",
       "measurementId": "$measurementId",
-      // Firebase ends
       }
     },
     "production": {
@@ -42,7 +38,6 @@
       "channel": "production",
       "env": {
       "GOOGLE_MAPS_API_KEY": "$GOOGLE_MAPS_API_KEY",
-        // For firebase env
       "apiKey": "$apiKey",
       "authDomain": "$authDomain",
       "projectId": "$projectId",
@@ -50,7 +45,6 @@
       "messagingSenderId": "$messagingSenderId",
       "appId": "$appId",
       "measurementId": "$measurementId",
-      // Firebase ends
       }
     }
   },

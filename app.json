@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Ollie Ride Driver",
-    "slug": "Ollie-Ride-Driver",
+    "name": "Ollie Ride",
+    "slug": "ollie-ride",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -27,7 +27,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.sparklesix.ollieridedriver",
+      "package": "com.sparklesix.ollieride",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyCwiyu1HxfDQFf5A9U4g_m4YLI21EzVuLg"
@@ -86,14 +86,15 @@
         "origin": false
       },
       "eas": {
-        "projectId": "44259f3e-1c7f-4497-b292-5604ba44cd06"
+        "projectId": "b9318fa1-14fe-4d40-95ce-060e81abba7d"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/44259f3e-1c7f-4497-b292-5604ba44cd06"
-    }
+      "url": "https://u.expo.dev/b9318fa1-14fe-4d40-95ce-060e81abba7d"
+    },
+    "owner": "sparklesix"
   }
 }

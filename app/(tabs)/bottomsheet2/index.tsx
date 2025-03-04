@@ -4,7 +4,7 @@ import { View, Image, Alert, Touchable } from "react-native";
 import Text from 'react-native-ui-lib/text';
 import Button from 'react-native-ui-lib/button';
 import tw from "@/tailwind";
-import { Trip } from "@/types";
+import { Trip, TripStatus } from "@/types";
 import NotificationCardBase from "@/components/notification/NotificationCardBase";
 import { doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "@/firebaseConfig";
@@ -27,7 +27,7 @@ const TripAvailable = () => {
   
   const router = useRouter();
 
-  const { selectedTrip } = useTripStore();
+  const { selectedTrip, setSelectedTrip } = useTripStore();
 
   console.log("Selected Trip: ", selectedTrip)
 
@@ -50,25 +50,37 @@ const TripAvailable = () => {
       Toast.show({type: "success", text1: `Access code ${tripAccessCode}`})
     }
 
-    // const selectedTripRef = doc(db, "trips", selectedTrip?.tripId);
+    const selectedTripRef = doc(db, "trips", selectedTrip?.tripId);
 
-    router.push("/bottomsheet2/navigate_to_customer");
+    
+    try {
+      // await updateDoc(selectedTripRef, {
+      //   status: TripStatus.TRIP_ACCEPTED,
+      //   driverId: auth?.currentUser?.uid,
+      //   tripAccessCode,
+      //   isTripPaid: false,
+      //   paidWithCash: false,
+      //   isPaymentVerified: false,
+      //   showAccessCode: true,
+      // });
 
-    // try {
-    //   await updateDoc(selectedTripRef, {
-    //     status: "TRIP_ACCEPTED",
-    //     driverId: auth?.currentUser?.uid,
-    //     tripAccessCode,
-    //     isTripPaid: false,
-    //     paidWithCash: false,
-    //     isPaymentVerified: false,
-    //     showAccessCode: true,
-    //   });
-    //   console.log(`Trip ${selectedTrip.id} was set.`);
-    // //   router.push("/bottomsheet2/trip_accepted");
-    // } catch (e) {
-    //   console.log(e);
-    // }
+      setSelectedTrip({...selectedTrip,
+        status: TripStatus.TRIP_ACCEPTED,
+        driverId: auth?.currentUser?.uid,
+        tripAccessCode,
+        isTripPaid: false,
+        paidWithCash: false,
+        isPaymentVerified: false,
+        showAccessCode: true,
+       })
+
+      console.log(`Trip ${selectedTrip.id} was set.`);
+      console;e.log("New selectedTrip: ", selectedTrip)
+      router.push("/bottomsheet2/navigate_to_customer");
+
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
