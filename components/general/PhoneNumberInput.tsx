@@ -235,15 +235,15 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10,
+    marginVertical: 5,
     width: '100%',
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E0E0E0',
-    borderRadius: 25,
+    borderColor: '#bdbdbd',
+    borderRadius: 10,
     height: 56,
     backgroundColor: '#FFFFFF',
   },

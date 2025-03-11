@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, TextField, Button, Picker, Colors } from 'react-native-ui-lib'
+import { View, Text, TextField, Button, Picker, Colors, Checkbox } from 'react-native-ui-lib'
 import { KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from "react-native"
 
 import tw from "@/tailwind"
@@ -11,6 +11,7 @@ import { db, auth } from "@/firebaseConfig"
 import { AntDesign } from '@expo/vector-icons'
 import GenderPicker from '@/components/general/GenderPicker'
 import PhoneNumberInput from '@/components/general/PhoneNumberInput'
+import Toast from 'react-native-toast-message'
 
 
 
@@ -21,16 +22,11 @@ const SignUp = () => {
     const [loading, setLoading] = useState(false)
 
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
+    const [name, setName] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
     const [error, setError] = useState('')
-
-    const [gender, setGender] = useState("");
-
     const [selectedGender, setSelectedGender] = useState<string | null>(null);
+    const [toggle, setToggle] = useState<boolean>(false)
 
 
     const [countryCode, setCountryCode] = useState('+880');
@@ -49,12 +45,6 @@ const SignUp = () => {
       return true;
     };
   
-    const handleContinue = () => {
-      if (validatePhoneNumber()) {
-        // Handle login/verification logic
-        console.log(`Proceeding with ${countryCode}${phoneNumber}`);
-      }
-    };
   
     const handleCountryChange = (country: { code: string }) => {
       setCountryCode(country.code);
@@ -62,56 +52,16 @@ const SignUp = () => {
       console.log(country)
     };
 
-    // if (auth.currentUser) return router.push("(tabs)")   
-
     const handleSignUp = async () => {
         try {
-            setLoading(true)
-            console.log("Signing up user with details: ", firstName, lastName, email, password, confirmPassword, phoneNumber)
+            // setLoading(true)
+            console.log("Signing up user with details: ", name, email, phoneNumber, selectedGender, countryCode)
 
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;  // Get the registered user object
-
-            const userId = user.uid
-
-            console.log("userID: ", userId, {
-                firstName, lastName, phoneNumber,
-                role: "driver"
-            })
-
-            console.log("Firestore instance:", db);
-
-            await setDoc(doc(db, "drivers", userId), {
-                firstName, lastName, phoneNumber,
-                role: "driver",
-                isApproved: false,
-                totalBalance: 0,
-                todayEarnings: 0,
-                totalTrips: 0,
-                totalTimeOnline: 0,
-                totalDistanceCovered: 0,
-                totalTips: 0,
-                acceptanceRate: 0,
-                cancellationRate: 0,
-                totalTimeSpentOnTrip: 0
-            });
-            // This is where chatGPT write other db sets.
-            console.log("Set the doc of drivers")
-
-            await sendEmailVerification(user)
-
-            console.log("Email code sent... Updating data")
-
-            await updateProfile(user, { displayName: `${firstName} ${lastName}` })
-
-            setLoading(false)
-            router.push("/auth/await_email_verification");
-
-            // Handle successful sign-up (e.g., navigate to home screen)
+           
         } catch (error) {
             setLoading(false)
-            setError(error.message);
-            console.log(error.message);
+            Toast.show({type:"error", text1: `Error: ${error}`})
+            console.log(error);
         }
     };
 
@@ -126,43 +76,25 @@ const SignUp = () => {
         <KeyboardAvoidingView style={tw`bg-white flex-1 p-3`}>
             <ScrollView showsVerticalScrollIndicator={false} >
 
-                <GenderPicker onSelectGender={handleGenderSelect} />
-
-                <PhoneNumberInput
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
-          onChangeCountry={handleCountryChange}
-          defaultCountry="+880"
-          errorMessage={error}
-          isValid={isValid}
-          placeholder="Your mobile number"
-        />
 
 
 
                 <View style={tw`mb-4`} >
                     <Text style={tw`text-2xl mb-6`}
                         onPress={() => router.push("/auth/upload_car_details")}
-                        poppinsMedium >Create an account</Text>
+                        poppinsMedium >Sign up with your email or 
+                    phone number
+                    </Text>
                     <Text poppins style={tw`text-gray-500`} >Lets guide you throught the steps of creating an account on Ollie Ride</Text>
                 </View>
                 <TextField
                     placeholder="First Name"
-                    value={firstName}
-                    onChangeText={setFirstName}
+                    value={name}
+                    onChangeText={setName}
                     rounded
                     poppins
                     style={tw`input`}
                 />
-                <TextField
-                    placeholder="Last Name"
-                    value={lastName}
-                    onChangeText={setLastName}
-                    rounded
-                    poppins
-                    style={tw`input`}
-                />
-                
 
                 <TextField
                     placeholder="Email"
@@ -174,24 +106,33 @@ const SignUp = () => {
                     rounded
                     poppins
                 />
-                <TextField
-                    placeholder="Password"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                    style={tw`input`}
-                    poppins
-                    rounded
+                
+                <PhoneNumberInput
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+                onChangeCountry={handleCountryChange}
+                defaultCountry="+880"
+                errorMessage={error}
+                isValid={isValid}
+                placeholder="Your mobile number"
+                containerStyle={tw`rounded-sm`}
                 />
-                <TextField
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    onChangeText={setConfirmPassword}
-                    secureTextEntry
-                    style={tw`mb-6`}
-                    poppins
-                    rounded
-                />
+                <GenderPicker onSelectGender={handleGenderSelect} />
+
+                <View style={tw`flex-row gap-x-3 my-4`}>
+                    <Checkbox
+                    style={tw`border-gray-300`}
+                    value={toggle} 
+                    onValueChange={() => setToggle(!toggle)}
+                    />
+                    <Text style={tw`flex-1 text-gray-400`} poppinsMedium>
+                    By signing up, you agree to the
+                    <Text style={tw`text-[${Colors.primaryColor}]`}> Terms of service </Text>
+                    and
+                    <Text style={tw`text-[${Colors.primaryColor}]`}> Privacy policy. </Text>
+                    </Text>
+                </View>
+              
                 {loading &&
                     <View style={tw`bg-gray-300 p-2 rounded-md my-2`} >
                         <ActivityIndicator size="large" color="red" />
@@ -203,7 +144,7 @@ const SignUp = () => {
                         poppins
                         onPress={handleSignUp}
                         style={tw`btn`}
-                        disabled={!email || !password || !firstName || !lastName || !confirmPassword || !phoneNumber ? true : false}
+                        disabled={!email || !phoneNumber ? true : false}
                     />
                 }
 

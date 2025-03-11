@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { View, Text, Button, TextField, Colors } from 'react-native-ui-lib';
-import tw from 'twrnc';
+import tw from '@/tailwind';
 import { Link, useRouter } from "expo-router"
 import ButtonLoader from "@/components/general/ButtonLoader"
 
@@ -10,8 +10,6 @@ import { auth, db } from "@/firebaseConfig"
 import { sendPasswordResetEmail } from "firebase/auth";
 
 
-// This will send the psasword to the api to reset password
-// https://api.ollieride.com/src/views/forgot_password.php?action=forgot_password
 const ForgotPassword = () => {
     const [email, setEmail] = useState("")
     const [loading, setLoading] = useState(false)
@@ -36,7 +34,7 @@ const ForgotPassword = () => {
         })
 
          setTimeout(()=>{
-            router.push("auth/sign_in")
+            router.push("/auth/sign_in")
          }, 3000)
 
          setLoading(false)
@@ -60,18 +58,6 @@ const ForgotPassword = () => {
   
     }
 
-        //     Toast.show({
-        //   type: "success",
-        //   text1: "We sent you a reset_code!"
-        // })
-        // router.push({
-        //   pathname: "/auth/reset_password",
-        //   params: { ...postData },
-        // });
-
-    // if (loading){
-    //   return <Loader />
-    // }
 
   return (
     <View style={tw`bg-white flex-1 p-4 pb-20 justify-between`}>
@@ -101,8 +87,8 @@ const ForgotPassword = () => {
         <Button
         label="Reset Password"
         backgroundColor={Colors.primaryColor}
-        style={tw`p-4 mt-4`}
-        rounded
+        style={tw`btn`}
+        
         poppins
         onPress={submitData}
         disabled = {!email ? true : false }

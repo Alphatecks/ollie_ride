@@ -18,6 +18,13 @@ const Layout = () => {
 				headerStyle: {elevation: 0, border: 0},
 			}} 
 				/>
+				
+			<Stack.Screen name="phone_verify" options = {{ 
+				headerShown: true, 
+				title: "Verify Phone",
+			}} 
+				/>
+
 			<Stack.Screen name="sign_in" options = {{ 
 				headerShown: true, 
 				title: "Sign In",
@@ -36,19 +43,8 @@ const Layout = () => {
 				headerStyle: {elevation: 0, border: 0},
 			}} 
 			/>			
-			<Stack.Screen name="upload_car_details" options = {{ 
-				headerShown: true, 
-				title: "Upload Car Details",
-				headerStyle: {elevation: 0, border: 0},
-			}} 
-			/>
-			<Stack.Screen name="driver_verification" options = {{ 
-				headerShown: true, 
-				title: "Driver Verification",
-				headerStyle: {elevation: 0, border: 0},
-			}} 
-			/>
-			<Stack.Screen name="update_profile" options = {{ 
+			
+			<Stack.Screen name="profile" options = {{ 
 				headerShown: true, 
 				title: "Update Profile",
 				headerStyle: {elevation: 0, border: 0},

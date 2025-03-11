@@ -186,4 +186,9 @@ useEffect(() => {
 ```
 
 
+### STYLING WITH TWRNC WITH VANILLA CSS
+```js
+style={tw.style( "poppins", { color: selectedItem ? Colors.black : Colors.grey30 })}
+```
+
 #### NGN ₦₦₦₦₦₦₦₦₦₦₦₦
