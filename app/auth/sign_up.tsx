@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, TextField, Button } from 'react-native-ui-lib'
+import { View, Text, TextField, Button, Picker, Colors } from 'react-native-ui-lib'
 import { KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from "react-native"
 
 import tw from "@/tailwind"
@@ -8,6 +8,8 @@ import { Link, useRouter } from "expo-router"
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth"
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { db, auth } from "@/firebaseConfig"
+import { AntDesign } from '@expo/vector-icons'
+import GenderPicker from '@/components/general/GenderPicker'
 
 
 
@@ -24,6 +26,12 @@ const SignUp = () => {
     const [phoneNumber, setPhoneNumber] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [error, setError] = useState('')
+
+    const [gender, setGender] = useState("");
+
+    const [selectedGender, setSelectedGender] = useState<string | null>(null);
+
+
 
     // if (auth.currentUser) return router.push("(tabs)")   
 
@@ -79,9 +87,21 @@ const SignUp = () => {
     };
 
 
+    const handleGenderSelect = (gender: string) => {
+        setSelectedGender(gender);
+        console.log("Selected Gender:", gender);
+    };
+
+
     return (
         <KeyboardAvoidingView style={tw`bg-white flex-1 p-3`}>
             <ScrollView showsVerticalScrollIndicator={false} >
+
+                <GenderPicker onSelectGender={handleGenderSelect} />
+
+
+
+
                 <View style={tw`mb-4`} >
                     <Text style={tw`text-2xl mb-6`}
                         onPress={() => router.push("/auth/upload_car_details")}

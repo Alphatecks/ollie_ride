@@ -239,3 +239,157 @@ export const ridersData2 = [
   //   toLocation: "UBAKALA JUNCTION, ABA-ENUGU, Port Harcourt Road, Aba",
   // },
 ];
+
+
+
+interface Tab {
+  name: string;
+}
+
+
+const tabs: Tab[] = [{ name: 'Upcoming' }, { name: 'Completed' }, { name: 'Cancelled' }];
+
+
+
+
+
+
+export const phoneInputStyle = {
+ container: {
+        // backgroundColor: '#575757',
+        // borderWidth: 1,
+        // borderStyle: 'solid',
+        // borderColor: '#B3B3B3',
+        // marginVertical: 10,
+      },
+      flagContainer: {
+        borderTopLeftRadius: 7,
+        borderBottomLeftRadius: 7,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        color: "black",
+      },
+      flag: {},
+      caret: {
+        // color: '#F3F3F3',
+        fontSize: 16,
+      },
+      divider: {
+        backgroundColor: '#F3F3F3',
+      },
+      callingCode: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        // color: '#F3F3F3',
+      },
+      input: {
+        color: 'green',
+        padding: 20,
+        fontFamily: "Poppins_400Regular"
+      }    
+};
+
+
+
+export const countriesData = [
+  {
+    countryName: "United States",
+    language: "English",
+    flag: "🇺🇸"
+  },
+  {
+    countryName: "Canada",
+    language: "English, French",
+    flag: "🇨🇦"
+  },
+  {
+    countryName: "Mexico",
+    language: "Spanish",
+    flag: "🇲🇽"
+  },
+  {
+    countryName: "Brazil",
+    language: "Portuguese",
+    flag: "🇧🇷"
+  },
+  {
+    countryName: "Argentina",
+    language: "Spanish",
+    flag: "🇦🇷"
+  },
+  {
+    countryName: "United Kingdom",
+    language: "English",
+    flag: "🇬🇧"
+  },
+  {
+    countryName: "France",
+    language: "French",
+    flag: "🇫🇷"
+  },
+  {
+    countryName: "Germany",
+    language: "German",
+    flag: "🇩🇪"
+  },
+  {
+    countryName: "Italy",
+    language: "Italian",
+    flag: "🇮🇹"
+  },
+  {
+    countryName: "Spain",
+    language: "Spanish",
+    flag: "🇪🇸"
+  },
+  {
+    countryName: "China",
+    language: "Chinese (Mandarin)",
+    flag: "🇨🇳"
+  },
+  {
+    countryName: "India",
+    language: "Hindi, English",
+    flag: "🇮🇳"
+  },
+  {
+    countryName: "Japan",
+    language: "Japanese",
+    flag: "🇯🇵"
+  },
+  {
+    countryName: "Australia",
+    language: "English",
+    flag: "🇦🇺"
+  },
+  {
+    countryName: "South Korea",
+    language: "Korean",
+    flag: "🇰🇷"
+  },
+  {
+    countryName: "South Africa",
+    language: "English, Afrikaans, Zulu, Xhosa",
+    flag: "🇿🇦"
+  },
+  {
+    countryName: "Nigeria",
+    language: "English",
+    flag: "🇳🇬"
+  },
+  {
+    countryName: "Egypt",
+    language: "Arabic",
+    flag: "🇪🇬"
+  },
+  {
+    countryName: "Russia",
+    language: "Russian",
+    flag: "🇷🇺"
+  },
+  {
+    countryName: "Turkey",
+    language: "Turkish",
+    flag: "🇹🇷"
+  }
+];
