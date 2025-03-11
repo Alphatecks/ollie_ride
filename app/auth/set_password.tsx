@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { View, Text, Button, TextField, Colors, TouchableOpacity } from 'react-native-ui-lib';
-import tw from 'twrnc';
+import tw from '@/tailwind';
 import { Ionicons } from '@expo/vector-icons'; // Importing icons from expo-vector-icons
 import { Link, useLocalSearchParams, useRouter } from "expo-router"
 import ButtonLoader from "@/components/general/ButtonLoader"
@@ -94,9 +94,9 @@ const SetPassword = () => {
   return (
     <View style={tw`bg-white flex-1 p-4 pb-20 justify-between`}>
       <View>
-        <Text center style={tw`mb-6`} poppinsMedium h2  >
+        {/* <Text center style={tw`mb-6`} poppinsMedium h2  >
           Set Password
-        </Text>
+        </Text> */}
         <Text center style={tw`mb-6`} poppins>
           Set your password
         </Text>
@@ -136,8 +136,8 @@ const SetPassword = () => {
       <Button
         label="Register"
         backgroundColor={Colors.primaryColor}
-        style={tw`p-4 mt-4`}
-        rounded
+        style={tw`btn p-4 mt-4`}
+        
         poppins
         onPress={submitData}
         disabled={!password || !c_password}

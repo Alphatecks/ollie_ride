@@ -1,7 +1,7 @@
 const tintColorLight = 'purple';
 const tintColorDark = 'purple';
 
-const baseColor = "#fa8a00"
+export const baseColor = "#0C3569"
 
 export default {
   light: {

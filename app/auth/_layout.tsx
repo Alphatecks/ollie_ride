@@ -50,6 +50,12 @@ const Layout = () => {
 				headerStyle: {elevation: 0, border: 0},
 			}} 
 			/>
+			<Stack.Screen name="set_password" options = {{ 
+				headerShown: true, 
+				title: "Set Password",
+				headerStyle: {elevation: 0, border: 0},
+			}} 
+			/>
 		</Stack>
 	)
 }

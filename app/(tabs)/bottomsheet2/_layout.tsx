@@ -8,12 +8,13 @@ import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { getNearbyPlaces, getNearbyPlaces2 } from "@/utils/googleAPI";
 import { Trip } from '@/types';
-import { Image } from 'react-native-ui-lib';
+import { Image, TextField } from 'react-native-ui-lib';
 import { getDistanceFromLatLonInMeters } from '@/utils/calculations';
 import { collection, doc, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '@/firebaseConfig';
 import { useTripStore } from '@/store/tripStore';
-
+import SearchSVG from "@/assets/search.svg"
+import ScheduleSVG from "@/assets/schedule.svg"
 
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
 
@@ -93,7 +94,7 @@ useEffect(() => {
 	  }
 	};
   
-	fetchLocationAndSubscribeToTrips();
+	// fetchLocationAndSubscribeToTrips();
   }, []);
 
 
@@ -139,6 +140,25 @@ useEffect(() => {
 					<Text style={tw`poppins`} >Your trip access code: {tripAccessCode} </Text>
 				</View>
 			}
+
+
+				<View style={tw`absolute top-10 z-2 bg-white px-2 mx-6 rounded-md py-1 left-0 right-0`}>
+					<View style={tw`flex-row items-center p-3 flex-1 gap-2`}>
+						<SearchSVG />
+						<TextField placeholder="Search" style={tw`poppins`} 
+						containerStyle={tw`w-full flex-1`}
+						/>
+					</View>
+				</View>
+
+				<View style={tw`absolute top-30 z-2 bg-white px-2 mx-6 rounded-md py-1 left-0 right-0`}>
+					<View style={tw`flex-row items-center p-3 flex-1 gap-2`}>
+						<ScheduleSVG />
+						<Text style={tw`poppins`}>Ride schedules</Text>
+					</View>
+				</View>
+
+
 			<MapView
 			style={tw`flex-1`}
 			provider={PROVIDER_GOOGLE}

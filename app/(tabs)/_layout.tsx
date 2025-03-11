@@ -14,6 +14,7 @@ import { useDeviceContext } from 'twrnc';
 import Text from "react-native-ui-lib/text";
 import Entypo from '@expo/vector-icons/Entypo';
 import { Badge } from 'react-native-ui-lib';
+import { baseColor } from '@/constants/Colors';
 
 
 export default function TabLayout() {
@@ -61,7 +62,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "blue",
+        tabBarActiveTintColor: baseColor,
         headerShown: false,
         tabBarLabelStyle: { fontFamily: "Poppins_400Regular", fontSize: 12 },
         tabBarStyle: tw`elevation-0 border-t-0 h-14 dark:bg-black`,

@@ -50,7 +50,7 @@ const Index = () => {
               if (userData.isApproved) {
                 router.replace("/(tabs)/bottomsheet2"); // Redirect to tabs if approved
               } else {
-                router.replace("/auth/driver_verification"); // Redirect to awaiting approval screen
+                // router.replace("/auth/driver_verification"); // Redirect to awaiting approval screen
               }
             } else {
               console.log("No such document!");
@@ -73,9 +73,6 @@ const Index = () => {
    );
 
     
-	// useEffect(()=>{
-	// 	if (auth.currentUser) return router.replace("(tabs)")
-	// }, [auth.currentUser])
 
 
 	return (
@@ -83,7 +80,7 @@ const Index = () => {
             <View style={tw`gap-y-8`} >
                 <Welcome width={356} />
                 <View>
-                    <Text h2 poppinsMedium center onPress = {()=> router.push("/onboarding")} >Welcome</Text>
+                    <Text h2 poppinsMedium center onPress = {()=> router.push("/(tabs)/bottomsheet2")} >Welcome</Text>
                     <Text poppinsLight center >Have a better driving experience</Text>
                 </View>
             </View>
