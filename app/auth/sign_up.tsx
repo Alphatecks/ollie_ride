@@ -10,6 +10,7 @@ import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { db, auth } from "@/firebaseConfig"
 import { AntDesign } from '@expo/vector-icons'
 import GenderPicker from '@/components/general/GenderPicker'
+import PhoneNumberInput from '@/components/general/PhoneNumberInput'
 
 
 
@@ -32,6 +33,34 @@ const SignUp = () => {
     const [selectedGender, setSelectedGender] = useState<string | null>(null);
 
 
+    const [countryCode, setCountryCode] = useState('+880');
+    const [isValid, setIsValid] = useState<boolean | undefined>(undefined);
+  
+    const validatePhoneNumber = () => {
+      // Simple validation - you can implement more sophisticated validation
+      if (phoneNumber.length < 6) {
+        setError('Please enter a valid phone number');
+        setIsValid(false);
+        return false;
+      }
+      
+      setError('');
+      setIsValid(true);
+      return true;
+    };
+  
+    const handleContinue = () => {
+      if (validatePhoneNumber()) {
+        // Handle login/verification logic
+        console.log(`Proceeding with ${countryCode}${phoneNumber}`);
+      }
+    };
+  
+    const handleCountryChange = (country: { code: string }) => {
+      setCountryCode(country.code);
+
+      console.log(country)
+    };
 
     // if (auth.currentUser) return router.push("(tabs)")   
 
@@ -99,6 +128,15 @@ const SignUp = () => {
 
                 <GenderPicker onSelectGender={handleGenderSelect} />
 
+                <PhoneNumberInput
+          value={phoneNumber}
+          onChangeText={setPhoneNumber}
+          onChangeCountry={handleCountryChange}
+          defaultCountry="+880"
+          errorMessage={error}
+          isValid={isValid}
+          placeholder="Your mobile number"
+        />
 
 
 
@@ -124,15 +162,7 @@ const SignUp = () => {
                     poppins
                     style={tw`input`}
                 />
-                <TextField
-                    placeholder="Phone Number"
-                    value={phoneNumber}
-                    onChangeText={setPhoneNumber}
-                    keyboardType="numeric"
-                    rounded
-                    poppins
-                    style={tw`input`}
-                />
+                
 
                 <TextField
                     placeholder="Email"
