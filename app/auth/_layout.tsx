@@ -2,13 +2,15 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import { Stack } from "expo-router"
 import tw from "@/tailwind"
+import { AntDesign } from '@expo/vector-icons'
 
 
 const Layout = () => {
 	return (
 		<Stack screenOptions={{ 
-			headerTitleStyle: {fontFamily: "Poppins_400Regular", fontSize: 18},
-			headerTitleAlign: "center"
+			headerTitleStyle: {fontFamily: "Poppins_400Regular", fontSize: 20},
+			headerTitleAlign: "center",
+			headerLeft: ({tintColor}) => (<AntDesign name="left" size={24} color={tintColor} onPress = {()=> router.back()} />)
 		 }} >
 			<Stack.Screen name="sign_up" options = {{ 
 				headerShown: true, 
