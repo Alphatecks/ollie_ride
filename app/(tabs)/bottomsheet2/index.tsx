@@ -13,7 +13,12 @@ import { useRouter } from "expo-router";
 import DoubleAddress from "@/components/home/DoubleAddress";
 import { useTripStore } from "@/store/tripStore";
 import Toast from "react-native-toast-message";
-
+import { TextField } from "react-native-ui-lib";
+import { Feather } from "@expo/vector-icons";
+import TargetSVG from "@/assets/target.svg"
+import MapSVG from "@/assets/Map.svg"
+import RecentPlaces from "@/components/bottomsheet-ui/RecentPlaces";
+import DoubleLocationCard from "@/components/home/DoubleLocationCard";
 
 interface TripAvailableProps {
   trip: Trip;
@@ -33,6 +38,8 @@ const TripAvailable = () => {
 
   const trip = {}
   const onClose = () => {
+
+    router.push("/(tabs)/bottomsheet2/book_ride")
     
   }
 
@@ -84,27 +91,43 @@ const TripAvailable = () => {
   };
 
   return (
-    <View style={tw`justify-between gap-10`}>
-      <View style={tw`gap-3`}>
-        {/* <Text>{trip?.id}</Text> */}
-        <NotificationCardBase
-          key={selectedTrip?.tripId || "1"}
-          name={selectedTrip?.riderName || "John Doe"}
-          imageUrl={selectedTrip?.riderProfileImage || url}
-          phoneNumber={selectedTrip?.riderPhoneNumber || "908739432354"}
-          time={selectedTrip?.createdAt || "12:00 PM"}
-        />
+    <View style={tw`justify-between`}>
 
-        <DoubleAddress fromLocation={selectedTrip?.fromLocation} toLocation={selectedTrip?.toLocation} />
-        
-        <Text poppins style={tw`my-4`}>Price Range: ₦{selectedTrip?.tripAmount} </Text>
+      <View style={tw`gap-2`}>
+        <Text poppinsMedium h2 center style={tw`border-b-[0.5px] border-gray-400`}>
+          Select Address
+        </Text>
+        <View style={tw`border-[0.5px] border-gray-400 px-3 rounded-md mb-3`}>
+          <TextField
+          placeholder="From"
+          style={tw`p-3`}
+          poppins
+          leadingAccessory = {<TargetSVG />}
+          containerStyle={tw`w-full pr-3`}
+          />
+        </View> 
+        <View style={tw`border-[0.5px] border-gray-400 px-3 rounded-md mb-3`}>
+          <TextField
+          placeholder="To"
+          style={tw`p-3`}
+          poppins
+          leadingAccessory = {<MapSVG />}
+          containerStyle={tw`w-full pr-3`}
+          />
+        </View> 
+
+        <Text poppinsMedium p1 >Recent Places</Text>
+
+        <RecentPlaces />
+
+        <DoubleLocationCard />
+
       </View>
-      <View style={tw`flex-row gap-2`}>
-        <Button label="Accept" poppins style={tw`btn flex-grow`}
-        onPress={()=> handleTripAccepted(selectedTrip)}
-        />
-        <Button label="Reject" poppins onPress={onClose} style={tw`btn flex-grow bg-[#BFC8D4] text-red-300`} color="#0C3569" />
-      </View>
+
+      <Button label="Confirm Location" poppins 
+      onPress={onClose}
+      style={tw`btn`} 
+      />
     </View>
   );
 }

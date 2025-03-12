@@ -8,7 +8,7 @@ import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { getNearbyPlaces, getNearbyPlaces2 } from "@/utils/googleAPI";
 import { Trip } from '@/types';
-import { Image, TextField } from 'react-native-ui-lib';
+import { Image, TextField, TouchableOpacity } from 'react-native-ui-lib';
 import { getDistanceFromLatLonInMeters } from '@/utils/calculations';
 import { collection, doc, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '@/firebaseConfig';
@@ -152,10 +152,13 @@ useEffect(() => {
 				</View>
 
 				<View style={tw`absolute top-30 z-2 bg-white px-2 mx-6 rounded-md py-1 left-0 right-0`}>
-					<View style={tw`flex-row items-center p-3 flex-1 gap-2`}>
+					<TouchableOpacity 
+					style={tw`flex-row items-center p-3 flex-1 gap-2`}
+					onPress={handleBottomSheetOpen}
+					>
 						<ScheduleSVG />
 						<Text style={tw`poppins`}>Ride schedules</Text>
-					</View>
+					</TouchableOpacity>
 				</View>
 
 
@@ -190,6 +193,7 @@ useEffect(() => {
 	        snapPoints={snapPoints}
 	        enablePanDownToClose={true}
 	        index={-1} 
+			containerStyle = {tw`z-3`} // Make the bottom sheet show above the absolute contents in the map
 	      >
 	        <BottomSheetView style={tw`px-4 flex-1`}>
 

@@ -16,7 +16,7 @@ const DoubleLocationCard: React.FC<DoubleLocationCardProps> = ({ fromLocation, t
 		return (
 		<View style={tw`w-full p-2 flex-row my-2`}>
 			<View style = {tw`items-center w-6`} >
-				<MaterialCommunityIcons name="map-marker" size={24} color="blue"  />
+				<MaterialCommunityIcons name="map-marker" size={24} color="#BFC8D4"  />
 				<View style={tw`border-dashed border-l-[1.5px] h-[52px] border-blue-600`}></View>
 				<MaterialCommunityIcons name="map-marker" size={24} style={tw`text-ollie-base`} />
 			</View>

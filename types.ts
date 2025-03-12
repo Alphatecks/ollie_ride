@@ -1,7 +1,28 @@
 // types.ts
 
 import { Timestamp as FirebaseTimestamp } from 'firebase/firestore';
+import { ViewStyle } from 'react-native';
 
+
+export interface RideOption {
+  id: string;
+  title: string;
+  description: string;
+  price: string;
+  unit: string;
+  duration: string;
+  selected?: boolean;
+  onPress?: () => void;
+  containerStyle?: ViewStyle;
+  selectedColor?: string;
+  unselectedColor?: string;
+  borderColor?: string;
+  textColor?: string;
+  descriptionColor?: string;
+  priceColor?: string;
+  priceUnitColor?: string;
+  iconColor?: string;
+}
 
 export interface Timestamp {
     seconds: number;
