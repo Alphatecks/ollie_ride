@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import tw from 'twrnc';
+import tw from '@/tailwind';
 import { FlatList } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 interface RideOption {
@@ -49,7 +50,7 @@ const RideOptionCard: React.FC<RideOption> = ({
       case 'economy':
         return <MaterialCommunityIcons name="car-hatchback" size={28} color={iconColor} />;
       case 'premium':
-        return <MaterialCommunityIcons name="car-sedan" size={28} color={iconColor} />;
+        return <MaterialCommunityIcons name="car-limousine" size={28} color={iconColor} />;
       case 'van':
         return <MaterialCommunityIcons name="van-passenger" size={28} color={iconColor} />;
       default:
@@ -61,10 +62,10 @@ const RideOptionCard: React.FC<RideOption> = ({
     <TouchableOpacity
       onPress={onPress}
       style={[
-        tw`p-4 rounded-xl border`,
+        tw`p-2 rounded-xl border`,
         selected ? { borderColor: borderColor, borderWidth: 2 } : { borderColor: '#E5E7EB', borderWidth: 1 },
         { backgroundColor: unselectedColor },
-        tw`w-[109px]`,
+        tw``,
         containerStyle,
       ]}
       activeOpacity={0.7}
@@ -81,14 +82,14 @@ const RideOptionCard: React.FC<RideOption> = ({
         <Text style={[tw`text-sm font-medium mb-2`, { color: textColor }]}>{duration}</Text>
       </View>
       <View style={tw`h-px bg-gray-200 my-2`} />
-      <View style={tw`flex-row justify-between items-center`}>
+      <View style={tw`flex-row justify-between gap-10 items-center`}>
         <View>
           <Text style={[tw`text-sm poppins`, { color: textColor }]}>{title}</Text>
-          <Text style={[tw`text-sm poppins`, { color: descriptionColor }]}>{description}</Text>
+          <Text style={[tw`text-xs poppins`, { color: descriptionColor }]}>{description}</Text>
         </View>
         <View>
-          <Text style={[tw`text-xl font-bold poppins`, { color: priceColor }]}>
-            {price}
+          <Text style={[tw`text-lg poppinsMedium`, { color: priceColor }]}>
+            ₦{price}
             <Text style={[tw`text-base poppins`, { color: priceUnitColor }]}>/{unit}</Text>
           </Text>
         </View>
@@ -105,7 +106,13 @@ interface RideOptionsRowProps {
 
 const RideOptionsRow: React.FC<RideOptionsRowProps> = ({ options, selectedRide, onSelectRide }) => {
   return (
-    <View style={tw`flex-row justify-between w-full gap-3`}>
+    <ScrollView
+        contentContainerStyle={tw`p-2 flex-grow gap-x-4`} 
+        keyboardShouldPersistTaps="handled"
+        horizontal // Enables horizontal scrolling
+        showsHorizontalScrollIndicator={false} // Hides the scrollbar (optional)
+        
+    >
       {options.map((option) => (
         <RideOptionCard
           key={option.id}
@@ -115,9 +122,24 @@ const RideOptionsRow: React.FC<RideOptionsRowProps> = ({ options, selectedRide, 
           containerStyle={tw`flex-1`}
         />
       ))}
-    </View>
+    </ScrollView>
   );
 };
+// const RideOptionsRow: React.FC<RideOptionsRowProps> = ({ options, selectedRide, onSelectRide }) => {
+//   return (
+//     <View style={tw`flex-row justify-between w-full gap-3`}>
+//       {options.map((option) => (
+//         <RideOptionCard
+//           key={option.id}
+//           {...option}
+//           selected={selectedRide === option.id}
+//           onPress={() => onSelectRide(option.id)}
+//           containerStyle={tw`flex-1`}
+//         />
+//       ))}
+//     </View>
+//   );
+// };
 
 
 

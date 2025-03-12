@@ -19,6 +19,7 @@ import TargetSVG from "@/assets/target.svg"
 import MapSVG from "@/assets/Map.svg"
 import RecentPlaces from "@/components/bottomsheet-ui/RecentPlaces";
 import DoubleLocationCard from "@/components/home/DoubleLocationCard";
+import { ScrollView } from "react-native-gesture-handler";
 
 interface TripAvailableProps {
   trip: Trip;
@@ -28,7 +29,7 @@ interface TripAvailableProps {
 
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
 
-const TripAvailable = () => {
+const Index = () => {
   
   const router = useRouter();
 
@@ -91,8 +92,23 @@ const TripAvailable = () => {
   };
 
   return (
-    <View style={tw`justify-between`}>
+    <View style={tw`gap-10`}>
 
+      {/* This shit works when i import scrollview from react-native-gesture-handler but doesnt scroll on other
+        scrollviews!!!
+      */}
+
+      {/* <ScrollView 
+					contentContainerStyle={tw`p-2 bg-red-400 flex-grow`} 
+					keyboardShouldPersistTaps="handled"
+
+				>
+					<Text style={tw`bg-red-100 p-4 my-4`} onPress = {()=> console.log("pressed me")}>Hello there...</Text>
+					<Text style={tw`bg-red-200 p-4 my-4`}>Hello there...</Text>
+					<Text style={tw`bg-red-200 p-4 my-4`}>Hello there...</Text>
+					<Text style={tw`bg-red-200 p-4 my-4`}>Hello there...</Text>
+				</ScrollView> */}
+        
       <View style={tw`gap-2`}>
         <Text poppinsMedium h2 center style={tw`border-b-[0.5px] border-gray-400`}>
           Select Address
@@ -132,4 +148,4 @@ const TripAvailable = () => {
   );
 }
 
-export default TripAvailable;
+export default Index;

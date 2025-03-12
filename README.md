@@ -192,3 +192,41 @@ style={tw.style( "poppins", { color: selectedItem ? Colors.black : Colors.grey30
 ```
 
 #### NGN ₦₦₦₦₦₦₦₦₦₦₦₦
+
+
+### ScrollView Issues
+
+I don't know why importing ScrollView from react-native and trying to render it in bottomsheet doesn't work/
+
+```js
+import { ScrollView } from 'react-native'
+
+<ScrollView 
+   contentContainerStyle={tw`p-2 bg-red-400 flex-grow`} 
+   keyboardShouldPersistTaps="handled"
+
+>
+   <Text style={tw`bg-red-100 p-4 my-4`} onPress = {()=> console.log("pressed me")}>Hello there...</Text>
+   <Text style={tw`bg-red-200 p-4 my-4`}>Hello there...</Text>
+   <Text style={tw`bg-red-200 p-4 my-4`}>Hello there...</Text>
+   <Text style={tw`bg-red-200 p-4 my-4`}>Hello there...</Text>
+</ScrollView> 
+
+```
+
+But import from works on bottomsheet. It scrolls perfectly.
+```js
+import { ScrollView } from "react-native-gesture-handler";
+
+<ScrollView 
+   contentContainerStyle={tw`p-2 bg-red-400 flex-grow`} 
+   keyboardShouldPersistTaps="handled"
+
+>
+   <Text style={tw`bg-red-100 p-4 my-4`} onPress = {()=> console.log("pressed me")}>Hello there...</Text>
+   <Text style={tw`bg-red-200 p-4 my-4`}>Hello there...</Text>
+   <Text style={tw`bg-red-200 p-4 my-4`}>Hello there...</Text>
+   <Text style={tw`bg-red-200 p-4 my-4`}>Hello there...</Text>
+</ScrollView> 
+
+```

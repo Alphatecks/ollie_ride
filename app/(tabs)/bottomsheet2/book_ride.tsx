@@ -1,5 +1,5 @@
 import { View, Text, KeyboardAvoidingView, Platform } from 'react-native'
-import React, { useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import tw from '@/tailwind'
 import RideSelectionCard from '@/components/bottomsheet-ui/RideSelectionCard';
 import { RideOptionsRow } from '@/components/bottomsheet-ui/RideOptionCard';
@@ -9,7 +9,7 @@ import CalendarSVG from "@/assets/calendar.svg"
 import { ExpandableSection } from 'react-native-ui-lib';
 import Accordion from '@/components/bottomsheet-ui/Accordion';
 import { TextInput } from 'react-native-gesture-handler';
-import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 
 const BookRide = () => {
 
@@ -34,14 +34,24 @@ const BookRide = () => {
           unit: 'km',
           duration: '7 min',
           icon: 'briefcase'
+        },
+        {
+          id: 'premium',
+          title: 'Premium',
+          description: '4 seats capacity',
+          price: '$1.5',
+          unit: 'km',
+          duration: '7 min',
+          icon: 'briefcase'
         }
       ];
 
       console.log("selected: ", selectedRide)
 
+
   return (
     <View>
-      <Text style={tw`text-lg poppins text-center`}>Book Ride</Text>
+      <Text style={tw`text-lg poppins text-center my-4`}>Book Ride</Text>
 
         <RideOptionsRow 
           options={rideOptions} 

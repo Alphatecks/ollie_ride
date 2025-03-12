@@ -3,7 +3,7 @@ import { View, Text, ActivityIndicator, KeyboardAvoidingView, Platform } from 'r
 import { Stack, useRouter, Slot, usePathname } from "expo-router"
 import tw from "@/tailwind"
 
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'; // Importing Gorhom Bottom Sheet for the drawer
+import BottomSheet, { BottomSheetScrollView, BottomSheetView } from '@gorhom/bottom-sheet'; // Importing Gorhom Bottom Sheet for the drawer
 import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { getNearbyPlaces, getNearbyPlaces2 } from "@/utils/googleAPI";
@@ -15,6 +15,7 @@ import { db } from '@/firebaseConfig';
 import { useTripStore } from '@/store/tripStore';
 import SearchSVG from "@/assets/search.svg"
 import ScheduleSVG from "@/assets/schedule.svg"
+import { ScrollView } from 'react-native-gesture-handler';
 
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
 
@@ -193,27 +194,17 @@ useEffect(() => {
 	        snapPoints={snapPoints}
 	        enablePanDownToClose={true}
 	        index={-1} 
-			containerStyle = {tw`z-3`} // Make the bottom sheet show above the absolute contents in the map
+			containerStyle = {tw`z-3 flex-1`} // Make the bottom sheet show above the absolute contents in the map
 			keyboardBehavior="interactive"
 			keyboardBlurBehavior="restore"
 			android_keyboardInputMode="adjustResize"  // Add this for Android
-
-			handleComponent={() => (
-				<View style={tw`w-full items-center py-2 bg-white rounded-t-lg`}>
-				  <View style={tw`w-16 h-1 bg-gray-300 rounded-full`} />
-				</View>
-			  )}
-
+			enableDynamicSizing={false}
 	      >
-
-			<KeyboardAvoidingView
-				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-				style={tw`flex-1`}
-			>
-				<BottomSheetView style={tw`px-4 flex-1`}>
+		
+			<BottomSheetView style={tw`px-4 flex-1`}>
 				<Slot />
-				</BottomSheetView>
-			</KeyboardAvoidingView>
+			</BottomSheetView>
+				
 	      </BottomSheet>
 		</>
 	)
