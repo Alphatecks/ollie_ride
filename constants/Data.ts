@@ -393,3 +393,41 @@ export const countriesData = [
     flag: "🇹🇷"
   }
 ];
+
+
+
+export const RepeatOptions = [
+  "Every Monday", "Every Tuesday", "Every Wednesday",
+  "Every Thursday", "Every Friday", "Every Saturday", "Every Sunday"
+];
+
+
+export const rideOptions = [
+  {
+    id: 'economy',
+    title: 'Economy',
+    description: '3 seats capacity',
+    price: '1000',
+    unit: 'km',
+    duration: '5 min',
+    icon: 'file'
+  },
+  {
+    id: 'comfort',
+    title: 'Comfort',
+    description: '4 seats capacity',
+    price: '1000.5',
+    unit: 'km',
+    duration: '7 min',
+    icon: 'briefcase'
+  },
+  {
+    id: 'premium',
+    title: 'Premium',
+    description: '4 seats capacity',
+    price: '1000.5',
+    unit: 'km',
+    duration: '7 min',
+    icon: 'briefcase'
+  }
+];
