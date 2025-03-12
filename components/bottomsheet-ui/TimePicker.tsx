@@ -1,18 +1,26 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
+import { View, Text, TouchableOpacity, Dimensions, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import tw from 'twrnc';
-
 import { ScrollView } from "react-native-gesture-handler";
 
+// Define prop types for ScrollablePicker
+interface ScrollablePickerProps {
+  data: string[];
+  selectedValue: string;
+  onValueChange: (value: string) => void;
+  itemHeight?: number;
+  visibleItems?: number;
+}
 
-const ScrollablePicker = ({ 
+const ScrollablePicker = React.memo(({ 
   data, 
   selectedValue, 
   onValueChange, 
   itemHeight = 40,
   visibleItems = 3 
-}) => {
-  const scrollViewRef = useRef(null);
+}: ScrollablePickerProps) => {
+
+  const scrollViewRef = useRef<ScrollView | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(data.indexOf(selectedValue));
 
   // Ensure the ScrollView initially shows the selected item
@@ -26,21 +34,61 @@ const ScrollablePicker = ({
   }, []);
 
   // Handle value selection
-  const handleValueChange = (value, index) => {
+  // const handleValueChange = (value: string, index: number) => {
+  //   setSelectedIndex(index);
+  //   onValueChange(value);
+    
+  //   // Scroll to keep selected item centered
+  //   if (scrollViewRef.current) {
+  //     scrollViewRef.current.scrollTo({
+  //       y: index * itemHeight,
+  //       animated: true
+  //     });
+  //   }
+  // };
+
+  
+
+  const handleValueChange = useCallback((value: string, index: number) => {
     setSelectedIndex(index);
     onValueChange(value);
     
-    // Scroll to keep selected item centered
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({
         y: index * itemHeight,
         animated: true
       });
     }
-  };
+  }, [onValueChange, itemHeight]);
+
+
+  const renderedItems = useMemo(() => data.map((item, index) => {
+    const isSelected = selectedIndex === index;
+  
+    return (
+      <TouchableOpacity
+        key={`${item}-${index}`}
+        onPress={() => handleValueChange(item, index)}
+        style={[
+          tw`items-center justify-center`,
+          { height: itemHeight }
+        ]}
+      >
+        <Text
+          style={[
+            tw`text-center text-lg`,
+            isSelected ? tw`text-blue-600 font-bold` : tw`text-gray-500`
+          ]}
+        >
+          {item}
+        </Text>
+      </TouchableOpacity>
+    );
+  }), [data, selectedIndex, handleValueChange, itemHeight]);
+  
 
   // When user stops scrolling, snap to the nearest item
-  const handleMomentumScrollEnd = (event) => {
+  const handleMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = event.nativeEvent.contentOffset.y;
     const index = Math.round(offsetY / itemHeight);
     
@@ -51,7 +99,6 @@ const ScrollablePicker = ({
 
   return (
     <View style={tw`overflow-hidden`}>
-      
       <ScrollView
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
@@ -62,45 +109,31 @@ const ScrollablePicker = ({
           paddingVertical: itemHeight * Math.floor(visibleItems / 2)
         })}
         style={tw.style({ height: itemHeight * visibleItems })}
-
         scrollEventThrottle={16}
         contentInset={{ top: 0, bottom: 0 }}
         alwaysBounceVertical={false}
-
-
       >
-        {data.map((item, index) => {
-          const isSelected = selectedIndex === index;
-          
-          return (
-            <TouchableOpacity
-              key={`${item}-${index}`}
-              onPress={() => handleValueChange(item, index)}
-              style={[
-                tw`items-center justify-center`,
-                { height: itemHeight }
-              ]}
-            >
-              <Text
-                style={[
-                  tw`text-center text-lg`,
-                  isSelected ? tw`text-blue-600 font-bold` : tw`text-gray-500`
-                ]}
-              >
-                {item}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
+        {renderedItems}
       </ScrollView>
     </View>
   );
-};
+  
+});
 
-const TimePicker = ({ 
-  initialHour = '03', 
-  initialMinute = '30', 
-  initialPeriod = 'PM',
+// Define prop types for TimePicker
+interface TimePickerProps {
+  initialHour?: string;
+  initialMinute?: string;
+  initialPeriod?: "AM" | "PM";
+  onTimeChange?: (time: { hour: string; minute: string; period: "AM" | "PM" }) => void;
+  itemHeight?: number;
+  visibleItems?: number;
+}
+
+const TimePicker: React.FC<TimePickerProps> = ({ 
+  initialHour = "03", 
+  initialMinute = "30", 
+  initialPeriod = "PM",
   onTimeChange = () => {},
   itemHeight = 40,
   visibleItems = 3
@@ -108,7 +141,7 @@ const TimePicker = ({
   // State for time values
   const [hour, setHour] = useState(initialHour);
   const [minute, setMinute] = useState(initialMinute);
-  const [period, setPeriod] = useState(initialPeriod);
+  const [period, setPeriod] = useState<"AM" | "PM">(initialPeriod);
 
   // Generate time values
   const hours = Array.from({ length: 12 }, (_, i) => 
@@ -119,7 +152,7 @@ const TimePicker = ({
     `${i.toString().padStart(2, '0')}`
   );
   
-  const periods = ['AM', 'PM'];
+  const periods: ("AM" | "PM")[] = ["AM", "PM"];
 
   // Notify parent component when time changes
   useEffect(() => {
@@ -161,7 +194,7 @@ const TimePicker = ({
           <View style={tw`ml-4`}>
             <TouchableOpacity 
               style={tw`border rounded-md border-blue-200 px-3 py-2`}
-              onPress={() => setPeriod(period === 'AM' ? 'PM' : 'AM')}
+              onPress={() => setPeriod(period === "AM" ? "PM" : "AM")}
             >
               <Text style={tw`text-blue-600 font-medium`}>{period}</Text>
             </TouchableOpacity>
