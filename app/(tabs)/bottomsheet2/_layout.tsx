@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react'
-import { View, Text, ActivityIndicator } from 'react-native'
+import { View, Text, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native'
 import { Stack, useRouter, Slot, usePathname } from "expo-router"
 import tw from "@/tailwind"
 
@@ -100,7 +100,7 @@ useEffect(() => {
 
 	  // Bottom sheet reference
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = ["25%", "50%", "70%", "90%"]; // Snap points for the bottom sheet
+  const snapPoints = ["25%", "50%", "70%", "100%"]; // Snap points for the bottom sheet
 
   // Handle bottom sheet changes (logs the index when the sheet changes position)
 	const handleSheetChanges = useCallback((index: number) => {
@@ -194,12 +194,26 @@ useEffect(() => {
 	        enablePanDownToClose={true}
 	        index={-1} 
 			containerStyle = {tw`z-3`} // Make the bottom sheet show above the absolute contents in the map
+			keyboardBehavior="interactive"
+			keyboardBlurBehavior="restore"
+			android_keyboardInputMode="adjustResize"  // Add this for Android
+
+			handleComponent={() => (
+				<View style={tw`w-full items-center py-2 bg-white rounded-t-lg`}>
+				  <View style={tw`w-16 h-1 bg-gray-300 rounded-full`} />
+				</View>
+			  )}
+
 	      >
-	        <BottomSheetView style={tw`px-4 flex-1`}>
 
+			<KeyboardAvoidingView
+				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+				style={tw`flex-1`}
+			>
+				<BottomSheetView style={tw`px-4 flex-1`}>
 				<Slot />
-
-	        </BottomSheetView>
+				</BottomSheetView>
+			</KeyboardAvoidingView>
 	      </BottomSheet>
 		</>
 	)
