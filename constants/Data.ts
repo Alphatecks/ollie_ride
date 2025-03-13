@@ -431,3 +431,6 @@ export const rideOptions = [
     icon: 'briefcase'
   }
 ];
+
+
+export const IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
