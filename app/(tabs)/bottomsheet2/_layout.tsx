@@ -155,7 +155,8 @@ useEffect(() => {
 				<View style={tw`absolute top-30 z-2 bg-white px-2 mx-6 rounded-md py-1 left-0 right-0`}>
 					<TouchableOpacity 
 					style={tw`flex-row items-center p-3 flex-1 gap-2`}
-					onPress={handleBottomSheetOpen}
+					// onPress={handleBottomSheetOpen}
+					onPress={()=> router.push("/payment/add_card")}
 					>
 						<ScheduleSVG />
 						<Text style={tw`poppins`}>Ride schedules</Text>

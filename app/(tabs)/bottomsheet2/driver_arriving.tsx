@@ -49,7 +49,7 @@ const Index = () => {
         <Button outline 
         style={tw`outline rounded-md`}
         label= "Cancel Ride"
-        // onPress = {()=> router.push("/(tabs)/bottomsheet2/driver_arriving")}
+        onPress = {()=> router.push("/(tabs)/bottomsheet2/reached_destination")}
       />
     </View>
   )

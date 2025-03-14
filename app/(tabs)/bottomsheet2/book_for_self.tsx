@@ -25,26 +25,25 @@ const Index = () => {
             </View>
 
             <RadioGroup initialValue={currentContact} onValueChange={setCurrentContact}>
-
-            <View style={tw`flex-row gap-6`}>
-                <RadioButton value={'yes'} color={baseColor}  />
-                <View style={tw`flex-row gap-2 items-center justify-center`}>
-                    <UserSVG />
-                    <Text style={tw`poppinsMedium`}>Self</Text>
+                <View style={tw`flex-row gap-6`}>
+                    <RadioButton value={'yes'} color={baseColor}  />
+                    <View style={tw`flex-row gap-2 items-center justify-center`}>
+                        <UserSVG />
+                        <Text style={tw`poppinsMedium`}>Self</Text>
+                    </View>
                 </View>
-            </View>
 
-            <View style={tw`flex-row gap-6 mt-4`}>
-                <RadioButton value={'no'} color={baseColor} />
-                <View style={tw`flex-row gap-2 items-center justify-center`}>
-                    <Avatar label={"TI"} backgroundColor={baseColor} labelColor='white' size={28} />                
-                    <Text style={tw`poppinsMedium`}>John Nweke</Text>
-                    <View style={tw`w-[1] h-[1] bg-ollie-base rounded-full`}></View>
-                    <Text style={tw`poppinsMedium text-gray-500`}>0802945900</Text>
+                <View style={tw`flex-row gap-6 mt-4`}>
+                    <RadioButton value={'no'} color={baseColor} />
+                    <View style={tw`flex-row gap-2 items-center justify-center`}>
+                        <Avatar label={"TI"} backgroundColor={baseColor} labelColor='white' size={28} />                
+                        <Text style={tw`poppinsMedium`}>John Nweke</Text>
+                        <View style={tw`w-[1] h-[1] bg-ollie-base rounded-full`}></View>
+                        <Text style={tw`poppinsMedium text-gray-500`}>0802945900</Text>
+                    </View>
+                
                 </View>
-            
-            </View>
-        </RadioGroup>
+            </RadioGroup>
 
             <View style={tw`flex-row gap-2 my-4 items-center ml-12`}>
                 <ContactSVG />
