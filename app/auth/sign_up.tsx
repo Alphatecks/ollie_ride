@@ -5,10 +5,6 @@ import { KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from "r
 import tw from "@/tailwind"
 import { Link, useRouter } from "expo-router"
 
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth"
-import { getFirestore, doc, setDoc } from "firebase/firestore";
-import { db, auth } from "@/firebaseConfig"
-import { AntDesign } from '@expo/vector-icons'
 import GenderPicker from '@/components/general/GenderPicker'
 import PhoneNumberInput from '@/components/general/PhoneNumberInput'
 import Toast from 'react-native-toast-message'
@@ -32,38 +28,62 @@ const SignUp = () => {
     const [countryCode, setCountryCode] = useState('+880');
     const [isValid, setIsValid] = useState<boolean | undefined>(undefined);
   
-    const validatePhoneNumber = () => {
+    const validatePhoneNumber = (phoneNumber: string) => {
       // Simple validation - you can implement more sophisticated validation
-      if (phoneNumber.length < 6) {
-        setError('Please enter a valid phone number');
+      if (phoneNumber.length < 11) {
+        Toast.show({type:"error", text1: `${phoneNumber} is invalid`})
+        
         setIsValid(false);
         return false;
       }
       
-      setError('');
       setIsValid(true);
       return true;
     };
+
+    
   
-  
+
     const handleCountryChange = (country: { code: string }) => {
       setCountryCode(country.code);
 
       console.log(country)
     };
 
-    const handleSignUp = async () => {
-        try {
-            // setLoading(true)
-            console.log("Signing up user with details: ", name, email, phoneNumber, selectedGender, countryCode)
-
-           
-        } catch (error) {
-            setLoading(false)
-            Toast.show({type:"error", text1: `Error: ${error}`})
-            console.log(error);
+    const handleSignUp = () => {
+        if (!email || !phoneNumber || !selectedGender || !name) {
+          Toast.show({
+            type: "error",
+            text1: "All fields are required!",
+          });
+          return;
         }
-    };
+        
+        const isPhoneValid = validatePhoneNumber(phoneNumber)
+        
+        if (!isPhoneValid) {
+            Toast.show({
+                type: "error",
+                text1: "Phone number is not valid"
+            });
+            
+            return
+            
+        }
+
+        console.log(email, phoneNumber, selectedGender, name )
+
+        // router.push({
+        //   pathname: "/auth/set_password",
+        //   params: {
+        //     email,
+        //     phoneNumber,
+        //     gender: selectedGender,
+        //     full_name: name,
+        //   },
+        // });
+      };
+      
 
 
     const handleGenderSelect = (gender: string) => {
@@ -88,7 +108,7 @@ const SignUp = () => {
                     <Text poppins style={tw`text-gray-500`} >Lets guide you throught the steps of creating an account on Ollie Ride</Text>
                 </View>
                 <TextField
-                    placeholder="First Name"
+                    placeholder="Full Name"
                     value={name}
                     onChangeText={setName}
                     rounded
@@ -117,7 +137,7 @@ const SignUp = () => {
                 placeholder="Your mobile number"
                 containerStyle={tw`rounded-sm`}
                 />
-                <GenderPicker onSelectGender={handleGenderSelect} />
+                <GenderPicker onSelectGender={handleGenderSelect} selectedGender={selectedGender} />
 
                 <View style={tw`flex-row gap-x-3 my-4`}>
                     <Checkbox

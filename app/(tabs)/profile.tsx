@@ -147,7 +147,7 @@ const Profile = () => {
 		console.log("Pressed logout!!")
 	    try {
 	      await auth.signOut();  // Sign out the user
-	      router.replace('auth/sign_in');
+	      router.replace('/auth/sign_in');
 	    } catch (error) {
 	      console.error('Error signing out: ', error);
         Toast.show({

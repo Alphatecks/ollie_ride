@@ -5,13 +5,15 @@ import { AntDesign } from "@expo/vector-icons";
 import tw from "@/tailwind";
 
 type GenderPickerProps = {
+  selectedGender: string | null;
   onSelectGender: (gender: string) => void;
 };
 
-const GenderPicker: React.FC<GenderPickerProps> = ({ onSelectGender }) => {
+const GenderPicker: React.FC<GenderPickerProps> = ({ selectedGender, onSelectGender }) => {
   return (
     <View>
       <Picker
+        value={selectedGender}  // Set the selected value
         placeholder="Select Gender"
         onChange={(value) => onSelectGender(value as string)}
         topBarProps={{ title: "Select Gender" }}
@@ -19,7 +21,7 @@ const GenderPicker: React.FC<GenderPickerProps> = ({ onSelectGender }) => {
           { label: "Male", value: "Male" },
           { label: "Female", value: "Female" },
         ]}
-        renderInput={(selectedItem) => (
+        renderInput={() => (
           <TouchableOpacity
             style={{
               flexDirection: "row",
@@ -33,8 +35,8 @@ const GenderPicker: React.FC<GenderPickerProps> = ({ onSelectGender }) => {
               marginVertical: 10
             }}
           >
-            <Text style={tw.style( "poppins", { color: selectedItem ? Colors.black : Colors.grey30 })}>
-              {selectedItem || "Select Gender"}
+            <Text style={tw.style("poppins", { color: selectedGender ? Colors.black : Colors.grey30 })}>
+              {selectedGender || "Select Gender"}
             </Text>
             <AntDesign name="down" size={18} color={Colors.grey30} />
           </TouchableOpacity>
