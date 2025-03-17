@@ -70,7 +70,7 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
   dropdownStyle,
   errorMessage,
   isValid,
-  maxLength = 15,
+  maxLength = 11,
   testID = 'phone-number-input',
   keyboardType = 'phone-pad',
   returnKeyType = 'done',

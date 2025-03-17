@@ -230,3 +230,10 @@ import { ScrollView } from "react-native-gesture-handler";
 </ScrollView> 
 
 ```
+
+### FOR DISABLED BUTTONS
+
+```js
+   style={tw`${!email || !password ? 'btn bg-gray-300' : 'btn'}`}
+
+```

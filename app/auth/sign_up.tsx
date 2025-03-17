@@ -8,6 +8,7 @@ import { Link, useRouter } from "expo-router"
 import GenderPicker from '@/components/general/GenderPicker'
 import PhoneNumberInput from '@/components/general/PhoneNumberInput'
 import Toast from 'react-native-toast-message'
+import ButtonLoader from '@/components/general/ButtonLoader'
 
 
 
@@ -28,18 +29,6 @@ const SignUp = () => {
     const [countryCode, setCountryCode] = useState('+880');
     const [isValid, setIsValid] = useState<boolean | undefined>(undefined);
   
-    const validatePhoneNumber = (phoneNumber: string) => {
-      // Simple validation - you can implement more sophisticated validation
-      if (phoneNumber.length < 11) {
-        Toast.show({type:"error", text1: `${phoneNumber} is invalid`})
-        
-        setIsValid(false);
-        return false;
-      }
-      
-      setIsValid(true);
-      return true;
-    };
 
     
   
@@ -59,29 +48,18 @@ const SignUp = () => {
           return;
         }
         
-        const isPhoneValid = validatePhoneNumber(phoneNumber)
-        
-        if (!isPhoneValid) {
-            Toast.show({
-                type: "error",
-                text1: "Phone number is not valid"
-            });
-            
-            return
-            
-        }
 
         console.log(email, phoneNumber, selectedGender, name )
 
-        // router.push({
-        //   pathname: "/auth/set_password",
-        //   params: {
-        //     email,
-        //     phoneNumber,
-        //     gender: selectedGender,
-        //     full_name: name,
-        //   },
-        // });
+        router.push({
+          pathname: "/auth/set_password",
+          params: {
+            email,
+            phoneNumber,
+            gender: selectedGender,
+            full_name: name,
+          },
+        });
       };
       
 
@@ -95,9 +73,6 @@ const SignUp = () => {
     return (
         <KeyboardAvoidingView style={tw`bg-white flex-1 p-3`}>
             <ScrollView showsVerticalScrollIndicator={false} >
-
-
-
 
                 <View style={tw`mb-4`} >
                     <Text style={tw`text-2xl mb-6`}
@@ -154,17 +129,15 @@ const SignUp = () => {
                 </View>
               
                 {loading &&
-                    <View style={tw`bg-gray-300 p-2 rounded-md my-2`} >
-                        <ActivityIndicator size="large" color="red" />
-                    </View>
+                    <ButtonLoader />
                 }
 
                 {!loading &&
                     <Button label="Sign Up"
                         poppins
                         onPress={handleSignUp}
-                        style={tw`btn`}
-                        disabled={!email || !phoneNumber ? true : false}
+                        style={tw`${!email || !phoneNumber || !name || !selectedGender || !toggle ? 'btn bg-gray-300' : 'btn'}`}
+                        disabled={!email || !phoneNumber || !name || !selectedGender || !toggle}
                     />
                 }
 

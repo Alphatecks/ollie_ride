@@ -23,12 +23,17 @@ const SetPassword = () => {
 
 
   const submitData = async () => {
-    // Get the auth and db
+    if(password !== c_password){
+      Toast.show({
+        type: "error",
+        text1: "Your password do not match"
+      });
+
+      return
+    }
 
     try{
       setLoading(true)
-
-     
 
       // Sign up the user
       const userCredential = await createUserWithEmailAndPassword(auth, params.email, password)
@@ -40,10 +45,10 @@ const SetPassword = () => {
 
       console.log("Email code sent... Updating data")
 
-      // Toast.show({
-      //   type: "success",
-      //   text1: "Account created successfully!! Pls check your email for verification code"
-      // });
+      Toast.show({
+        type: "success",
+        text1: "Account created successfully!! Pls check your email for verification code"
+      });
 
       await updateProfile(user, {displayName: params?.full_name})
 
@@ -58,8 +63,15 @@ const SetPassword = () => {
 
       await setDoc(doc(db, "users", user.uid), {
         gender: params.gender,
-        phoneNumber: params.phone_number,
-        full_name: params.full_name
+        phoneNumber: params.phoneNumber,
+        full_name: params.full_name,
+        role: "rider",
+        isApproved: false,
+        totalBalance: 0,
+        totalTrips: 0,
+        totalTimeOnline: 0,
+        totalDistanceCovered: 0,
+        totalTimeSpentOnTrip: 0
       })
       console.log("Set up a users collection!!")
 
@@ -70,17 +82,20 @@ const SetPassword = () => {
 
       console.log(params)
 
-    //   router.replace("/drawer/(tabs)")
+      router.replace("/(tabs)/bottomsheet2")
+     
     }
     catch(error){
       setLoading(false)
-      console.log("Failed to sign up: ", error)
+      Toast.show({
+        type: "error",
+        text1: `Failed to sign up...  Retry.`,
+        text2: `${error}`
+      });
+      return
     //   router.push("/auth/signup")
     }
-   
-
-    // await handlePost(postData);
-    // if (data) setUser(params)
+  
   };
 
   const togglePasswordVisibility = () => {

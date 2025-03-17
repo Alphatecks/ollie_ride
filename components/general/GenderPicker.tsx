@@ -13,7 +13,7 @@ const GenderPicker: React.FC<GenderPickerProps> = ({ selectedGender, onSelectGen
   return (
     <View>
       <Picker
-        value={selectedGender}  // Set the selected value
+        value={selectedGender || ""}  // Set the selected value
         placeholder="Select Gender"
         onChange={(value) => onSelectGender(value as string)}
         topBarProps={{ title: "Select Gender" }}
