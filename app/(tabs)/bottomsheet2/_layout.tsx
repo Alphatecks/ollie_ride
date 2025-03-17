@@ -16,6 +16,7 @@ import { useTripStore } from '@/store/tripStore';
 import SearchSVG from "@/assets/search.svg"
 import ScheduleSVG from "@/assets/schedule.svg"
 import { ScrollView } from 'react-native-gesture-handler';
+import { Feather } from '@expo/vector-icons';
 
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
 
@@ -51,8 +52,6 @@ useEffect(() => {
 	  }
   
 	  const userLocation = await Location.getCurrentPositionAsync({});
-	//   ------ UNCOMMENT THIS TO FILL UP THE FIREBASE STORE WITH DUMMY DATA ----
-	//   getNearbyPlaces2(userLocation.coords.latitude, userLocation.coords.longitude)
 	  setLocation(userLocation);
 	  setRegion({
 		latitude: userLocation.coords.latitude,
@@ -60,40 +59,7 @@ useEffect(() => {
 		latitudeDelta: 0.005,
 		longitudeDelta: 0.005,
 	  });
-  
-	  try {
-		// Reference the "trips" collection where driverId is null
-		const tripsCollection = collection(db, "trips");
-		const q = query(tripsCollection, where("driverId", "==", null));
-  
-		// Real-time listener
-		const unsubscribe = onSnapshot(q, (snapshot) => {
-		  const trips: Trip[] = snapshot.docs.map(doc => ({
-			tripId: doc.id,
-			...doc.data(),
-		  })) as Trip[];
-  
-		  // Filter trips within 3 km
-		  const nearbyTrips = trips.filter(trip =>
-			getDistanceFromLatLonInMeters(
-			  userLocation.coords.latitude,
-			  userLocation.coords.longitude,
-			  trip.latitude,
-			  trip.longitude
-			) <= 3000
-		  );
-
-		  console.log(nearbyTrips)
-  
-		  setAvailableTrips(nearbyTrips);
-		});
-  
-		// Clean up listener on unmount
-		return () => unsubscribe();
-	  } catch (error) {
-		console.error("Failed to fetch trips:", error);
-	  }
-	};
+  	};
   
 	// fetchLocationAndSubscribeToTrips();
   }, []);
@@ -129,34 +95,21 @@ useEffect(() => {
 
 	return (
 		<>	
-			{/* Check if availbale trips has been fetched! */}
-			{availableTrips.length < 0 &&
-				<View style={tw`bg-green-300 px-2 py-1 items-center justify-center`}>
-					<Text style={tw`poppins`} >Checking Available Trips in your location...</Text>
-					<ActivityIndicator />
-				</View>
-			}
-			{tripAccessCode &&
-				<View style={tw`bg-green-300 px-2 py-1 items-center justify-center`}>
-					<Text style={tw`poppins`} >Your trip access code: {tripAccessCode} </Text>
-				</View>
-			}
 
-
-				<View style={tw`absolute top-10 z-2 bg-white px-2 mx-6 rounded-md py-1 left-0 right-0`}>
-					<View style={tw`flex-row items-center p-3 flex-1 gap-2`}>
-						<SearchSVG />
-						<TextField placeholder="Search" style={tw`poppins`} 
-						containerStyle={tw`w-full flex-1`}
-						/>
+				<TouchableOpacity style={tw`absolute top-10 z-2 bg-white mx-6 rounded-md`}
+				onPress={handleBottomSheetOpen}
+				>
+					<View style={tw`flex-row items-center p-3`}>
+						<Feather  name='plus-circle' size={20} />
 					</View>
-				</View>
+				</TouchableOpacity>
+				
 
 				<View style={tw`absolute top-30 z-2 bg-white px-2 mx-6 rounded-md py-1 left-0 right-0`}>
 					<TouchableOpacity 
 					style={tw`flex-row items-center p-3 flex-1 gap-2`}
 					// onPress={handleBottomSheetOpen}
-					onPress={()=> router.push("/auth/profile")}
+					// onPress={()=> router.push("/auth/profile")}
 					>
 						<ScheduleSVG />
 						<Text style={tw`poppins`}>Ride schedules</Text>
@@ -172,21 +125,7 @@ useEffect(() => {
 			region={region}
 			mapType="standard"
 			>
-			{Array.isArray(availableTrips) && availableTrips.slice(0, 4).map((trip) => (
-			<Marker
-				key={trip.id}
-				coordinate={{ latitude: trip.latitude, longitude: trip.longitude }}
-				title={`Trip ${trip.id}`}
-				onPress={() => handleTripMarkerClicked(trip)}
-			>
-				<Image
-					source={{ uri: url, cache: 'only-if-cached' }} 
-					style={tw`h-12 w-12 rounded-full border-2 border-white`} 
-					resizeMode="cover"
-					/>
-				{/* <Image source={{ uri: url }} style={tw`h-12 w-12 rounded-full border-2 border-white`} /> */}
-			</Marker>
-        ))}
+	
 			</MapView>
 			
 			<BottomSheet

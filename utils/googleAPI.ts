@@ -153,3 +153,5 @@ export const getNearbyPlaces2 = async (
     return [];
   }
 };
+
+

@@ -44,52 +44,6 @@ const Index = () => {
     
   }
 
-  const handleTripAccepted = async (selectedTrip: Trip | null) => {
-
-    console.log(selectedTrip?.tripId)
-
-    if (!selectedTrip) {
-      Toast.show({type: "error", text1: "You didn't select any trip. "})
-      return;
-    }
-    
-    const tripAccessCode = generateAccessCode();
-    if (tripAccessCode) {
-      Toast.show({type: "success", text1: `Access code ${tripAccessCode}`})
-    }
-
-    const selectedTripRef = doc(db, "trips", selectedTrip?.tripId);
-
-    
-    try {
-      // await updateDoc(selectedTripRef, {
-      //   status: TripStatus.TRIP_ACCEPTED,
-      //   driverId: auth?.currentUser?.uid,
-      //   tripAccessCode,
-      //   isTripPaid: false,
-      //   paidWithCash: false,
-      //   isPaymentVerified: false,
-      //   showAccessCode: true,
-      // });
-
-      setSelectedTrip({...selectedTrip,
-        status: TripStatus.TRIP_ACCEPTED,
-        driverId: auth?.currentUser?.uid,
-        tripAccessCode,
-        isTripPaid: false,
-        paidWithCash: false,
-        isPaymentVerified: false,
-        showAccessCode: true,
-       })
-
-      console.log(`Trip ${selectedTrip.id} was set.`);
-      console;e.log("New selectedTrip: ", selectedTrip)
-      router.push("/bottomsheet2/navigate_to_customer");
-
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   return (
     <View style={tw`gap-10`}>
@@ -118,7 +72,7 @@ const Index = () => {
           placeholder="From"
           style={tw`p-3`}
           poppins
-          leadingAccessory = {<TargetSVG />}
+          leadingAccessory = {<TargetSVG onPress={()=> console.log("pressed map icon")} />}
           containerStyle={tw`w-full pr-3`}
           />
         </View> 
@@ -127,14 +81,10 @@ const Index = () => {
           placeholder="To"
           style={tw`p-3`}
           poppins
-          leadingAccessory = {<MapSVG />}
+          leadingAccessory = {<MapSVG onPress={()=> console.log("pressed map icon")} />}
           containerStyle={tw`w-full pr-3`}
           />
         </View> 
-
-        <Text poppinsMedium p1 >Recent Places</Text>
-
-        <RecentPlaces />
 
         <DoubleLocationCard />
 

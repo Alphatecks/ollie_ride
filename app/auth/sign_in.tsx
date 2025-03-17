@@ -16,7 +16,7 @@ const SignIn = () => {
 	const router = useRouter()
 
 	const [email, setEmail] = useState('')                                                 
-    const [loading, setLoading] = useState(false)                                                 
+  const [loading, setLoading] = useState(false)                                                 
 	const [password, setPassword] = useState('')                                           
 
     const user = auth.currentUser
