@@ -6,7 +6,7 @@ import debounce from 'lodash.debounce';
 const search = debounce(async (query) => {
     // Object to store the states (loading, data, error)
   
-    const apiKey = process.env.EXPO_BING_MAPS_KEY; // Replace with your actual key
+    const apiKey = "Aq8PnSeraxCE7_Otau4MHHbOBp9ZG4htMjXoXto8n8xtt1iyHlG2SZDigxz27riR"; // Replace with your actual key
     const countryFilter = 'NG'; // Filter results by country (Nigeria)
   
     const result = {
@@ -68,7 +68,7 @@ const search = debounce(async (query) => {
   
   // Modular search function using Google Place Autocomplete
   export const googleSearch = debounce(async (query) => {
-    const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS; // Replace with your Google API key
+    const apiKey = "AIzaSyCwiyu1HxfDQFf5A9U4g_m4YLI21EzVuLg"; // Replace with your Google API key
     const result = {
       loading: true,
       data: [],
