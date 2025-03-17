@@ -25,7 +25,7 @@ const Wallet = () => {
       const currentUser = auth.currentUser;
 
       if (currentUser) {
-        const userDocRef = doc(db, 'drivers', currentUser.uid);
+        const userDocRef = doc(db, 'users', currentUser.uid);
 
         try {
           // Fetch the current balance first
@@ -80,16 +80,14 @@ const Wallet = () => {
       <View style={tw`flex-row gap-4 border border-[0.8px] p-4 rounded-md border-blue-900 my-3`}>
         <View style={tw`flex-grow`}>
           <Text poppins style={tw`text-gray-500`}>Wallet Balance</Text>
-          <Text poppinsMedium h2 onPress = {()=> router.push("/riding_flow/download_receipt")} >${totalBalance.toFixed(2)}</Text>
-          <Text poppins>Today’s earnings: ${userData?.todayEarnings} </Text>
+          <Text poppinsMedium h2 onPress = {()=> router.push("/riding_flow/download_receipt")} >₦{totalBalance.toFixed(2)}</Text>
         </View>
         <View style={tw`flex-grow justify-center`}>
           <Button
-            label="Withdraw"
+            label="Add Money"
             style={tw`btn`}
             poppins
-            onPress={() => router.push("wallet_aux/withdraw")}
-            disabled={totalBalance === 0 ? true : false} // Disable button if totalBalance is 0
+            onPress={() => router.push("/wallet_aux/withdraw")}
           />
         </View>
       </View>
@@ -97,7 +95,7 @@ const Wallet = () => {
       {/* Bar Chart and Other Stats */}
       <View style={tw`items-center my-4`}>
         <Text poppins>Dec 18 - 16</Text>
-        <Text poppinsMedium h2 onPress = {()=> router.push("/riding_flow/cancel_ride")}>$120.34</Text>
+        <Text poppinsMedium h2 onPress = {()=> router.push("/riding_flow/cancel_ride")}>₦0.00</Text>
       </View>
 
       <View style={tw`my-4`}>
@@ -132,20 +130,6 @@ const Wallet = () => {
       </View>
 
       {/* Earnings Section */}
-      <View style={tw`gap-3 my-3`}>
-        <View style={tw`flex-row justify-between`}>
-          <Text poppinsMedium>Earnings</Text>
-          <Text poppinsMedium>$400.24</Text>
-        </View>
-        <View style={tw`flex-row justify-between`}>
-          <Text poppins>Trip Earnings</Text>
-          <Text poppins>$20.24</Text>
-        </View>
-        <View style={tw`flex-row justify-between`}>
-          <Text poppins>Tax</Text>
-          <Text poppins style={tw`text-red-500`}>$40.24</Text>
-        </View>
-      </View>
     </ScrollView>
   );
 };

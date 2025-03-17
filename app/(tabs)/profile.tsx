@@ -181,21 +181,32 @@ const Profile = () => {
 					<Text style={tw`text-white py-3`} onPress = {()=> router.push("auth/update_profile")} >Edit</Text>
 				</View>
 			
-			
+
 				{/* Profile Options */}
 				<View style={tw`p-3 gap-7`}>
 					<ProfileOptionsCard 
-						title = "Payment" 
+						title = "Manage Address" 
 						href="payment" 
 						icon = {<MaterialCommunityIcons 
 						name="file-document-outline" 
 						size={24} color="black" />}
 					/>
-					<ProfileOptionsCard title = "Documents" href = "document_aux" icon = {<FontAwesome5 name="coins" size={24} color="black" />} />
 					<ProfileOptionsCard 
-						title = "Settings"  
+						title = "My Bookings"  
 						disabled = {true}
 						icon={<MaterialCommunityIcons name="cog-outline" size={24} color="black" />} 
+					/>
+					<ProfileOptionsCard 
+						title = "Emergency Contact" 
+						href='help_center'
+						icon={<MaterialCommunityIcons 
+						name="headset" size={24} color="black" />} 
+					/>
+					<ProfileOptionsCard 
+						title = "Settings" 
+						href='help_center'
+						icon={<MaterialCommunityIcons 
+						name="headset" size={24} color="black" />} 
 					/>
 					<ProfileOptionsCard 
 						title = "Help Center" 
