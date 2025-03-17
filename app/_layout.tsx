@@ -1,5 +1,4 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
 import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -12,7 +11,8 @@ import Toast from 'react-native-toast-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import {
-  Colors, Typography, ThemeManager
+  Colors, Typography, ThemeManager,
+  View
 } from 'react-native-ui-lib';
 
 import { useColorScheme } from '@/components/useColorScheme';
@@ -28,6 +28,7 @@ export {
 import { StreamCall, User as UserType, Logger  } from '@stream-io/video-react-native-sdk';
 
 import { useAuthStore, initAuthListener } from "@/store/authStore"; // Import Zustand store
+import { ActivityIndicator } from 'react-native';
 
 
 
@@ -142,19 +143,34 @@ function RootLayoutNav() {
   const { user, loading } = useAuthStore();
   const router = useRouter();
 
-  useEffect(() => {
-    initAuthListener();
-  }, []);
+  // useEffect(() => {
+  //   initAuthListener();
+  // }, []);
 
-  useEffect(() => {
-    if (!loading) {
-      if (user) {
-        router.replace("/(tabs)/bottomsheet2/"); // Redirect to Dashboard
-      } else {
-        router.replace("/"); // Redirect to Login Flow
-      }
-    }
-  }, [user, loading]);
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     const user = await AsyncStorage.getItem('user_token');
+  //     const onboardingSeen = await AsyncStorage.getItem('onboarding_seen');
+  
+  //     if (!onboardingSeen) {
+  //       router.replace('/onboarding');
+  //     } else if (!user) {
+  //       router.replace('/auth');
+  //     } else {
+  //       router.replace('/(tabs)/bottomsheet2');
+  //     }
+  //   };
+  
+  //   checkAuth();
+  // }, []);
+
+  // if (loading) {
+  //   return (
+  //     <View>
+  //       <ActivityIndicator />
+  //     </View>
+  //   )
+  // }
 
   return (
     <>

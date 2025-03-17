@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, Dimensions, TouchableOpacity, StyleSheet } from 'react-native';
 import { View, Text, Typography, Colors } from 'react-native-ui-lib';
 import { Link, useRouter } from 'expo-router';
@@ -23,7 +23,23 @@ const OnboardingScreen = () => {
 
   const [isOnboardingDone, setIsOnboardingDone] = useState(false);
 
+
+  const handleFinishOnboarding = async () => {
+    await AsyncStorage.setItem('onboarding_seen', 'true');
+    router.push('/auth'); // Navigate to auth after finishing onboarding
+  };
   
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      const onboardingSeen = await AsyncStorage.getItem('onboarding_seen');
+      if (onboardingSeen) {
+        router.replace('/auth'); // If already seen, skip onboarding
+      }
+    };
+  
+    checkOnboardingStatus();
+  }, []);
+
 
   const onboardingData = [
     {
@@ -81,7 +97,7 @@ const OnboardingScreen = () => {
     <View style={[tw`flex-1 justify-center items-center`, styles.container]}>
       <TouchableOpacity 
         style={[tw`absolute top-12 right-5 z-10`, styles.skipButton]} 
-        onPress={handleSkip}
+        onPress={handleFinishOnboarding}
       >
         <Text style={[tw`text-ollie-base poppinsMedium`]}>Skip</Text>
       </TouchableOpacity>
@@ -100,9 +116,9 @@ const OnboardingScreen = () => {
       <View style={[tw`absolute bottom-10`, styles.progressContainer]}>
         <View>
           {isOnboardingDone && 
-            <Link asChild href="/auth" style={tw`p-6 bg-ollie-base rounded-full flex items-center justify-center`}>
+            <TouchableOpacity onPress={handleFinishOnboarding} style={tw`p-6 bg-ollie-base rounded-full flex items-center justify-center`}>
               <Text style={tw`text-center text-white poppinsMedium`}>Go</Text>
-            </Link>
+            </TouchableOpacity>
           
           }
           {!isOnboardingDone && 
