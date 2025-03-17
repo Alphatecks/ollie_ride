@@ -1,3 +1,5 @@
+import { rideOptions } from "@/constants/Data";
+
 export const getDistanceFromLatLonInMeters = (lat1, lon1, lat2, lon2) => {
 /**
  * Calculates the distance between two geographical coordinates (latitude and longitude) on the Earth's surface in meters.
@@ -39,4 +41,14 @@ const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c; // in kilometers
   return distance;
+};
+
+
+
+const calculateTripFare = (totalDistance: number, selectedRideType: string) => {
+  const rideOption = rideOptions.find(option => option.id === selectedRideType);
+  
+
+  const pricePerKm = parseFloat(rideOption.price);
+  return Math.round(distance * pricePerKm); // Rounded to nearest integer
 };

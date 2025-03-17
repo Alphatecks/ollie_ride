@@ -1,6 +1,10 @@
 ### Ollie Ride's App
 
 
+### TODO
+- Handle the book for self and others properly on the book_for_self screen.
+
+
 **Prerequisites**
 
 * Node.js and npm (or yarn) installed on your system ([https://nodejs.org/](https://nodejs.org/))
@@ -241,3 +245,5 @@ import { ScrollView } from "react-native-gesture-handler";
 ### DISTANCE MATRIX
 
 {"distance": "779 km", "distanceValue": 778772, "duration": "13 hours 41 mins", "durationValue": 49251}
+
+

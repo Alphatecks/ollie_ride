@@ -7,16 +7,17 @@ import BottomSheet, { BottomSheetScrollView, BottomSheetView } from '@gorhom/bot
 import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { getNearbyPlaces, getNearbyPlaces2 } from "@/utils/googleAPI";
-import { Trip } from '@/types';
+import { Trip, TripStatus } from '@/types';
 import { Image, TextField, TouchableOpacity } from 'react-native-ui-lib';
 import { getDistanceFromLatLonInMeters } from '@/utils/calculations';
-import { collection, doc, onSnapshot, query, where } from 'firebase/firestore';
-import { db } from '@/firebaseConfig';
+import { collection, doc, getDocs, onSnapshot, query, where } from 'firebase/firestore';
+import { auth, db } from '@/firebaseConfig';
 import { useTripStore } from '@/store/tripStore';
 import SearchSVG from "@/assets/search.svg"
 import ScheduleSVG from "@/assets/schedule.svg"
 import { ScrollView } from 'react-native-gesture-handler';
 import { Feather } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
 
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
 
@@ -26,7 +27,6 @@ const Layout = () => {
 	const router = useRouter()
 	const pathname = usePathname()
 	const [location, setLocation] = useState()
-	const [availableTrips, setAvailableTrips] = useState<Trip[]>([]);
 
 
 	const { setSelectedTrip, selectedTrip } = useTripStore();
@@ -62,7 +62,63 @@ useEffect(() => {
   	};
   
 	// fetchLocationAndSubscribeToTrips();
+
+	//  const fetchTrips = async () => {
+	// 	  try {
+	// 		const tripsRef = collection(db, "trips");
+	// 		const q = query(tripsRef, where("riderId", "==", auth.currentUser?.uid));
+	// 		const querySnapshot = await getDocs(q);
+	
+	// 		const trips = querySnapshot.docs.map((doc) => ({
+	// 		  tripId: doc.id,
+	// 		  ...doc.data(),
+	// 		}));
+	
+	// 		console.log("Trips for current user:", trips[0]);
+	// 		setSelectedTrip(trips[0])
+
+	
+	// 	  } catch (error) {
+	// 		console.error("Error fetching trips:", error);
+	// 		Toast.show({
+	// 		  type: "error",
+	// 		  text1: "Error fetching trip."
+	// 		});
+	// 	  }
+	// 	};
+
+	// 	fetchTrips()
+
   }, []);
+
+  useEffect(() => {
+	if (!auth.currentUser?.uid) return;
+  
+	const tripsRef = collection(db, "trips");
+	const q = query(tripsRef, where("riderId", "==", auth.currentUser.uid));
+  
+	// Real-time listener for the rider's trip updates
+	const unsubscribe = onSnapshot(q, (querySnapshot) => {
+	  const trips = querySnapshot.docs.map((doc) => ({
+		tripId: doc.id,
+		...doc.data(),
+	  }));
+  
+	  if (trips.length > 0) {
+		console.log("Updated trip for rider:", trips[0]);
+		setSelectedTrip(trips[0]);
+	  }
+	}, (error) => {
+	  console.error("Error listening to trips:", error);
+	  Toast.show({
+		type: "error",
+		text1: "Error fetching trip updates.",
+	  });
+	});
+  
+	return () => unsubscribe(); // Cleanup the listener when component unmounts
+  }, []);
+  
 
 
 	  // Bottom sheet reference
@@ -85,19 +141,27 @@ useEffect(() => {
 		bottomSheetRef.current?.snapToIndex(0); // Collapse instead of -1
 	};
 
-	const handleTripMarkerClicked = (trip: Trip) => {
-		setSelectedTrip(trip);
-
-		handleBottomSheetOpen()
-		// router.push({pathname: "/b", })
-		console.log("Trip clicked: ", trip.tripId)
-	}
+	const handleNavigateToTripScreen = () => {
+		console.log("Selected trip: ", selectedTrip);
+	  
+		if (!selectedTrip) return;
+	  
+		if (selectedTrip.driverId === null) {
+		  console.log("Driver is null, going to searching driver.");
+		  handleBottomSheetOpen();
+		  router.push("/(tabs)/bottomsheet2/searching_driver");
+		  return;
+		}
+	  
+		// Add other conditions if needed
+	  };
+	  
 
 	return (
 		<>	
 
 				<TouchableOpacity style={tw`absolute top-10 z-2 bg-white mx-6 rounded-md`}
-				onPress={handleBottomSheetOpen}
+				onPress={handleNavigateToTripScreen}
 				>
 					<View style={tw`flex-row items-center p-3`}>
 						<Feather  name='plus-circle' size={20} />

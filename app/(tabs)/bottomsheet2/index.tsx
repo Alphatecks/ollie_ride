@@ -21,6 +21,9 @@ import { useEffect, useState } from "react";
 import * as Location from 'expo-location';
 
 import { googleSearch, googleDistanceMatrix } from "@/utils/useSearch"
+import { LocationData } from "@/types";
+import { auth, db } from "@/firebaseConfig";
+import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
 
 
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
@@ -31,7 +34,7 @@ const Index = () => {
 
   const { selectedTrip, setSelectedTrip } = useTripStore();
   const [locationDistance, setLocationDistance] = useState({})
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState<LocationData>(null);
   const [fromText, setFromText] = useState('');
   const [toText, setToText] = useState(''); 
   const [fromSuggestions, setFromSuggestions] = useState([]);
@@ -40,6 +43,7 @@ const Index = () => {
   const [isFromTyping, setIsFromTyping] = useState(false);
   const [isToTyping, setIsToTyping] = useState(false);
 
+  const currentUser = auth.currentUser
 
   useEffect(() => {
     (async () => {
@@ -53,10 +57,37 @@ const Index = () => {
       let location = await Location.getCurrentPositionAsync({});
 
 
-      console.log("location: ", location)
+      console.log("location: ", location.coords.longitude, location.coords.latitude)
 
       setLocation(location);
     })();
+
+    if (!currentUser) return; // Ensure user is authenticated
+
+    const fetchTrips = async () => {
+      try {
+        const tripsRef = collection(db, "trips");
+        const q = query(tripsRef, where("riderId", "==", currentUser.uid));
+        const querySnapshot = await getDocs(q);
+
+        const trips = querySnapshot.docs.map((doc) => ({
+          tripId: doc.id,
+          ...doc.data(),
+        }));
+
+        console.log("Trips for current user:", trips[0].tripId);
+        setSelectedTrip(trips[0])
+
+      } catch (error) {
+        console.error("Error fetching trips:", error);
+        Toast.show({
+          type: "error",
+          text1: "Error fetching trip."
+        });
+      }
+    };
+
+    fetchTrips();
   }, []);
 
 
@@ -120,7 +151,9 @@ const handlePress = () => {
 
   router.push({pathname: "/(tabs)/bottomsheet2/book_ride", 
     params: {...locationDistance, fromLocation: fromText, 
-      toLocation: toText
+      toLocation: toText,
+      riderLongitude: location.coords.longitude,
+      riderLatitude: location.coords.latitude,
     }
   })
 

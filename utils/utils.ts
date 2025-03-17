@@ -1,3 +1,4 @@
+import { rideOptions } from "@/constants/Data";
 import { Timestamp } from "firebase/firestore";
 
 
@@ -25,4 +26,28 @@ export function generateAccessCode(): number {
     }
   
     return date.toLocaleString('en-US', options);
+  };
+
+  interface TripParams {
+    distance: string; // e.g., "2.1 km"
+    selectedRide: string; // e.g., "economy", "van", "premium"
+  }
+
+
+  export const calculateTripFare = (distance: string, selectedRide: string): number => {
+    // Extract numeric value from "2.1 km"
+    const tripDistanceKm = parseFloat(distance);
+  
+    // Find the selected ride option
+    const selectedRideOption = rideOptions.find(option => option.id === selectedRide);
+  
+    if (!selectedRideOption) {
+      throw new Error("Invalid ride selection");
+    }
+  
+    // Convert price from string to number
+    const pricePerKm = parseFloat(selectedRideOption.price);
+  
+    // Calculate total trip fare
+    return tripDistanceKm * pricePerKm;
   };

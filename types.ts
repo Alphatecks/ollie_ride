@@ -53,6 +53,11 @@ export interface Trip {
     updatedAt: Timestamp;
     riderPhoneNumber: string;
     riderCurrentLocation: string;
+    riderProfileImage?: string;
+    riderLongitude: number;
+    riderLatitude: number;
+    driverLongitude: number;
+    driverLatitude: number;
     tripAccessCode: number;
     tripStartedTime?: Date;
     tripEndedTime?: Date | null;
@@ -62,6 +67,43 @@ export interface Trip {
     isPaymentVerified?: boolean;
     showAccessCode?: boolean;
     rating?: number;
+    isCanceled?: boolean;
+    bookingFor: "self" | "others";
+    driverProfileImage: string;
+    driverDisplayName: string;
+  }
+  
+
+  export interface UserProfile {
+    id: string;
+    city: string;
+    full_name: string;
+    gender: string;
+    isApproved: boolean;
+    phoneNumber: string;
+    profileImage: string;
+    role: string;
+    state: string;
+    street: string;
+    totalBalance: number;
+    totalDistanceCovered: number;
+    totalTimeOnline: number;
+    totalTimeSpentOnTrip: number;
+    totalTrips: number;
+    updatedAt: string; // Consider changing to `Date` if parsed
+  }
+
+  export interface TripParams {
+    distance: string; // e.g., "1 m"
+    distanceValue: number; // e.g., "0" (consider changing to number if it's always numeric)
+    duration: string; // e.g., "1 min"
+    durationValue: number; // e.g., "0" (consider changing to number if it's always numeric)
+    fromLocation: string;
+    riderLatitude: number; // Consider changing to number if it's always numeric
+    riderLongitude: number; // Consider changing to number if it's always numeric
+    selectedRide: string; // e.g., "economy", "van", etc.
+    toLocation: string;
+    bookingFor: "self" | "others";
   }
   
 
@@ -107,4 +149,19 @@ export interface Place {
   fullName: string;
   phoneNumber: string;
   time: string;
+}
+
+
+export interface LocationData {
+  coords: {
+    accuracy: number;
+    altitude: number;
+    altitudeAccuracy: number;
+    heading: number;
+    latitude: number;
+    longitude: number;
+    speed: number;
+  };
+  mocked: boolean;
+  timestamp: number;
 }
