@@ -82,7 +82,7 @@ const SetPassword = () => {
 
       console.log(params)
 
-      router.replace("/(tabs)/bottomsheet2")
+      router.replace("/auth/await_email_verification")
      
     }
     catch(error){

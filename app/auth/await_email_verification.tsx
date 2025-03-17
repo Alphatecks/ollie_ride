@@ -25,16 +25,16 @@ const AwaitEmail = () => {
         }
 
         const interval = setInterval(async () => {
-            await auth.currentUser.reload(); // Refresh user data
-            if (auth.currentUser.emailVerified) {
+            await auth?.currentUser?.reload(); // Refresh user data
+            if (auth?.currentUser?.emailVerified) {
                 setEmailVerified(true);  // Update the state if the email is verified
                 clearInterval(interval); // Stop polling once email is verified
                 Toast.show({
                   type: "success",
                   text1: `Your email ${auth.currentUser.email} was verified`,
                   text2: "Click continue to finish setup",
-                  textStyle: tw`poppins`,
                   visibilityTime: 5000,
+                  text1Style: tw`poppins`
                 })
             }
         }, 5000);  // Check every 5 seconds
@@ -74,7 +74,7 @@ const AwaitEmail = () => {
                 <Button 
                     label="Continue" 
                     poppins
-                    onPress={() => router.push("/auth/upload_car_details")} 
+                    onPress={() => router.push("/auth/profile")} 
                     style={tw`btn`}
                     disabled={!emailVerified}  // Disable button if email is not verified
                 />     

@@ -22,14 +22,28 @@ const SignIn = () => {
     const user = auth.currentUser
 
 
-   useFocusEffect(
-     useCallback(() => {
-       if (user) router.replace("/(tabs)/bottomsheet2")
-       return () => {
-         console.log('This route is now unfocused.');
-       };
-     }, [user])
-   );                                    
+    useFocusEffect(
+        useCallback(() => {
+          const checkEmailVerification = async () => {
+            // const user = auth.currentUser;
+            if (user) {
+              await user.reload(); // Refresh user data
+              if (!user.emailVerified) {
+                router.replace("/auth/await_email_verification");
+              } else {
+                router.replace("/(tabs)/bottomsheet2");
+              }
+            }
+          };
+      
+          checkEmailVerification();
+      
+          return () => {
+            console.log("This route is now unfocused.");
+          };
+        }, [])
+      );
+                                         
                                                                                         
 	const handleSignIn = async () => {
 	    try {
@@ -48,7 +62,7 @@ const SignIn = () => {
 	        // Handle successful sign-up (e.g., navigate to home screen)
 	    } catch (error) {
             setLoading(false)
-            Toast.show({type: "success", text1: `${error}`})
+            Toast.show({type: "error", text1: `${error}`})
             console.log(error)
 	    }
 	};

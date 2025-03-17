@@ -43,11 +43,11 @@ const Profile = () => {
   // Listen for user state changes (e.g., update in displayName)
   useEffect(() => {
 
-  	 const fetchBalance = async () => {
+  	 const fetchUserDetails = async () => {
       // const currentUser = auth.currentUser;
 
       if (user) {
-        const userDocRef = doc(db, 'drivers', user.uid);
+        const userDocRef = doc(db, 'users', user.uid);
 
         try {
           // Fetch the current balance first
@@ -55,6 +55,8 @@ const Profile = () => {
           if (userDocSnapshot.exists()) {
             const _userData = userDocSnapshot.data();
             setUserData(_userData)
+
+			console.log(_userData)
           }
 
           // Now set up the real-time listener
@@ -73,7 +75,7 @@ const Profile = () => {
       }
     };
 
-    fetchBalance()
+    fetchUserDetails()
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
 	    // currentUser.reload(); 
@@ -166,7 +168,7 @@ const Profile = () => {
 							<Avatar 
 							name = {user.displayName} 
 							size = {60}
-							source={{ uri: avatarUri || user?.photoURL || '' }} // Use the uploaded or current user's photo
+							source={{ uri: avatarUri || user?.photoURL || userData?.profileImage || '' }} // Use the uploaded or current user's photo
 				            onPress={pickImage} // Open image picker on press
 							/>
 						</View>
@@ -178,23 +180,8 @@ const Profile = () => {
 					</View>
 					<Text style={tw`text-white py-3`} onPress = {()=> router.push("auth/update_profile")} >Edit</Text>
 				</View>
-				<View style={tw`p-4`}>
-				<View style={tw`bg-white shadow-md -mt-10 rounded-md p-3 gap-2`}>
-					<Text poppins center>Trips Completed</Text>
-					<Text poppinsMedium center>{userData?.totalTrips} trips over {userData?.totalTimeSpentOnTrip} years</Text>
-					<View style={tw`h-[1px] bg-gray-300 my-3`}></View>
-					<View style={tw`flex-row gap-2 justify-around`}>
-						<View>
-							<Text poppins style={tw`text-gray-400`}>Acceptance Rate</Text>
-							<Text poppinsMedium center>{ userData?.acceptanceRate }%</Text>
-						</View>
-						<View>
-							<Text poppins style={tw`text-gray-400`}>Cancelation Rate</Text>
-							<Text poppinsMedium center>{ userData?.cancellationRate }%</Text>
-						</View>
-					</View>
-				</View>
-				</View>
+			
+			
 				{/* Profile Options */}
 				<View style={tw`p-3 gap-7`}>
 					<ProfileOptionsCard 
