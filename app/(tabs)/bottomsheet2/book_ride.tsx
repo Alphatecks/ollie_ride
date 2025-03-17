@@ -14,27 +14,31 @@ import DoubleLocationCard from '@/components/home/DoubleLocationCard';
 import TimePicker from '@/components/bottomsheet-ui/TimePicker';
 import { RepeatOptionGroup } from '@/components/bottomsheet-ui/RepeatPicker';
 import { RepeatOptions, rideOptions } from '@/constants/Data';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 const BookRide = () => {
 
     const [selectedRide, setSelectedRide] = useState('economy');
     const [isExpanded, setIsExpanded] = useState<boolean>(false)
     const [selected, setSelected] = useState("Every Tuesday");
+    const params = useLocalSearchParams()
 
     const router = useRouter()
 
-    console.log("selected: ", selectedRide, selected)
+    console.log("selected: ", selectedRide, selected, params)
 
     const [selectedTime, setSelectedTime] = useState({
       hour: '03',
       minute: '30',
       period: 'PM'
     });
-  
-    const handleTimeChange = (time) => {
-      setSelectedTime(time);
-      console.log('Selected time:', time);
+
+    const handleBookingSelection = () => {
+      // Push down the data to the next screen route
+      router.push({
+        pathname: "/(tabs)/bottomsheet2/book_for_self",
+        params: { selectedRide, ...params }
+      });
     };
 
   return (
@@ -47,8 +51,11 @@ const BookRide = () => {
             onTimeChange={handleTimeChange}
           />   */}
 
-        <RepeatOptionGroup  options={RepeatOptions} selectedValue={selected} onSelect={setSelected}/> 
-                  
+
+        <DoubleLocationCard fromLocation={params?.fromLocation} toLocation={params?.toLocation} 
+          locationDistance={params?.distance}          
+        />
+
         <RideOptionsRow 
           options={rideOptions} 
           selectedRide={selectedRide} 
@@ -58,7 +65,7 @@ const BookRide = () => {
         <BookingOption
         title="Book for self"
         icon={<MaterialCommunityIcons name="account" size={24} color="#002D62" />}
-        onPress={() => router.push("/(tabs)/bottomsheet2/book_for_self")}
+        onPress={handleBookingSelection}
         />
         <BookingOption
         title="Schedule for later"

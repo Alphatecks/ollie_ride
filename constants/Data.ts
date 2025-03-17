@@ -413,10 +413,10 @@ export const rideOptions = [
     icon: 'file'
   },
   {
-    id: 'comfort',
-    title: 'Comfort',
+    id: 'van',
+    title: 'Van',
     description: '4 seats capacity',
-    price: '1000.5',
+    price: '4000',
     unit: 'km',
     duration: '7 min',
     icon: 'briefcase'

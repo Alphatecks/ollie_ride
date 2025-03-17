@@ -5,14 +5,15 @@ import tw from '@/tailwind'
 import UserSVG from "@/assets/profile-blue.svg"
 import ContactSVG from "@/assets/contacts.svg"
 import { baseColor } from '@/constants/Colors'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 
 const Index = () => {
-    const [currentContact, setCurrentContact] = useState("yes")
+    const [currentContact, setCurrentContact] = useState("self")
 
     const router = useRouter()
+    const params = useLocalSearchParams()
 
-    console.log(currentContact)
+    console.log(currentContact, params)
   return (
     <View style={tw`flex-1`}>
         <View>
@@ -26,7 +27,7 @@ const Index = () => {
 
             <RadioGroup initialValue={currentContact} onValueChange={setCurrentContact}>
                 <View style={tw`flex-row gap-6`}>
-                    <RadioButton value={'yes'} color={baseColor}  />
+                    <RadioButton value={'self'} color={baseColor}  />
                     <View style={tw`flex-row gap-2 items-center justify-center`}>
                         <UserSVG />
                         <Text style={tw`poppinsMedium`}>Self</Text>
@@ -34,7 +35,7 @@ const Index = () => {
                 </View>
 
                 <View style={tw`flex-row gap-6 mt-4`}>
-                    <RadioButton value={'no'} color={baseColor} />
+                    <RadioButton value={'others'} color={baseColor} />
                     <View style={tw`flex-row gap-2 items-center justify-center`}>
                         <Avatar label={"TI"} backgroundColor={baseColor} labelColor='white' size={28} />                
                         <Text style={tw`poppinsMedium`}>John Nweke</Text>

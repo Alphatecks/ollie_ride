@@ -237,3 +237,7 @@ import { ScrollView } from "react-native-gesture-handler";
    style={tw`${!email || !password ? 'btn bg-gray-300' : 'btn'}`}
 
 ```
+
+### DISTANCE MATRIX
+
+{"distance": "779 km", "distanceValue": 778772, "duration": "13 hours 41 mins", "durationValue": 49251}

@@ -61,19 +61,25 @@ const Index = () => {
 
 
   useEffect(() => {
-    if (!isFromTyping && !isToTyping && fromText.trim() && toText.trim()) {
-      const timer = setTimeout(() => {
-        console.log("User has finished typing:", { fromText, toText });
-      }, 2000);
+    const getFromAndToDistance = async () => {
+      if (!isFromTyping && !isToTyping && fromText.trim() && toText.trim()) {
+        const timer = setTimeout(async () => {
+          console.log("User has finished typing:", { fromText, toText });
+          const res = await googleDistanceMatrix(fromText, toText);
   
-      return () => clearTimeout(timer);
+          console.log("Total distance: ", res.data)
+          setLocationDistance(res.data)
+  
+        }, 2000);
+    
+        return () => clearTimeout(timer);
+      }
     }
+    getFromAndToDistance()
+
   }, [isFromTyping, isToTyping, fromText, toText]);
 
   
-
-
-  console.log("Selected Trip: ", selectedTrip)
 
   const onClose = () => {
 
@@ -109,6 +115,16 @@ const handleSuggestionClickTo = (suggestion) => {
   // Clear the suggestions list
   setToSuggestions([]);
 };
+
+const handlePress = () => {
+
+  router.push({pathname: "/(tabs)/bottomsheet2/book_ride", 
+    params: {...locationDistance, fromLocation: fromText, 
+      toLocation: toText
+    }
+  })
+
+}
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -182,14 +198,16 @@ const handleSuggestionClickTo = (suggestion) => {
         )}
 
 
-        <DoubleLocationCard fromLocation={fromText} toLocation={toText} />
+        <DoubleLocationCard fromLocation={fromText} toLocation={toText} 
+          locationDistance={locationDistance.distance}          
+        />
 
       </View>
 
       <Button label="Confirm Location" poppins 
-      onPress={onClose}
-      style={tw`${!fromText || !toText ? "btn bg-gray-400": "btn"}`}
-      disabled = {!fromText || !toText}
+      onPress={handlePress}
+      style={tw`${!fromText || !toText || !locationDistance.distance ? "btn bg-gray-400": "btn"}`}
+      disabled = {!fromText || !toText || !locationDistance.distance}
       />
     </View>
   </ TouchableWithoutFeedback>

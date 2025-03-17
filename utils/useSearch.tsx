@@ -126,7 +126,7 @@ const search = debounce(async (query) => {
   
   // Modular distance calculation function using Google Distance Matrix API
   export const googleDistanceMatrix = async (origin, destination) => {
-    const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS; // Replace with your Google API key
+    const apiKey = "AIzaSyCwiyu1HxfDQFf5A9U4g_m4YLI21EzVuLg"; // Replace with your Google API key
     const result = {
       loading: true,
       data: null,
