@@ -10,6 +10,10 @@ import Onboarding2 from "@/assets/02.svg"
 import Onboarding3 from "@/assets/03.svg"
 import { AntDesign } from '@expo/vector-icons';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+
 const { width } = Dimensions.get('window');
 
 const OnboardingScreen = () => {
@@ -18,6 +22,8 @@ const OnboardingScreen = () => {
   const flatListRef = useRef(null);
 
   const [isOnboardingDone, setIsOnboardingDone] = useState(false);
+
+  
 
   const onboardingData = [
     {

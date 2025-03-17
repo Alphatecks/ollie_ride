@@ -1,7 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import tw from "twrnc"
@@ -25,12 +25,9 @@ export {
   ErrorBoundary,
 } from 'expo-router';
 
-import {
-  StreamVideo,
-  StreamVideoClient,
-} from '@stream-io/video-react-native-sdk';
-
 import { StreamCall, User as UserType, Logger  } from '@stream-io/video-react-native-sdk';
+
+import { useAuthStore, initAuthListener } from "@/store/authStore"; // Import Zustand store
 
 
 
@@ -142,13 +139,22 @@ function RootLayoutNav() {
 
   useDeviceContext(tw); // <- 👋
 
+  const { user, loading } = useAuthStore();
+  const router = useRouter();
 
-  // const client = new StreamVideoClient({ apiKey, user, token });
-  // const call = client.call('default', 'my-first-call');
-  // // call.join({ create: true });
-  // call.getOrCreate();
+  useEffect(() => {
+    initAuthListener();
+  }, []);
 
-  // console.log("Client: ", client)
+  useEffect(() => {
+    if (!loading) {
+      if (user) {
+        router.replace("/(tabs)/bottomsheet2/"); // Redirect to Dashboard
+      } else {
+        router.replace("/"); // Redirect to Login Flow
+      }
+    }
+  }, [user, loading]);
 
   return (
     <>
