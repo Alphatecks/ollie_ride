@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, Dimensions, TouchableOpacity, StyleSheet } from 'react-native';
 import { View, Text, Typography, Colors } from 'react-native-ui-lib';
-import { Link, useRouter } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import * as Progress from 'react-native-progress'; // For circular progress bar
-import tw from "@/tailwind"
+import tw from "../tailwind"
 
-import Onboarding1 from "@/assets/01.svg"
-import Onboarding2 from "@/assets/02.svg"
-import Onboarding3 from "@/assets/03.svg"
-import { AntDesign } from '@expo/vector-icons';
+import Onboarding1 from "../assets/01.svg"
+import Onboarding2 from "../assets/02.svg"
+import Onboarding3 from "../assets/03.svg"
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -17,7 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width } = Dimensions.get('window');
 
 const OnboardingScreen = () => {
-  const router = useRouter();
+  const navigation = useNavigation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
 
@@ -26,14 +26,14 @@ const OnboardingScreen = () => {
 
   const handleFinishOnboarding = async () => {
     await AsyncStorage.setItem('onboarding_seen', 'true');
-    router.push('/auth'); // Navigate to auth after finishing onboarding
+    navigation.navigate('Auth'); // Navigate to auth after finishing onboarding
   };
   
   useEffect(() => {
     const checkOnboardingStatus = async () => {
       const onboardingSeen = await AsyncStorage.getItem('onboarding_seen');
       if (onboardingSeen) {
-        router.replace('/auth'); // If already seen, skip onboarding
+        navigation.navigate('Auth'); // If already seen, skip onboarding
       }
     };
   
@@ -69,7 +69,7 @@ const OnboardingScreen = () => {
   };
 
   const handleSkip = () => {
-    // router.push('/auth');
+    // navigation.navigate('Auth');
     console.log('Clicked!!');
   };
 
