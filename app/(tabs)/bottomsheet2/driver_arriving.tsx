@@ -1,18 +1,18 @@
 import { View, Text } from 'react-native'
 import React, { useState } from 'react'
-import CarBigSVG from "@/assets/car-big.svg"
-import EmergencySVG from "@/assets/emergency.svg"
-import tw from '@/tailwind'
+import CarBigSVG from "../../assets/car-big.svg"
+import EmergencySVG from "../../assets/emergency.svg"
+import tw from '../../tailwind'
 import { Button, TouchableOpacity } from 'react-native-ui-lib'
-import DriverProfile from '@/components/bottomsheet-ui/DriverProfile'
-import { useRouter } from 'expo-router'
+import DriverProfile from '../../components/bottomsheet-ui/DriverProfile'
+import { useNavigation } from '@react-navigation/native'
 
 
 // Handle both driver arriving and also ride in progress.
 
 const Index = () => {
 
-    const router = useRouter()
+    const navigation = useNavigation()
     const [inProgress, setInProgress] = useState<boolean>(false)
 
   return (
@@ -49,7 +49,7 @@ const Index = () => {
         <Button outline 
         style={tw`outline rounded-md`}
         label= "Cancel Ride"
-        onPress = {()=> router.push("/(tabs)/bottomsheet2/reached_destination")}
+        onPress = {()=> navigation.navigate('ReachedDestination')}
       />
     </View>
   )

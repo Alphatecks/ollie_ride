@@ -1,22 +1,23 @@
 import { View, Text } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import CarBigSVG from "@/assets/car-big.svg";
-import tw from '@/tailwind';
+import CarBigSVG from "../../assets/car-big.svg";
+import tw from '../../tailwind';
 import { Bar } from 'react-native-progress';
-import { baseColor } from '@/constants/Colors';
+import { baseColor } from '../../constants/Colors';
 import { Button } from 'react-native-ui-lib';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '@/firebaseConfig'; // Ensure your Firebase config is imported
+import { db } from '../../firebaseConfig'; // Ensure your Firebase config is imported
 import Toast from 'react-native-toast-message';
 
 const Searching = () => {
-  const router = useRouter();
+  const navigation = useNavigation();
+  const route = useRoute();
   const [showProgress, setShowProgress] = useState(false);
   const [tripData, setTripData] = useState(null);
   const [hasCanceledTrip, setHasCanceledTrip] = useState<boolean>(false)
 
-  const params = useLocalSearchParams();
+  const params = route.params;
   const { tripId } = params;
 
   useEffect(() => {
@@ -75,7 +76,7 @@ const Searching = () => {
         type: "success",
         text1: "Ride canceled successfully!!"
       });
-      // router.push("/(tabs)/bottomsheet2/driver_arriving");
+      // navigation.navigate('DriverArriving');
     } catch (error) {
       setHasCanceledTrip(false)
 

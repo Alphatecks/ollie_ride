@@ -1,17 +1,17 @@
 import { View, Text } from 'react-native'
 import React, { useState } from 'react'
 import { Button, RadioButton, RadioGroup } from 'react-native-ui-lib'
-import tw from '@/tailwind'
-import { baseColor } from '@/constants/Colors'
-import CardInfo from '@/components/bottomsheet-ui/CardInfo'
-import { Feather } from '@expo/vector-icons'
-import { useRouter } from 'expo-router'
+import tw from '../../tailwind'
+import { baseColor } from '../../constants/Colors'
+import CardInfo from '../../components/bottomsheet-ui/CardInfo'
+import Feather from 'react-native-vector-icons/Feather'
+import { useNavigation } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 const Index = () => {
     const [currentPaymentMethod, setCurrentPaymentMethod] = useState("cash")
     console.log(currentPaymentMethod)
-    const router = useRouter()
+    const navigation = useNavigation()
 
     return (
         <View>
@@ -32,7 +32,7 @@ const Index = () => {
         <View style={tw`flex-row items-center gap-2 my-4`}>
             <Feather name='plus' style={tw`text-ollie-base`} size={24}/>
             <TouchableOpacity style={tw`text-ollie-base poppins`}
-            onPress={()=>router.push("/payment/add_card")}
+            onPress={()=> navigation.navigate('AddCard')}
             >
                 <Text>Add Card</Text>
             </TouchableOpacity>

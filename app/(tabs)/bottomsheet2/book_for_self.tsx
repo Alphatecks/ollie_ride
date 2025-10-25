@@ -1,24 +1,25 @@
 import { View, Text, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Avatar, Button, RadioButton, RadioGroup } from 'react-native-ui-lib'
-import tw from '@/tailwind'
-import UserSVG from "@/assets/profile-blue.svg"
-import ContactSVG from "@/assets/contacts.svg"
-import { baseColor } from '@/constants/Colors'
-import { useLocalSearchParams, useRouter } from 'expo-router'
-import { Trip, TripParams, TripStatus, UserProfile } from '@/types'
+import tw from '../../tailwind'
+import UserSVG from "../../assets/profile-blue.svg"
+import ContactSVG from "../../assets/contacts.svg"
+import { baseColor } from '../../constants/Colors'
+import { useNavigation, useRoute } from '@react-navigation/native'
+import { Trip, TripParams, TripStatus, UserProfile } from '../../types'
 import { addDoc, collection, doc, getDoc, Timestamp } from 'firebase/firestore'
-import { auth, db } from '@/firebaseConfig'
-import { calculateTripFare, generateAccessCode } from '@/utils/utils'
-import { rideOptions } from '@/constants/Data'
+import { auth, db } from '../../firebaseConfig'
+import { calculateTripFare, generateAccessCode } from '../../utils/utils'
+import { rideOptions } from '../../constants/Data'
 import Toast from 'react-native-toast-message'
-import ButtonLoader from '@/components/general/ButtonLoader'
+import ButtonLoader from '../../components/general/ButtonLoader'
 
 const Index = () => {
     const [currentContact, setCurrentContact] = useState<"self" | "others">("self")
 
-    const router = useRouter()
-    const params = useLocalSearchParams()
+    const navigation = useNavigation()
+    const route = useRoute()
+    const params = route.params
 
     const currentUser = auth.currentUser
 
@@ -103,7 +104,7 @@ const Index = () => {
             });
             setLoading(false)
 
-            router.push({pathname: "/(tabs)/bottomsheet2/searching_driver", params: {...params, tripId: docRef.id}});
+            navigation.navigate('SearchingDriver', { ...params, tripId: docRef.id });
 
         } catch (error) {
             console.error("Error creating trip:", error);

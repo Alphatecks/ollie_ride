@@ -1,17 +1,17 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import tw from '@/tailwind'
-import DoubleAddress from '@/components/home/DoubleAddress'
-import { DoubleLocationCardVariant } from '@/components/home/DoubleLocationCard'
-import CardInfo from '@/components/bottomsheet-ui/CardInfo'
-import NoCardFound from '@/components/bottomsheet-ui/NoCardFound'
+import tw from '../../tailwind'
+import DoubleAddress from '../../components/home/DoubleAddress'
+import { DoubleLocationCardVariant } from '../../components/home/DoubleLocationCard'
+import CardInfo from '../../components/bottomsheet-ui/CardInfo'
+import NoCardFound from '../../components/bottomsheet-ui/NoCardFound'
 import { Button } from 'react-native-ui-lib'
-import { useRouter } from 'expo-router'
+import { useNavigation } from '@react-navigation/native'
 
 
 const Index = () => {
 
-    const router = useRouter()
+    const navigation = useNavigation()
   return (
     <View>
         <Text style={tw`border-b-[0.8px] border-gray-300 py-3 poppins text-center`}>You have arrived at your destination</Text>
@@ -41,7 +41,7 @@ const Index = () => {
         <View style={tw`gap-6`}>
             <CardInfo cardNumber='2980948384923' expiry='02/03' />
             <Button label="Make Payment" style={tw`btn`} poppins
-            onPress ={router.push("/(tabs)/bottomsheet2/payment_method")}
+            onPress ={() => navigation.navigate('PaymentMethod')}
             />
         </View>
 
