@@ -2,21 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import Text from "react-native-ui-lib/text";
 import { Button, TextField } from 'react-native-ui-lib';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import tw from "@/tailwind";
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import tw from "../../tailwind";
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '@/firebaseConfig';
+import { db } from '../../firebaseConfig';
 import Toast from 'react-native-toast-message';
-import ButtonLoader from '@/components/general/ButtonLoader';
+import ButtonLoader from '../../components/general/ButtonLoader';
 
 const RateRider = () => {
     const [reviewRating, setReviewRating] = useState<number>(0); // Track the rating
     const [reviewText, setReviewText] = useState<string>('');
-    const router = useRouter();
-	const [loading, setLoading] = useState<boolean>(false)
+    const navigation = useNavigation();
+    const route = useRoute();
+    const [loading, setLoading] = useState<boolean>(false)
 
-	const params = useLocalSearchParams()
+    const params = route.params;
 
 	console.log(params)
 
@@ -42,7 +43,7 @@ const RateRider = () => {
 				text1: "You rated the trip!!"
 			})
 			setLoading(false)
-			router.push({
+			navigation.navigate('MainTabs', {
 				pathname: "/riding_flow/download_receipt",
 				params: params
 			})

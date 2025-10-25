@@ -1,24 +1,26 @@
 import React from 'react'
 import { View, Image, ScrollView } from 'react-native'
 import Text from "react-native-ui-lib/text"
-import { useLocalSearchParams, useRouter } from "expo-router"
+import { useNavigation, useRoute } from '@react-navigation/native'
 
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import tw from "@/tailwind"
-import { formatDate } from '@/utils/utils';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import tw from "../../tailwind"
+import { formatDate } from '../../utils/utils';
 
 
 
 
 const History = () => {
-	const trip = useLocalSearchParams()
+	const navigation = useNavigation();
+	const route = useRoute();
+	const trip = route.params;
 
 	console.log(formatDate(Date(trip?.tripStartedTime)))
 
 	// console.log(trip)
 	const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd"
 
-	const router = useRouter()
+	// const navigation = useNavigation()
 	// console.log(params)
 	return (
 		<ScrollView 

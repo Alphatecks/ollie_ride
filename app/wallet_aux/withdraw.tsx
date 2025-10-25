@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Text from 'react-native-ui-lib/text';
 import Button from 'react-native-ui-lib/button';
 import { TextInput, View, Alert, ActivityIndicator, TouchableOpacity } from 'react-native';
-import tw from '@/tailwind';
-import { useRouter } from 'expo-router';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { auth, db } from '@/firebaseConfig';
+import tw from '../../tailwind';
+import { useNavigation } from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { auth, db } from '../../firebaseConfig';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore'; // Firestore methods
 
 const Withdraw = () => {
@@ -15,7 +15,7 @@ const Withdraw = () => {
   const [bankAccount, setBankAccount] = useState(null);
   const [loading, setLoading] = useState(true);
   const [totalBalance, setTotalBalance] = useState<number>(0); // User's total balance
-  const router = useRouter();
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -25,7 +25,7 @@ const Withdraw = () => {
         if (!currentUser) {
           Alert.alert('Error', 'User not authenticated');
           setLoading(false);
-          router.push('/');
+          navigation.navigate('MainTabs');
           return;
         }
 
@@ -97,7 +97,7 @@ const Withdraw = () => {
 
       {bankAccount ? (
         <TouchableOpacity 
-        onPress={() => router.push('payment/account_list')}
+        onPress={() => navigation.navigate('AccountList')}
         style={tw`flex-row items-center justify-between border border-blue-900 p-5`}>
           <View style={tw`flex-row items-center gap-2`}>
             <FontAwesome name="bank" size={22} style={tw``} />
@@ -118,12 +118,12 @@ const Withdraw = () => {
             name="trash-bin-outline"
             size={40}
             color="black"
-            onPress={() => router.push('payment/account_list')}
+            onPress={() => navigation.navigate('AccountList')}
           />
           <Text poppins center style={tw``}>
             Please add a bank account first before withdrawal
           </Text>
-          <Button poppins label="Add Bank Details" style={tw`btn`} onPress={() => router.push('payment/add_bank')} />
+          <Button poppins label="Add Bank Details" style={tw`btn`} onPress={() => navigation.navigate('AddBank')} />
         </View>
       )}
 
@@ -154,7 +154,7 @@ const Withdraw = () => {
             poppins
             label="Withdraw"
             style={tw`btn`}
-            onPress={() => router.push('wallet_aux/withdraw_success')}
+            onPress={() => navigation.navigate('WithdrawSuccess')}
             disabled={!bankAccount || isInputDisabled || amount === 0} // Disable button if no bankAccount or invalid input
           />
         </View>
