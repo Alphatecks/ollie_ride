@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import tw from '@/tailwind';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import tw from '../../tailwind';
 
 type PulsingCarIconProps = {
     handlePress: () => void;
