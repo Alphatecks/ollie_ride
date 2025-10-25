@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView } from 'react-native';
 import { View, Text, Button } from 'react-native-ui-lib';
 import { SafeAreaView } from "react-native-safe-area-context";
-import tw from "@/tailwind";
-import { useRouter } from "expo-router";
+import tw from "../../tailwind";
+import { useNavigation } from '@react-navigation/native';
 import { BarChart } from "react-native-gifted-charts";
 import { doc, getDoc, onSnapshot } from 'firebase/firestore'; // Firestore methods
-import { auth, db } from '@/firebaseConfig'; // Firebase setup
-import { DriverData } from '@/types';
+import { auth, db } from '../../firebaseConfig'; // Firebase setup
+import { DriverData } from '../../types';
 
 
 console.log(auth.currentUser)
@@ -17,7 +17,7 @@ const Wallet = () => {
   const [totalBalance, setTotalBalance] = useState<number>(0);
   const [userData, setUserData] = useState<DriverData>()
   const [loading, setLoading] = useState(true); // Set loading to true initially
-  const router = useRouter();
+  const navigation = useNavigation();
 
   // Fetch the current totalBalance and then listen for changes
   useEffect(() => {
@@ -80,14 +80,14 @@ const Wallet = () => {
       <View style={tw`flex-row gap-4 border border-[0.8px] p-4 rounded-md border-blue-900 my-3`}>
         <View style={tw`flex-grow`}>
           <Text poppins style={tw`text-gray-500`}>Wallet Balance</Text>
-          <Text poppinsMedium h2 onPress = {()=> router.push("/riding_flow/download_receipt")} >₦{totalBalance.toFixed(2)}</Text>
+          <Text poppinsMedium h2 onPress = {()=> navigation.navigate('DownloadReceipt')} >₦{totalBalance.toFixed(2)}</Text>
         </View>
         <View style={tw`flex-grow justify-center`}>
           <Button
             label="Add Money"
             style={tw`btn`}
             poppins
-            onPress={() => router.push("/wallet_aux/withdraw")}
+            onPress={() => navigation.navigate('Withdraw')}
           />
         </View>
       </View>
@@ -95,7 +95,7 @@ const Wallet = () => {
       {/* Bar Chart and Other Stats */}
       <View style={tw`items-center my-4`}>
         <Text poppins>Dec 18 - 16</Text>
-        <Text poppinsMedium h2 onPress = {()=> router.push("/riding_flow/cancel_ride")}>₦0.00</Text>
+        <Text poppinsMedium h2 onPress = {()=> navigation.navigate('CancelRide')}>₦0.00</Text>
       </View>
 
       <View style={tw`my-4`}>

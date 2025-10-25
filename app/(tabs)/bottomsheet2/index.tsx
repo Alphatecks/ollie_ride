@@ -3,26 +3,26 @@
 import { View, TouchableWithoutFeedback } from "react-native";
 import Text from 'react-native-ui-lib/text';
 import Button from 'react-native-ui-lib/button';
-import tw from "@/tailwind";
+import tw from "../../tailwind";
 import { Keyboard } from 'react-native';
 
-import { useRouter } from "expo-router";
-import DoubleAddress from "@/components/home/DoubleAddress";
-import { useTripStore } from "@/store/tripStore";
+import { useNavigation } from '@react-navigation/native';
+import DoubleAddress from "../../components/home/DoubleAddress";
+import { useTripStore } from "../../store/tripStore";
 import Toast from "react-native-toast-message";
 import { TextField } from "react-native-ui-lib";
-import { Feather } from "@expo/vector-icons";
-import TargetSVG from "@/assets/target.svg"
-import MapSVG from "@/assets/Map.svg"
-import RecentPlaces from "@/components/bottomsheet-ui/RecentPlaces";
-import DoubleLocationCard from "@/components/home/DoubleLocationCard";
+import Feather from "react-native-vector-icons/Feather";
+import TargetSVG from "../../assets/target.svg"
+import MapSVG from "../../assets/Map.svg"
+import RecentPlaces from "../../components/bottomsheet-ui/RecentPlaces";
+import DoubleLocationCard from "../../components/home/DoubleLocationCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
-import * as Location from 'expo-location';
+import Geolocation from '@react-native-community/geolocation';
 
-import { googleSearch, googleDistanceMatrix } from "@/utils/useSearch"
-import { LocationData } from "@/types";
-import { auth, db } from "@/firebaseConfig";
+import { googleSearch, googleDistanceMatrix } from "../../utils/useSearch"
+import { LocationData } from "../../types";
+import { auth, db } from "../../firebaseConfig";
 import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
 
 
@@ -30,7 +30,7 @@ const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspo
 
 const Index = () => {
   
-  const router = useRouter();
+  const navigation = useNavigation();
 
   const { selectedTrip, setSelectedTrip } = useTripStore();
   const [locationDistance, setLocationDistance] = useState({})
@@ -114,7 +114,7 @@ const Index = () => {
 
   const onClose = () => {
 
-    router.push("/(tabs)/bottomsheet2/book_ride")
+    navigation.navigate('BookRide')
     
   }
 
@@ -149,7 +149,7 @@ const handleSuggestionClickTo = (suggestion) => {
 
 const handlePress = () => {
 
-  router.push({pathname: "/(tabs)/bottomsheet2/book_ride", 
+  navigation.navigate('BookRide', { 
     params: {...locationDistance, fromLocation: fromText, 
       toLocation: toText,
       riderLongitude: location.coords.longitude,

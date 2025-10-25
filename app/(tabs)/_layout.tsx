@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { auth, db } from "@/firebaseConfig";
+import { auth, db } from "../../firebaseConfig";
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { Tabs } from 'expo-router';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { TouchableOpacity, View, ActivityIndicator } from 'react-native';
-import tw from "@/tailwind";
+import tw from "../../tailwind";
 import { useDeviceContext } from 'twrnc';
 import Text from "react-native-ui-lib/text";
-import Entypo from '@expo/vector-icons/Entypo';
+import Entypo from 'react-native-vector-icons/Entypo';
 import { Badge } from 'react-native-ui-lib';
-import { baseColor } from '@/constants/Colors';
+import { baseColor } from '../../constants/Colors';
 
 
 export default function TabLayout() {
