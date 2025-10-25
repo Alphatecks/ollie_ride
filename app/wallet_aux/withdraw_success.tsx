@@ -2,13 +2,13 @@ import React from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
 import Text from "react-native-ui-lib/text"
 import tw from 'twrnc'; 
-import { useRouter } from "expo-router"
+import { useNavigation } from '@react-navigation/native'
 
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 
 const WithdrawSuccess = () => {
-  const router = useRouter()
+  const navigation = useNavigation()
 
   return (
     <View style={tw`flex-1 justify-around items-center bg-white`}>
@@ -20,7 +20,7 @@ const WithdrawSuccess = () => {
         <Text style={tw`text-gray-500 mb-10`} poppins >Your money should be available in about 1 hour</Text>
       </View>
       <TouchableOpacity style={tw`p-6`}
-        onPress = {() => router.push("(tabs)")}
+        onPress = {() => navigation.navigate('MainTabs')}
       >
         <Text style={tw`text-blue-700 underline`} poppins >Back to home</Text>
       </TouchableOpacity>

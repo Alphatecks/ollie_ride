@@ -1,23 +1,25 @@
 import React, {useEffect, useState} from 'react'
 import { ScrollView, View } from 'react-native'
 import Text from "react-native-ui-lib/text"
-import tw from "@/tailwind"
+import tw from "../../tailwind"
 
 import { Button, TextField } from 'react-native-ui-lib';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import Car from "@/assets/car.svg"
-import NotificationCardBase from '@/components/notification/NotificationCardBase';
-import { auth, db } from '@/firebaseConfig';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import Car from "../../assets/car.svg"
+import NotificationCardBase from '../../components/notification/NotificationCardBase';
+import { auth, db } from '../../firebaseConfig';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams } from 'expo-router';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { doc, getDoc } from 'firebase/firestore';
-import { Trip } from '@/types';
+import { Trip } from '../../types';
 
 const DownloadReceipt = () => {
 
-    const params = useLocalSearchParams()
+    const navigation = useNavigation()
+    const route = useRoute()
+    const params = route.params
 
     const [trip, setTrip] = useState<Trip>(null)
 
