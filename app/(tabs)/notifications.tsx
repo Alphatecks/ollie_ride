@@ -2,22 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import Text from 'react-native-ui-lib/text';
 import Avatar from 'react-native-ui-lib/avatar';
-import tw from "@/tailwind";
-import Ionicons from '@expo/vector-icons/Ionicons';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { useRouter } from "expo-router";
+import tw from "../../tailwind";
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
 import { collection, onSnapshot, query, where, doc, addDoc, setDoc } from "firebase/firestore";
-import { db, auth } from "@/firebaseConfig"; // Adjust the import based on your setup
-import { NotificationCardMessage } from "@/components/notification/NotificationCardBase";
-import { Trip } from '@/types';
-import { ChatBubble } from '@/components/chat/Chat';
-import { getNotifications } from '@/utils/booking';
+import { db, auth } from "../../firebaseConfig"; // Adjust the import based on your setup
+import { NotificationCardMessage } from "../../components/notification/NotificationCardBase";
+import { Trip } from '../../types';
+import { ChatBubble } from '../../components/chat/Chat';
+import { getNotifications } from '../../utils/booking';
 
 const Notifications = () => {
   const [ongoingTrip, setOngoingTrip] = useState<Trip | []>([]);
   const [notifications, setNotifications] = useState<any[]>([]);
-  const router = useRouter();
+  const navigation = useNavigation();
   const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
   const driver = auth?.currentUser
 
@@ -87,7 +87,7 @@ const Notifications = () => {
 			  >Call</Text>
             </TouchableOpacity>
             <TouchableOpacity style={tw`items-center gap-2`} 
-			  	onPress = {()=> router.push(`/chat/${ongoingTrip?.id}`)}
+			  	onPress = {()=> navigation.navigate('Chat', { tripId: ongoingTrip?.id })}
 				  >
               <MaterialIcons name="message" size={24} style={tw`text-ollie-base`} />
               <Text poppinsMedium style={tw`text-ollie-base`}>Chat</Text>

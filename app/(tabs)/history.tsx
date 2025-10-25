@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Avatar } from 'react-native-ui-lib';
 import { FlatList } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import tw from '@/tailwind';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import TripCard from '@/components/history/TripCard';
+import tw from '../../tailwind';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import TripCard from '../../components/history/TripCard';
 import { collection, getDocs, query, where } from 'firebase/firestore'; // Firestore methods
-import { auth, db } from '@/firebaseConfig'; // Firebase setup
-import { Trip } from '@/types';
+import { auth, db } from '../../firebaseConfig'; // Firebase setup
+import { Trip } from '../../types';
 
 interface TripData {
   id: string;
@@ -20,7 +20,7 @@ interface TripData {
 const History = () => {
   const [tripData, setTripData] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  const navigation = useNavigation();
 
   // Fetch trip history from Firestore
   useEffect(() => {
@@ -69,7 +69,7 @@ const History = () => {
       tripTotal={item.tripAmount}
       userImageUri={item.riderImageUrl}
       rating={item?.rating}
-      handlePress={() => router.push({
+      handlePress={() => navigation.navigate('TripDetails', {
         pathname: `/history_aux/${item.id}`,
         params: item
       })}

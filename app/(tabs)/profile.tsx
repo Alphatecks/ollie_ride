@@ -2,25 +2,25 @@ import React, { useState, useEffect } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import { View, Text, Button, Avatar } from 'react-native-ui-lib'
 import { SafeAreaView } from "react-native-safe-area-context";
-import tw from "@/tailwind";
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import * as ImagePicker from 'expo-image-picker';
+import tw from "../../tailwind";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import * as ImagePicker from 'react-native-image-picker';
 
 
-import { auth, db, storage } from "@/firebaseConfig"
+import { auth, db, storage } from "../../firebaseConfig"
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { updateProfile, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 
-import { useRouter } from "expo-router"
+import { useNavigation } from '@react-navigation/native'
 
-import ProfileOptionsCard from "@/components/profile/ProfileOptionsCard"
-import { ProfileOptionsLogoutCard } from "@/components/profile/ProfileOptionsCard"
+import ProfileOptionsCard from "../../components/profile/ProfileOptionsCard"
+import { ProfileOptionsLogoutCard } from "../../components/profile/ProfileOptionsCard"
 
-import { getAllCollectionsData } from "@/utils/firebase"
+import { getAllCollectionsData } from "../../utils/firebase"
 
 import Toast from "react-native-toast-message"
 
@@ -32,7 +32,7 @@ import Toast from "react-native-toast-message"
 // console.log(auth.currentUser)
 
 const Profile = () => {
-	const router = useRouter()
+	const navigation = useNavigation()
 
 	const [avatarUri, setAvatarUri] = useState<string | null>(null); // Local avatar state
 
@@ -149,7 +149,7 @@ const Profile = () => {
 		console.log("Pressed logout!!")
 	    try {
 	      await auth.signOut();  // Sign out the user
-	      router.replace('/auth/sign_in');
+	      navigation.navigate('SignIn');
 	    } catch (error) {
 	      console.error('Error signing out: ', error);
         Toast.show({
@@ -178,7 +178,7 @@ const Profile = () => {
 						</View>
 						<Text style={tw`poppinsMedium text-white`}>{auth.currentUser.displayName}</Text>
 					</View>
-					<Text style={tw`text-white py-3`} onPress = {()=> router.push("auth/update_profile")} >Edit</Text>
+					<Text style={tw`text-white py-3`} onPress = {()=> navigation.navigate('UpdateProfile')} >Edit</Text>
 				</View>
 			
 
