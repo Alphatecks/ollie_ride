@@ -3,7 +3,7 @@ import { View, Text, Avatar } from 'react-native-ui-lib';
 import { FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import tw from '../../tailwind';
+import tw from "../../../tailwind";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import TripCard from '../../components/history/TripCard';
 import { collection, getDocs, query, where } from 'firebase/firestore'; // Firestore methods

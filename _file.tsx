@@ -21,7 +21,7 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'; // Importin
 
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'; // MapView and Marker from react-native-maps for showing the map and rider markers
 import * as Location from 'expo-location'; // Importing expo-location for handling location permissions and fetching user location
-import tw from "@/tailwind"; // TailwindCSS for styling
+import tw from "./tailwind"; // TailwindCSS for styling
 
 import { getNearbyPlaces } from "@/utils/googleAPI"
 import {createTrip, fetchAvailableTrips} from "@/utils/booking"

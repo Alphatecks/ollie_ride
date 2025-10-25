@@ -3,7 +3,7 @@ import React from 'react'
 import LeftArrowSVG from "@/assets/ArrowLeft.svg";
 import RightArrowSVG from "@/assets/ArrowRight.svg";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import tw from '@/tailwind';
+import tw from '../../../tailwind';
 
 interface TimeIndicatorProps {
     minutesAway: string;

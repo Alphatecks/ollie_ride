@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import tw from "@/tailwind";
+import tw from "../../../tailwind";
 
 
 type RepeatOptionGroupProps = {

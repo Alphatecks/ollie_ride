@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Picker, Colors } from "react-native-ui-lib";
 import { AntDesign } from "@expo/vector-icons";
-import tw from "@/tailwind";
+import tw from "../../tailwind";
 
 type GenderPickerProps = {
   selectedGender: string | null;

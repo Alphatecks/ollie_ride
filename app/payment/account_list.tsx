@@ -7,7 +7,7 @@ import { collection, onSnapshot } from 'firebase/firestore'; // Firestore method
 import { auth, db } from '@/firebaseConfig'; // Import Firebase auth and Firestore
 import { useRouter } from 'expo-router';
 import PaymentCard from '@/components/payment/PaymentCard';
-import tw from '@/tailwind';
+import tw from '../../../tailwind';
 
 const AccountList = () => {
   const [bankAccounts, setBankAccounts] = useState([]);

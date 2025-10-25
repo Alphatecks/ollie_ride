@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import LocationArrowSVG from "@/assets/locationArrow.svg";
-import tw from '@/tailwind';
+import tw from '../../../tailwind';
 
 interface DoubleAddressProps {
   fromLocation?: string;

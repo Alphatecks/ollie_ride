@@ -1,7 +1,7 @@
 import { View, Text, RadioGroup, RadioButton, Button } from 'react-native-ui-lib';
 import {TextInput} from "react-native"
 import React, { useState } from 'react';
-import tw from '@/tailwind';
+import tw from '../../../tailwind';
 
 const CancelRide = () => {
   const [currentValue, setCurrentValue] = useState('');

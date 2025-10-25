@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text } from 'react-native-ui-lib'
-import tw from "@/tailwind"
+import tw from "../../tailwind"
 import * as Progress from 'react-native-progress';
 
 

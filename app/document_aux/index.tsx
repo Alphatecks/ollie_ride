@@ -4,7 +4,7 @@ import Text from 'react-native-ui-lib/text'
 
 import DocumentCard from "@/components/document/DocumentCard"
 
-import tw from "@/tailwind";
+import tw from "../../../tailwind";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
