@@ -1,12 +1,12 @@
 import React from 'react'
 import { View } from 'react-native'
 import Text from "react-native-ui-lib/text"
-import tw from "@/tailwind"
+import tw from "../../tailwind"
 
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
-import PaymentCard from "@/components/payment/PaymentCard"
+import PaymentCard from "../../components/payment/PaymentCard"
 
 const Index = () => {
 	return (

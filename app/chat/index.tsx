@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
-import { db, auth } from '@/firebaseConfig';
-import { useRouter } from 'expo-router';
-import tw from '@/tailwind';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { db, auth } from '../../firebaseConfig';
+import { useNavigation } from '@react-navigation/native';
+import tw from '../../tailwind';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 const ChatListScreen = () => {
   const [conversations, setConversations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const user = auth.currentUser;  // Get the current logged-in user
-  const router = useRouter();     // Use Expo Router for navigation
+  const navigation = useNavigation();     // Use Expo Router for navigation
 
   useEffect(() => {
     // Fetch all conversations where the current user is a participant
@@ -39,7 +39,7 @@ const ChatListScreen = () => {
 
   // Handle navigation to a chat 
   const openChat = (conversationId, otherUserId) => {
-    router.push({
+    navigation.navigate('ChatRoom', {
       pathname: '/chat',
       params: { conversationId, otherUserId }, // Pass conversationId and other user's ID as params
     });

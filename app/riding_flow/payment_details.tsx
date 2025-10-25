@@ -1,20 +1,21 @@
 import React, {useState} from 'react'
 import { Alert, View } from 'react-native'
 import Text from "react-native-ui-lib/text"
-import tw from "@/tailwind"
+import tw from "../../tailwind"
 
 import { Button, RadioButton, RadioGroup } from 'react-native-ui-lib';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '@/firebaseConfig';
-import ButtonLoader from '@/components/general/ButtonLoader';
+import { db } from '../../firebaseConfig';
+import ButtonLoader from '../../components/general/ButtonLoader';
 
 
 const PaymentDetails = () => {
 	const [currentValue, setCurrentValue] = useState<string>('Cash');
-	const router = useRouter()
+	const navigation = useNavigation()
+	const route = useRoute()
 
-	const params = useLocalSearchParams()
+	const params = route.params
 	const [loading, setLoading] = useState<boolean>(false)
 
 	console.log("From bottomsheet: ", params?.id)
@@ -42,7 +43,7 @@ const PaymentDetails = () => {
 
 			console.log("Verified payment_details and updated firebase")
 
-			router.push({
+			navigation.navigate('RateRider', {
 				pathname: "/riding_flow/rate_rider",
 				params: params
 			})
