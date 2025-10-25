@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 import Text from "react-native-ui-lib/text";
 import { Button, TextField } from 'react-native-ui-lib';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import tw from "../../tailwind";
+import tw from "../../../tailwind";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';

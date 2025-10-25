@@ -4,7 +4,7 @@ import { KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator, Dimensio
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import tw from "../../tailwind"
+import tw from "../../../tailwind"
 import { useNavigation } from '@react-navigation/native'
 
 import GenderPicker from '../../components/general/GenderPicker'

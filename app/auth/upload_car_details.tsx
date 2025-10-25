@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
 import {Text, Button} from "react-native-ui-lib"
 
-import tw from "../../tailwind";
+import tw from "../../../tailwind";
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ButtonLoader from "../../components/general/ButtonLoader";

@@ -3,7 +3,7 @@
 import { View, TouchableWithoutFeedback } from "react-native";
 import Text from 'react-native-ui-lib/text';
 import Button from 'react-native-ui-lib/button';
-import tw from "../../tailwind";
+import tw from "../../../tailwind";
 import { Keyboard } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';

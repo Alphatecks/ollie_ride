@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView } from 'react-native';
 import { View, Text, Button } from 'react-native-ui-lib';
 import { SafeAreaView } from "react-native-safe-area-context";
-import tw from "../../tailwind";
+import tw from "../../../tailwind";
 import { useNavigation } from '@react-navigation/native';
 import { BarChart } from "react-native-gifted-charts";
 import { doc, getDoc, onSnapshot } from 'firebase/firestore'; // Firestore methods

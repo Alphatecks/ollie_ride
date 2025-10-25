@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import Text from 'react-native-ui-lib/text';
 import Avatar from 'react-native-ui-lib/avatar';
-import tw from "../../tailwind";
+import tw from "../../../tailwind";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';

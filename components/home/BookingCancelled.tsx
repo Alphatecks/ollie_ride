@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import Text from 'react-native-ui-lib/text'
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import tw from "../../tailwind"; // TailwindCSS for styling
+import tw from "../../../tailwind"; // TailwindCSS for styling
 import Button from 'react-native-ui-lib/button'
 
 interface BookingCancelledProps {

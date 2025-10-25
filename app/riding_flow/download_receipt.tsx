@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { ScrollView, View } from 'react-native'
 import Text from "react-native-ui-lib/text"
-import tw from "../../tailwind"
+import tw from "../../../tailwind"
 
 import { Button, TextField } from 'react-native-ui-lib';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';

@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'                                                    
 import { View, Text, TextField, Button, TouchableOpacity } from 'react-native-ui-lib'                        
-import tw from "../../tailwind"
+import tw from "../../../tailwind"
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"

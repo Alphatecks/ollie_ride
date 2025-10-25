@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import { Alert, View } from 'react-native'
 import Text from "react-native-ui-lib/text"
-import tw from "../../tailwind"
+import tw from "../../../tailwind"
 
 import { Button, RadioButton, RadioGroup } from 'react-native-ui-lib';
 import { useNavigation, useRoute } from '@react-navigation/native';

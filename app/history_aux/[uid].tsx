@@ -4,7 +4,7 @@ import Text from "react-native-ui-lib/text"
 import { useNavigation, useRoute } from '@react-navigation/native'
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import tw from "../../tailwind"
+import tw from "../../../tailwind"
 import { formatDate } from '../../utils/utils';
 
 

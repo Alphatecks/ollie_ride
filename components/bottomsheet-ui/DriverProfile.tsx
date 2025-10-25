@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import tw from "../../tailwind";
+import tw from "../../../tailwind";
 import { IMAGE_URL } from "../../constants/Data";
 import { baseColor } from "../../constants/Colors";
 import CallSVG from "../../assets/call.svg"

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import tw from "../../tailwind";
+import tw from "../../../tailwind";
 import { Button } from "react-native-ui-lib";
 import Feather from "react-native-vector-icons/Feather";
 
