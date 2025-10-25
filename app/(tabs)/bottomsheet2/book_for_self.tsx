@@ -2,8 +2,8 @@ import { View, Text, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Avatar, Button, RadioButton, RadioGroup } from 'react-native-ui-lib'
 import tw from '../../tailwind'
-import UserSVG from "../../assets/profile-blue.svg"
-import ContactSVG from "../../assets/contacts.svg"
+import UserSVG from "../../../assets/profile-blue.svg"
+import ContactSVG from "../../../assets/contacts.svg"
 import { baseColor } from '../../constants/Colors'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Trip, TripParams, TripStatus, UserProfile } from '../../types'

@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native'
 import React, { useState } from 'react'
-import CarBigSVG from "../../assets/car-big.svg"
-import EmergencySVG from "../../assets/emergency.svg"
+import CarBigSVG from "../../../assets/car-big.svg"
+import EmergencySVG from "../../../assets/emergency.svg"
 import tw from '../../tailwind'
 import { Button, TouchableOpacity } from 'react-native-ui-lib'
 import DriverProfile from '../../components/bottomsheet-ui/DriverProfile'

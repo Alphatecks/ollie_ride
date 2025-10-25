@@ -12,8 +12,8 @@ import { useTripStore } from "../../store/tripStore";
 import Toast from "react-native-toast-message";
 import { TextField } from "react-native-ui-lib";
 import Feather from "react-native-vector-icons/Feather";
-import TargetSVG from "../../assets/target.svg"
-import MapSVG from "../../assets/Map.svg"
+import TargetSVG from "../../../assets/target.svg"
+import MapSVG from "../../../assets/Map.svg"
 import RecentPlaces from "../../components/bottomsheet-ui/RecentPlaces";
 import DoubleLocationCard from "../../components/home/DoubleLocationCard";
 import { ScrollView } from "react-native-gesture-handler";

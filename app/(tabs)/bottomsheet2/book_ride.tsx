@@ -7,7 +7,7 @@ import BookingOption from '../../components/bottomsheet-ui/BookingOption';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import CalendarSVG from "../../assets/calendar.svg"
+import CalendarSVG from "../../../assets/calendar.svg"
 import { ExpandableSection } from 'react-native-ui-lib';
 import Accordion from '../../components/bottomsheet-ui/Accordion';
 import { TextInput } from 'react-native-gesture-handler';

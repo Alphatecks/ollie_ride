@@ -2,7 +2,7 @@ import { View, Text, ExpandableSection, Button } from 'react-native-ui-lib'
 import React, {useState} from 'react'
 import tw from '../../tailwind'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Headset from "../../assets/Headset.svg"
+import Headset from "../../../assets/Headset.svg"
 
 const Index = () => {
 
