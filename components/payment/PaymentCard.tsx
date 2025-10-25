@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native-ui-lib';
-import tw from '@/tailwind';
-import Feather from '@expo/vector-icons/Feather';
-import { useRouter } from 'expo-router';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import tw from '../../tailwind';
+import Feather from 'react-native-vector-icons/Feather';
+import { useNavigation } from '@react-navigation/native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface PaymentCardProps {
   title: string;
@@ -22,7 +22,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
   hasArrowIcon = true,
   handlePress
 }) => {
-  const router = useRouter();
+  const navigation = useNavigation();
 
   // Determine background color based on status
   // const backgroundColor = () => {
@@ -43,7 +43,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
   return (
     <TouchableOpacity
       style={tw`flex-row justify-between items-center rounded-md p-2 py-4`}
-      onPress={() => router.push(href)}
+      onPress={() => navigation.navigate(href)}
     >
       <View style={tw`flex-row items-center gap-3 flex-1`}>
         {icon}

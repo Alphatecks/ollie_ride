@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { Avatar } from 'react-native-ui-lib';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import tw from '@/tailwind';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import tw from '../../tailwind';
 
 interface TripCardProps {
   userName: string;

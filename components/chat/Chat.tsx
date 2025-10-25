@@ -1,7 +1,7 @@
 import React, {ReactNode} from 'react'
 import { View, Text, Button, Colors, Image } from 'react-native-ui-lib'
-import HeadsetSVG from "@/assets/Headset.svg"
-import tw from '@/tailwind'
+import HeadsetSVG from "../../assets/Headset.svg"
+import tw from '../../tailwind'
 
 // import CarRedSVG from "@/assets/CarRed.svg"
 // import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';

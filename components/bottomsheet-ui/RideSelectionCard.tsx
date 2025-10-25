@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import tw from '@/tailwind';
+import Feather from 'react-native-vector-icons/Feather';
+import tw from '../../tailwind';
 
 const RideSelectionCard = ({
   // Customizable props with defaults
