@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
 import {Text, Button} from "react-native-ui-lib"
 
-import tw from "@/tailwind";
-import Entypo from '@expo/vector-icons/Entypo';
-import { FontAwesome } from '@expo/vector-icons';
-import ButtonLoader from "@/components/general/ButtonLoader";
-import { auth, db, storage } from "@/firebaseConfig";
+import tw from "../../tailwind";
+import Entypo from 'react-native-vector-icons/Entypo';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import ButtonLoader from "../../components/general/ButtonLoader";
+import { auth, db, storage } from "../../firebaseConfig";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
-import { useRouter } from "expo-router";
-import * as ImagePicker from 'expo-image-picker';
+import { useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'react-native-image-picker';
 
 import Toast from "react-native-toast-message"
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 const UploadCarDetails = () => {
   const [carFrontURI, setCarFrontURI] = useState<string>(""); // Local URI for front image
@@ -22,7 +22,7 @@ const UploadCarDetails = () => {
   const [carBackURL, setCarBackURL] = useState<string>("");   // Firebase URL for back image
   const [loading, setLoading] = useState<boolean>(false);
 
-  const router = useRouter();
+  const navigation = useNavigation();
   const user = auth.currentUser;
 
   const [formValues, setFormValues] = useState({
@@ -77,7 +77,7 @@ const UploadCarDetails = () => {
       });
 
       setLoading(false);
-      router.push("auth/driver_verification");
+      navigation.navigate('DriverVerification');
 
     } catch (e) {
       setLoading(false);

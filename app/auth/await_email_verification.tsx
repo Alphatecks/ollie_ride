@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';                                                    
 import { View, Text, Button, TouchableOpacity } from 'react-native-ui-lib';                        
-import tw from "@/tailwind";
-import { useRouter, useFocusEffect } from "expo-router";
+import tw from "../../tailwind";
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
-import { auth } from "@/firebaseConfig";
+import { auth } from "../../firebaseConfig";
 import { sendEmailVerification } from "firebase/auth";
 
 import Toast from 'react-native-toast-message';
 
 
 const AwaitEmail = () => {  
-    const router = useRouter();
+    const navigation = useNavigation();
     const [emailTimeout, setEmailTimeout] = useState(false);
     const [emailVerified, setEmailVerified] = useState(auth.currentUser?.emailVerified);
 
@@ -74,7 +74,7 @@ const AwaitEmail = () => {
                 <Button 
                     label="Continue" 
                     poppins
-                    onPress={() => router.push("/auth/profile")} 
+                    onPress={() => navigation.navigate('Profile')} 
                     style={tw`btn`}
                     disabled={!emailVerified}  // Disable button if email is not verified
                 />     

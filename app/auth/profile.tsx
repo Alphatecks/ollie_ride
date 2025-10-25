@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, TextField, Colors, Avatar, TouchableOpacity } from 'react-native-ui-lib';
-import tw from '@/tailwind';
-import { auth, db, storage } from '@/firebaseConfig';
+import tw from '../../tailwind';
+import { auth, db, storage } from '../../firebaseConfig';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from 'react-native-image-picker';
 import Toast from 'react-native-toast-message';
-import Loader from '@/components/general/Loader';
-import { useRouter } from 'expo-router';
-import { Feather } from '@expo/vector-icons';
+import Loader from '../../components/general/Loader';
+import { useNavigation } from '@react-navigation/native';
+import { Feather } from 'react-native-vector-icons/Feather';
 
 const Profile = () => {
     const [state, setState] = useState('');
@@ -17,7 +17,7 @@ const Profile = () => {
     const [loading, setLoading] = useState(false);
     const [profileImage, setProfileImage] = useState(null);
     const [userData, setUserData] = useState(null);
-    const router = useRouter();
+    const navigation = useNavigation();
     
     // Get current user
     const currentUser = auth.currentUser;
@@ -29,7 +29,7 @@ const Profile = () => {
                 text1: 'Authentication Error',
                 text2: 'Please log in to access your profile'
             });
-            router.replace('/auth/sign_in');
+            navigation.navigate('SignIn');
             return;
         }
         
@@ -174,7 +174,7 @@ const Profile = () => {
             });
             
             // Navigate back or to dashboard
-            router.replace("/(tabs)/bottomsheet2");
+            navigation.navigate('MainTabs');
         } catch (error) {
             setLoading(false);
             Toast.show({
@@ -186,7 +186,7 @@ const Profile = () => {
     };
     
     const handleCancel = () => {
-        router.back();
+        navigation.goBack();
     };
     
     if (loading) {
