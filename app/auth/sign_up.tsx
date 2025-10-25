@@ -1,20 +1,22 @@
 import React, { useState } from 'react'
-import { View, Text, TextField, Button, Picker, Colors, Checkbox } from 'react-native-ui-lib'
-import { KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from "react-native"
+import { View, Text, TextField, Button, Colors, Checkbox, TouchableOpacity } from 'react-native-ui-lib'
+import { KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator, Dimensions } from "react-native"
+import { SafeAreaView } from 'react-native-safe-area-context'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import tw from "@/tailwind"
-import { Link, useRouter } from "expo-router"
+import tw from "../../tailwind"
+import { useNavigation } from '@react-navigation/native'
 
-import GenderPicker from '@/components/general/GenderPicker'
-import PhoneNumberInput from '@/components/general/PhoneNumberInput'
+import GenderPicker from '../../components/general/GenderPicker'
+import PhoneNumberInput from '../../components/general/PhoneNumberInput'
 import Toast from 'react-native-toast-message'
-import ButtonLoader from '@/components/general/ButtonLoader'
+import ButtonLoader from '../../components/general/ButtonLoader'
 
 
 
 const SignUp = () => {
 
-    const router = useRouter()
+    const navigation = useNavigation()
 
     const [loading, setLoading] = useState(false)
 
@@ -51,7 +53,7 @@ const SignUp = () => {
 
         console.log(email, phoneNumber, selectedGender, name )
 
-        router.push({
+        navigation.navigate('PaymentDetails', {
           pathname: "/auth/set_password",
           params: {
             email,
@@ -76,7 +78,7 @@ const SignUp = () => {
 
                 <View style={tw`mb-4`} >
                     <Text style={tw`text-2xl mb-6`}
-                        onPress={() => router.push("/auth/upload_car_details")}
+                        onPress={() => navigation.navigate('UploadCarDetails')}
                         poppinsMedium >Sign up with your email or 
                     phone number
                     </Text>
@@ -146,9 +148,9 @@ const SignUp = () => {
 
                 <Text poppinsMedium style={tw`my-4`} >
                     Have an account?
-                    <Link href="/auth/set_password" asChild >
+                    <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
                         <Text style={tw`text-ollie-base`}> Sign In</Text>
-                    </Link>
+                    </TouchableOpacity>
                 </Text>
             </ScrollView>
 

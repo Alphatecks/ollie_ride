@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
-import { View, Text, Button, TextField, Colors } from 'react-native-ui-lib';
-import tw from 'twrnc';
-import { useRouter } from 'expo-router';
+import React, { useState, useRef } from 'react';
+import { Text as RNText, View as RNView, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import tw from '../../tailwind';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 const PhoneVerify = () => {
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const router = useRouter();
+  const [otp, setOtp] = useState(["", "", "", "", ""]);
+  const navigation = useNavigation();
+  const route = useRoute();
+  const inputRefs = useRef([]);
 
   const allFilled = otp.every(value => value !== "");
 
@@ -25,7 +29,7 @@ const PhoneVerify = () => {
       text1: "OTP Submitted Successfully!"
     });
     
-    router.replace("/home"); // Navigate to home screen or any other route
+    navigation.navigate('MainTabs'); // Navigate to home screen or any other route
   };
 
   return (
