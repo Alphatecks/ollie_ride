@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TextInput } from 'react-native';
-import { Entypo } from '@expo/vector-icons';
-import tw from '@/tailwind';
+import Entypo from 'react-native-vector-icons/Entypo';
+import tw from '../../tailwind';
 
 const InputWithIcons = ({ onChangeText, value, placeholder, ...props }) => {
   return (

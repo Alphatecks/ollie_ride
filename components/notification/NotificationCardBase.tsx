@@ -2,9 +2,9 @@ import React from 'react';
 import { TouchableOpacity, View, Text } from 'react-native';
 import { Avatar } from 'react-native-ui-lib'; // Assuming you're using react-native-elements for Avatar
 
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import tw from "@/tailwind"
+import tw from "../../tailwind"
 
 /*
   TODO: Add same style  from NotificationCardMessage to NotificationCardBase

@@ -1,10 +1,10 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native-ui-lib'
 import tw from "twrnc"
-import Feather from '@expo/vector-icons/Feather';
-import { useRouter } from "expo-router"
+import Feather from 'react-native-vector-icons/Feather';
+import { useNavigation } from '@react-navigation/native'
 
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface ProfileOptionsCardProps {
 	title: string;
@@ -17,11 +17,11 @@ interface ProfileOptionsCardProps {
 
 const ProfileOptionsCard: React.FC<ProfileOptionsCardProps> = ({title, href, icon, disabled = false, hasArrowIcon = true, textStyle }) => {
 
-	const router = useRouter()
+	const navigation = useNavigation()
 
 	return (
 		<TouchableOpacity style={tw`flex-row justify-between items-center`}
-		onPress = {disabled ? ()=>{} : ()=> router.push(href)}
+		onPress = {disabled ? ()=>{} : ()=> navigation.navigate(href)}
 		>	
 			<View style={tw`flex-row items-center gap-3`}>
 				{/*<MaterialCommunityIcons name="file-document-outline" size={24} color="black" />*/}

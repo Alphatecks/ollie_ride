@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import tw from '@/tailwind';
+import Feather from 'react-native-vector-icons/Feather';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import tw from '../../tailwind';
 import { FlatList } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
