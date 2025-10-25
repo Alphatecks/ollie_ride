@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, FlatList, Alert, ActivityIndicator } from 'react-native';
 import { Text, TextField } from 'react-native-ui-lib';
-import tw from '@/tailwind';
+import tw from '../../tailwind';
 import { collection, onSnapshot, addDoc, doc, getDoc } from 'firebase/firestore';
-import { db, auth } from '@/firebaseConfig';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { db, auth } from '../../firebaseConfig';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-ui-lib';
-import { Ionicons } from '@expo/vector-icons';
-import { ChatBubble } from '@/components/chat/Chat';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ChatBubble } from '../../components/chat/Chat';
 
 const ChatScreen = () => {
-  const router = useRouter();
-
-  const {tripId} = useLocalSearchParams()
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { tripId } = route.params;
 
 
   const driverId = auth?.currentUser?.uid;

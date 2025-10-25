@@ -3,9 +3,9 @@ import { View, TextInput, Alert } from 'react-native';
 import Text from 'react-native-ui-lib/text';
 import Button from 'react-native-ui-lib/button';
 import { collection, addDoc, query, where, getDocs, setDoc, doc } from 'firebase/firestore'; // Import necessary Firestore methods
-import { auth, db } from '@/firebaseConfig';
-import { useRouter } from 'expo-router';
-import tw from '@/tailwind';
+import { auth, db } from '../../firebaseConfig';
+import { useNavigation } from '@react-navigation/native';
+import tw from '../../tailwind';
 import Toast from 'react-native-toast-message';
 
 const AddBankDetails = () => {
@@ -13,7 +13,7 @@ const AddBankDetails = () => {
   const [bankAccount, setBankAccount] = useState('');
   const [accountHolder, setAccountHolder] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const navigation = useNavigation();
 
   const handleAddBankDetails = async () => {
     if (!bankName || !bankAccount || !accountHolder) {
@@ -83,7 +83,7 @@ const AddBankDetails = () => {
       setBankAccount('');
       setAccountHolder('');
       // Navigate after successful operation
-      // router.push('/wallet_aux/withdraw_success');
+      // navigation.navigate('WithdrawSuccess');
     } catch (error) {
       Toast.show({
         type: 'error',

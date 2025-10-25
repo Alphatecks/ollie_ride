@@ -1,9 +1,9 @@
 import { View, Text, TextInput } from 'react-native'
 import React, { useState } from 'react'
-import { Stack } from 'expo-router'
-import tw from '@/tailwind'
-import CardSVG from "@/assets/card.svg"
-import MasterCardSVG from "@/assets/mastercard.svg"
+import { useNavigation } from '@react-navigation/native'
+import tw from '../../tailwind'
+import CardSVG from "../../assets/card.svg"
+import MasterCardSVG from "../../assets/mastercard.svg"
 import { Button } from 'react-native-ui-lib'
 
 const Index = () => {
