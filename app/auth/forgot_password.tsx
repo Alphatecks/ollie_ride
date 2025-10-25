@@ -1,19 +1,19 @@
 import React, {useState} from 'react';
 import { View, Text, Button, TextField, Colors } from 'react-native-ui-lib';
-import tw from '@/tailwind';
-import { Link, useRouter } from "expo-router"
-import ButtonLoader from "@/components/general/ButtonLoader"
+import tw from '../../tailwind';
+import { useNavigation } from '@react-navigation/native'
+import ButtonLoader from "../../components/general/ButtonLoader"
 
 import Toast from 'react-native-toast-message';
 
-import { auth, db } from "@/firebaseConfig"
+import { auth, db } from "../../firebaseConfig"
 import { sendPasswordResetEmail } from "firebase/auth";
 
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState("")
     const [loading, setLoading] = useState(false)
-    const router = useRouter()
+    const navigation = useNavigation()
 
 
     const submitData = () => {  
@@ -34,7 +34,7 @@ const ForgotPassword = () => {
         })
 
          setTimeout(()=>{
-            router.push("/auth/sign_in")
+            navigation.navigate('SignIn')
          }, 3000)
 
          setLoading(false)
