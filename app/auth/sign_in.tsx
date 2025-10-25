@@ -1,19 +1,19 @@
 import React, { useState, useCallback } from 'react'                                                    
-import { View, Text, TextField, Button } from 'react-native-ui-lib'                        
-import tw from "@/tailwind"
-import { Link, useRouter, useFocusEffect } from "expo-router"
+import { View, Text, TextField, Button, TouchableOpacity } from 'react-native-ui-lib'                        
+import tw from "../../tailwind"
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
 import { getFirestore, doc, setDoc } from "firebase/firestore";
-import { auth } from "@/firebaseConfig"
+import { auth } from "../../firebaseConfig"
 
-import ButtonLoader from "@/components/general/ButtonLoader"
+import ButtonLoader from "../../components/general/ButtonLoader"
 import Toast from 'react-native-toast-message'
 
                                                                                         
 const SignIn = () => {  
 
-	const router = useRouter()
+	const navigation = useNavigation()
 
 	const [email, setEmail] = useState('')                                                 
   const [loading, setLoading] = useState(false)                                                 
@@ -29,9 +29,9 @@ const SignIn = () => {
             if (user) {
               await user.reload(); // Refresh user data
               if (!user.emailVerified) {
-                router.replace("/auth/await_email_verification");
+                navigation.navigate('AwaitEmailVerification');
               } else {
-                router.replace("/(tabs)/bottomsheet2");
+                navigation.navigate('MainTabs');
               }
             }
           };
@@ -108,15 +108,15 @@ const SignIn = () => {
 
         }
                 
-         <Link asChild href="/auth/forgot_password">
+         <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
              <Text poppinsMedium style={tw`text-ollie-base py-4`} >Forgot Password?</Text>
-         </Link>
+         </TouchableOpacity>
 
          <Text poppinsMedium style={tw`py-3`}>
                 Don't an account?
-                <Link href="/auth/sign_up" asChild  >
+                <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
                     <Text style={tw`text-ollie-base`}> Sign Up</Text>
-                </Link>
+                </TouchableOpacity>
         </Text>               
      </View>                                                                            
  )                                                                                      
