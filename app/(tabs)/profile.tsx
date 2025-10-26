@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import { View, Text, Button, Avatar } from 'react-native-ui-lib'
 import { SafeAreaView } from "react-native-safe-area-context";
-import tw from "../../../tailwind";
+import tw from "../../tailwind";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';

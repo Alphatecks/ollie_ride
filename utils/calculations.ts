@@ -1,4 +1,4 @@
-import { rideOptions } from "@/constants/Data";
+import { rideOptions } from "../constants/Data";
 
 export const getDistanceFromLatLonInMeters = (lat1, lon1, lat2, lon2) => {
 /**

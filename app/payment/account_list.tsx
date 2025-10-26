@@ -4,10 +4,10 @@ import Text from 'react-native-ui-lib/text';
 import Button from 'react-native-ui-lib/button';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { collection, onSnapshot } from 'firebase/firestore'; // Firestore methods for real-time updates
-import { auth, db } from '@/firebaseConfig'; // Import Firebase auth and Firestore
+import { auth, db } from '../../firebaseConfig'; // Import Firebase auth and Firestore
 import { useRouter } from 'expo-router';
-import PaymentCard from '@/components/payment/PaymentCard';
-import tw from '../../../tailwind';
+import PaymentCard from '../../components/payment/PaymentCard';
+import tw from '../../tailwind';
 
 const AccountList = () => {
   const [bankAccounts, setBankAccounts] = useState([]);

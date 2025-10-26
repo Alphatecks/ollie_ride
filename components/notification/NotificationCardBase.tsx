@@ -4,7 +4,7 @@ import { Avatar } from 'react-native-ui-lib'; // Assuming you're using react-nat
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import tw from "../../../tailwind"
+import tw from "../../tailwind"
 
 /*
   TODO: Add same style  from NotificationCardMessage to NotificationCardBase

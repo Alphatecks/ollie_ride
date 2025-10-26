@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "@/firebaseConfig"; // Adjust the path based on your structure
+import { auth } from "../firebaseConfig"; // Adjust the path based on your structure
 
 interface AuthState {
   user: User | null;

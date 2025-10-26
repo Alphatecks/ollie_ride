@@ -229,9 +229,9 @@ export default function App() {
   return (
     <>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Index" component={IndexScreen} />
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Index">
           <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+          <Stack.Screen name="Index" component={IndexScreen} />
           <Stack.Screen name="Auth" component={AuthStack} />
           <Stack.Screen name="MainTabs" component={MainTabs} />
         </Stack.Navigator>

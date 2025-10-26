@@ -12,7 +12,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "react-native",
     "paths": {
       "@/*": ["./*"]
     }
@@ -24,6 +24,8 @@
   "exclude": [
     "node_modules",
     "android",
-    "ios"
+    "ios",
+    "babel.config.js",
+    "metro.config.js"
   ]
 }

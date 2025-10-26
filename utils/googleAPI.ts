@@ -1,8 +1,8 @@
-import { Trip, TripStatus } from '@/types';
+import { Trip, TripStatus } from '../types';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { addDoc, collection } from 'firebase/firestore';
-import { db } from '@/firebaseConfig';
+import { db } from '../firebaseConfig';
 
 
 const apiKey = 'AIzaSyCwiyu1HxfDQFf5A9U4g_m4YLI21EzVuLg';

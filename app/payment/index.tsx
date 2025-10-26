@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 import Text from "react-native-ui-lib/text"
-import tw from "../../../tailwind"
+import tw from "../../tailwind"
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';

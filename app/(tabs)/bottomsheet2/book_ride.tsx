@@ -1,20 +1,20 @@
 import { View, Text, KeyboardAvoidingView, Platform } from 'react-native'
 import React, { useCallback, useMemo, useState } from 'react'
-import tw from '../../tailwind'
-import RideSelectionCard from '../../components/bottomsheet-ui/RideSelectionCard';
-import { RideOptionsRow } from '../../components/bottomsheet-ui/RideOptionCard';
-import BookingOption from '../../components/bottomsheet-ui/BookingOption';
+import tw from '../../../tailwind'
+import RideSelectionCard from '../../../components/bottomsheet-ui/RideSelectionCard';
+import { RideOptionsRow } from '../../../components/bottomsheet-ui/RideOptionCard';
+import BookingOption from '../../../components/bottomsheet-ui/BookingOption';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CalendarSVG from "../../../assets/calendar.svg"
 import { ExpandableSection } from 'react-native-ui-lib';
-import Accordion from '../../components/bottomsheet-ui/Accordion';
+import Accordion from '../../../components/bottomsheet-ui/Accordion';
 import { TextInput } from 'react-native-gesture-handler';
 import { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import DoubleLocationCard from '../../components/home/DoubleLocationCard';
-import TimePicker from '../../components/bottomsheet-ui/TimePicker';
-import { RepeatOptionGroup } from '../../components/bottomsheet-ui/RepeatPicker';
+import DoubleLocationCard from '../../../components/home/DoubleLocationCard';
+import TimePicker from '../../../components/bottomsheet-ui/TimePicker';
+import { RepeatOptionGroup } from '../../../components/bottomsheet-ui/RepeatPicker';
 import { RepeatOptions, rideOptions } from '../../constants/Data';
 import { useNavigation, useRoute } from '@react-navigation/native';
 

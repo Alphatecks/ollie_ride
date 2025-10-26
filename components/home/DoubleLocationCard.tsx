@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react'
 import { View, Text, Button, Colors } from 'react-native-ui-lib'
-import tw from "../../../tailwind"
+import tw from "../../tailwind"
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';

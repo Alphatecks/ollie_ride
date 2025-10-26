@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import CarBigSVG from "../../../assets/car-big.svg";
-import tw from '../../tailwind';
+import tw from '../../../tailwind';
 import { Bar } from 'react-native-progress';
 import { baseColor } from '../../constants/Colors';
 import { Button } from 'react-native-ui-lib';

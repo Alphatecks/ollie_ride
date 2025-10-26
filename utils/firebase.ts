@@ -1,6 +1,6 @@
 import { collection, getDocs, doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage"; // Firebase Storage for upload
-import { db, storage } from "@/firebaseConfig"; // Your Firebase config
+import { db, storage } from "../firebaseConfig"; // Your Firebase config
 
 
 // Function to handle setting up user-related Firestore collections

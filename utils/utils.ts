@@ -1,4 +1,4 @@
-import { rideOptions } from "@/constants/Data";
+import { rideOptions } from "../constants/Data";
 import { Timestamp } from "firebase/firestore";
 
 

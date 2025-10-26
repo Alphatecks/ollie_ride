@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Trip } from "@/types";
+import { Trip } from "../types";
 
 interface TripStore {
   selectedTrip: Trip | null;

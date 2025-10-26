@@ -7,22 +7,22 @@ import tw from "../../../tailwind";
 import { Keyboard } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
-import DoubleAddress from "../../components/home/DoubleAddress";
-import { useTripStore } from "../../store/tripStore";
+import DoubleAddress from "../../../components/home/DoubleAddress";
+import { useTripStore } from "../../../store/tripStore";
 import Toast from "react-native-toast-message";
 import { TextField } from "react-native-ui-lib";
 import Feather from "react-native-vector-icons/Feather";
 import TargetSVG from "../../../assets/target.svg"
 import MapSVG from "../../../assets/Map.svg"
-import RecentPlaces from "../../components/bottomsheet-ui/RecentPlaces";
-import DoubleLocationCard from "../../components/home/DoubleLocationCard";
+import RecentPlaces from "../../../components/bottomsheet-ui/RecentPlaces";
+import DoubleLocationCard from "../../../components/home/DoubleLocationCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
 import Geolocation from '@react-native-community/geolocation';
 
-import { googleSearch, googleDistanceMatrix } from "../../utils/useSearch"
-import { LocationData } from "../../types";
-import { auth, db } from "../../firebaseConfig";
+import { googleSearch, googleDistanceMatrix } from "../../../utils/useSearch"
+import { LocationData } from "../../../types";
+import { auth, db } from "../../../firebaseConfig";
 import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
 
 

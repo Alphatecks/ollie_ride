@@ -11,9 +11,9 @@ import {
   query, where, getDocs 
 } from 'firebase/firestore';
 
-import { db } from '@/firebaseConfig';  // Ensure this is your Firebase config file
+import { db } from '../firebaseConfig';  // Ensure this is your Firebase config file
 
-import {ridersData2} from "@/constants/Data"
+import {ridersData2} from "../constants/Data"
 
 
 // Utility to create a trip (called by rider)

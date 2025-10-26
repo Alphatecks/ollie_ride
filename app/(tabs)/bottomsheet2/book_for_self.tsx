@@ -1,7 +1,7 @@
 import { View, Text, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Avatar, Button, RadioButton, RadioGroup } from 'react-native-ui-lib'
-import tw from '../../tailwind'
+import tw from '../../../tailwind'
 import UserSVG from "../../../assets/profile-blue.svg"
 import ContactSVG from "../../../assets/contacts.svg"
 import { baseColor } from '../../constants/Colors'
@@ -12,7 +12,7 @@ import { auth, db } from '../../firebaseConfig'
 import { calculateTripFare, generateAccessCode } from '../../utils/utils'
 import { rideOptions } from '../../constants/Data'
 import Toast from 'react-native-toast-message'
-import ButtonLoader from '../../components/general/ButtonLoader'
+import ButtonLoader from '../../../components/general/ButtonLoader'
 
 const Index = () => {
     const [currentContact, setCurrentContact] = useState<"self" | "others">("self")

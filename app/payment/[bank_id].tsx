@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, TextInput, Alert } from 'react-native';
 import Text from "react-native-ui-lib/text";
 import Button from "react-native-ui-lib/button";
-import tw from "../../../tailwind";
+import tw from "../../tailwind";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore'; // Firestore methods
-import { db, auth } from '@/firebaseConfig'; // Firestore config
+import { db, auth } from '../../firebaseConfig'; // Firestore config
 
 const AccountList = () => {
   const params = useLocalSearchParams();
