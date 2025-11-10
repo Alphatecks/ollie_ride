@@ -15,7 +15,7 @@ const Index = () => {
 			<View>
 				<PaymentCard 
 				hasArrowIcon = {false}
-				href = "payment/account_list"
+				href = "AccountList"
 				icon = {<FontAwesome name="bank" size={24} style={tw`text-ollie-base`} />}
 				title = "Bank account" 
 				subtitle = "Enter in your bank account details to receive your payments" />

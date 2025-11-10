@@ -3,7 +3,7 @@ import { View, Text } from 'react-native-ui-lib'
 import tw from "twrnc"
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import MapSVG from "../../../assets/map1.svg"
+import MapSVG from "../../assets/map1.svg"
 
 
 interface RecentPlacesProps {

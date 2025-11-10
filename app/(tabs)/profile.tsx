@@ -115,7 +115,7 @@ const Profile = () => {
 
     try {
       // Create a reference to store the image in Firebase Storage
-      const imageRef = ref(storage, `drivers/${user.uid}/profile.jpg`);
+      const imageRef = ref(storage, `riders/${user.uid}/profile.jpg`);
 
       // Fetch the image file from the local URI
       const response = await fetch(imageUri);

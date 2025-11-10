@@ -1,18 +1,20 @@
-import { View, Text, ActivityIndicator } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Avatar, Button, RadioButton, RadioGroup } from 'react-native-ui-lib'
 import tw from '../../../tailwind'
 import UserSVG from "../../../assets/profile-blue.svg"
 import ContactSVG from "../../../assets/contacts.svg"
-import { baseColor } from '../../constants/Colors'
+import { baseColor } from '../../../constants/Colors'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { Trip, TripParams, TripStatus, UserProfile } from '../../types'
+import { Trip, TripParams, TripStatus, UserProfile } from '../../../types'
 import { addDoc, collection, doc, getDoc, Timestamp } from 'firebase/firestore'
-import { auth, db } from '../../firebaseConfig'
-import { calculateTripFare, generateAccessCode } from '../../utils/utils'
-import { rideOptions } from '../../constants/Data'
+import { auth, db } from '../../../firebaseConfig'
+import { calculateTripFare, generateAccessCode } from '../../../utils/utils'
+import { rideOptions } from '../../../constants/Data'
 import Toast from 'react-native-toast-message'
 import ButtonLoader from '../../../components/general/ButtonLoader'
+import ContactPickerModal from '../../../components/general/ContactPickerModal'
+import { ContactOption, fetchDeviceContacts, requestContactsPermission } from '../../../utils/contactPicker'
 
 const Index = () => {
     const [currentContact, setCurrentContact] = useState<"self" | "others">("self")
@@ -27,6 +29,10 @@ const Index = () => {
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(false);
     const [isFetching, setIsFetching] = useState<boolean>(false)
+    const [selectedContact, setSelectedContact] = useState<ContactOption | null>(null);
+    const [isContactModalVisible, setIsContactModalVisible] = useState(false);
+    const [contactOptions, setContactOptions] = useState<ContactOption[]>([]);
+    const [isLoadingContacts, setIsLoadingContacts] = useState(false);
   
     useEffect(() => {
 
@@ -66,6 +72,67 @@ const Index = () => {
         fetchUserData();
     }, []);
 
+    const handleChooseContact = useCallback(async () => {
+        try {
+            setIsLoadingContacts(true);
+            const hasPermission = await requestContactsPermission();
+            if (!hasPermission) {
+                Toast.show({
+                    type: "error",
+                    text1: "Permission denied",
+                    text2: "Please allow contact access from settings to select a contact."
+                });
+                return;
+            }
+
+            const contacts = await fetchDeviceContacts();
+            const limitedContacts = contacts.slice(0, 200);
+            setContactOptions(limitedContacts);
+            if (limitedContacts.length === 0) {
+                Toast.show({
+                    type: "info",
+                    text1: "No contacts found",
+                    text2: "Add contacts with phone numbers to your device and try again."
+                });
+            }
+            setIsContactModalVisible(true);
+        } catch (error) {
+            console.error("Error loading contacts:", error);
+            Toast.show({
+                type: "error",
+                text1: "Unable to load contacts",
+                text2: "Please try again."
+            });
+        } finally {
+            setIsLoadingContacts(false);
+        }
+    }, []);
+
+    const handleContactSelect = useCallback((contact: ContactOption) => {
+        setSelectedContact(contact);
+        setCurrentContact("others");
+        setIsContactModalVisible(false);
+        Toast.show({
+            type: "success",
+            text1: "Contact selected",
+            text2: `${contact.name}`
+        });
+    }, []);
+
+    const getContactInitials = useCallback(() => {
+        const name = selectedContact?.name || '';
+        if (!name) {
+            return "CT";
+        }
+        const initials = name
+            .split(" ")
+            .filter(Boolean)
+            .slice(0, 2)
+            .map((part) => part.charAt(0).toUpperCase())
+            .join("");
+        return initials || "CT";
+    }, [selectedContact]);
+
     const handleConfirm = async () => {
 
 
@@ -73,6 +140,31 @@ const Index = () => {
 
         const tripFare = calculateTripFare(params.distance, params.selectedRide)
     
+        if (currentContact === "others" && !selectedContact) {
+            Toast.show({
+                type: "error",
+                text1: "Select a contact",
+                text2: "Choose a contact before confirming the ride."
+            });
+            return;
+        }
+
+        const riderName = currentContact === "others"
+            ? (selectedContact?.name || '')
+            : currentUser?.displayName || userProfile?.full_name || '';
+
+        const riderPhoneNumber = currentContact === "others"
+            ? (selectedContact?.phoneNumber || '')
+            : userProfile?.phoneNumber || '';
+
+        if (!riderName || !riderPhoneNumber) {
+            Toast.show({
+                type: "error",
+                text1: "Missing contact details",
+                text2: "We need a name and phone number to proceed."
+            });
+            return;
+        }
 
 
         const newTrip: Trip = {
@@ -82,14 +174,18 @@ const Index = () => {
             latitude: params.riderLatitude as number,
             longitude: params.riderLongitude as number,
             riderId: currentUser?.uid as string,
-            riderName: currentUser?.displayName,
+            riderName,
             status: TripStatus.TRIP_AVAILABLE, // Initially available for drivers
             toLocation: params.toLocation as string,
             tripAmount: tripFare,
-            riderPhoneNumber:  userProfile?.phoneNumber,
+            riderPhoneNumber,
             riderProfileImage: userProfile?.profileImage,
             tripAccessCode: generateAccessCode(),
             bookingFor: currentContact,
+            otherContactName: currentContact === "others" ? selectedContact?.name : undefined,
+            otherContactPhoneNumber: currentContact === "others" ? selectedContact?.phoneNumber : undefined,
+            bookedByName: userProfile?.full_name || currentUser?.displayName || '',
+            bookedByPhoneNumber: userProfile?.phoneNumber || '',
             ...params
         };
 
@@ -154,25 +250,52 @@ const Index = () => {
 
                 <View style={tw`flex-row gap-6 mt-4`}>
                     <RadioButton value={'others'} color={baseColor} />
-                    <View style={tw`flex-row gap-2 items-center justify-center`}>
-                        <Avatar label={"TI"} backgroundColor={baseColor} labelColor='white' size={28} />                
-                        <Text style={tw`poppinsMedium`}>John Nweke</Text>
-                        <View style={tw`w-[1] h-[1] bg-ollie-base rounded-full`}></View>
-                        <Text style={tw`poppinsMedium text-gray-500`}>0802945900</Text>
+                    <View style={tw`flex-row gap-3 items-center justify-center flex-1`}>
+                        <Avatar
+                            label={getContactInitials()}
+                            backgroundColor={baseColor}
+                            labelColor='white'
+                            size={28}
+                        />
+                        <View style={tw`flex-1`}>
+                            <Text style={tw`poppinsMedium`}>
+                                {selectedContact?.name || 'No contact selected'}
+                            </Text>
+                            <Text style={tw`poppinsMedium text-gray-500`}>
+                                {selectedContact?.phoneNumber || 'Tap below to choose'}
+                            </Text>
+                        </View>
                     </View>
                 
                 </View>
             </RadioGroup>
 
-            <View style={tw`flex-row gap-2 my-4 items-center ml-12`}>
+            <TouchableOpacity
+                style={tw`flex-row gap-3 my-4 items-center ml-12`}
+                onPress={handleChooseContact}
+                disabled={isLoadingContacts}
+                accessibilityLabel="Choose another contact from device"
+            >
                 <ContactSVG />
-                <Text style={tw`poppinsMedium`}>Choose other contacts</Text>
-            </View>
+                <Text style={tw`poppinsMedium text-blue-900`}>
+                    {isLoadingContacts ? 'Loading contacts…' : 'Choose other contacts'}
+                </Text>
+                {isLoadingContacts && <ActivityIndicator size="small" color={baseColor} />}
+            </TouchableOpacity>
         </View>
         {loading ? <ButtonLoader />:
             <Button style={tw`btn mt-10`} label="Confirm" onPress = {handleConfirm} />
         
         }
+
+        <ContactPickerModal
+            visible={isContactModalVisible}
+            loading={isLoadingContacts}
+            contacts={contactOptions}
+            onSelect={handleContactSelect}
+            onClose={() => setIsContactModalVisible(false)}
+            onRetry={handleChooseContact}
+        />
      
     </View>
   )

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'                                                    
-import { View, Text, TextField, Button, TouchableOpacity } from 'react-native-ui-lib'                        
+import { View, Text, TextInput, SafeAreaView, TouchableOpacity } from 'react-native'                        
 import tw from "../../tailwind"
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 
@@ -7,8 +7,9 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } f
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { auth } from "../../firebaseConfig"
 
-import ButtonLoader from "../../components/general/ButtonLoader"
 import Toast from 'react-native-toast-message'
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
                                                                                         
 const SignIn = () => {  
@@ -16,8 +17,9 @@ const SignIn = () => {
 	const navigation = useNavigation()
 
 	const [email, setEmail] = useState('')                                                 
-  const [loading, setLoading] = useState(false)                                                 
+    const [loading, setLoading] = useState(false)                                                 
 	const [password, setPassword] = useState('')                                           
+    const [showPassword, setShowPassword] = useState(false)
 
     const user = auth.currentUser
 
@@ -69,56 +71,88 @@ const SignIn = () => {
 
                                                                                         
  return (                                                                               
-     <View style={tw`bg-white flex-1 p-6`}> 
-        <View style={tw`mb-4`} >
-             <View>
-                 <Text style={tw`text-2xl mb-6`} poppinsMedium >Sign In to your account</Text>   
-             </View>
-             
-        </View>                                                            
-         <TextField                                                                     
-             placeholder="Email"                                                        
-             value={email}                                                              
-             onChangeText={setEmail}                                                    
-             keyboardType="email-address"                                               
-             autoCapitalize="none" 
-             rounded
-             poppins                                                     
-             style={tw`mb-4`}                                                           
-         />                                                                             
-         <TextField                                                                     
-             placeholder="Password"                                                     
-             value={password}                                                           
-             onChangeText={setPassword}                                                 
-             secureTextEntry                                                            
-             style={tw`mb-6`}
-             poppins  
-             rounded                                                         
-         />  
-         {loading ? 
-             <ButtonLoader />
-            :
-            <Button
-            label="Sign In"
-            poppins
-            onPress={handleSignIn}
-            style={tw`${!email || !password ? 'btn bg-gray-300' : 'btn'}`}
-            disabled={!email || !password}
-            />
+     <SafeAreaView style={tw`bg-white flex-1`}> 
+        {/* Header */}
+        <View style={tw`flex-row items-center px-6 py-4`}>
+            <TouchableOpacity 
+                onPress={() => navigation.goBack()}
+                style={tw`flex-row items-center`}
+            >
+                <AntDesign name="left" size={20} color="#000000" />
+            </TouchableOpacity>
+            <View style={tw`absolute left-0 right-0 items-center`}>
+                <Text style={[tw`text-lg font-bold text-black`, {fontFamily: 'Poppins-Bold'}]}>Log in</Text>
+            </View>
+        </View>
 
-        }
-                
-         <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-             <Text poppinsMedium style={tw`text-ollie-base py-4`} >Forgot Password?</Text>
-         </TouchableOpacity>
+           <View style={tw`flex-1 px-6 pt-8`}>
+               {/* Email Input */}
+               <TextInput
+                   placeholder="Email"
+                   value={email}
+                   onChangeText={setEmail}
+                   keyboardType="email-address"
+                   autoCapitalize="none"
+                   style={[tw`bg-gray-100 border border-gray-300 rounded-lg px-4 py-4 mb-4 text-base text-gray-900`, {fontFamily: 'Poppins-Regular'}]}
+                   placeholderTextColor="#9CA3AF"
+               />
 
-         <Text poppinsMedium style={tw`py-3`}>
-                Don't an account?
-                <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-                    <Text style={tw`text-ollie-base`}> Sign Up</Text>
+            {/* Password Input */}
+            <View style={tw`relative`}>
+                <TextInput
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                    style={[tw`bg-gray-100 border border-gray-300 rounded-lg px-4 py-4 pr-12 text-base text-gray-900`, {fontFamily: 'Poppins-Regular'}]}
+                    placeholderTextColor="#9CA3AF"
+                />
+                <TouchableOpacity 
+                    style={tw`absolute right-4 top-0 bottom-0 justify-center`}
+                    onPress={() => setShowPassword(!showPassword)}
+                >
+                    <Ionicons 
+                        name={showPassword ? "eye-off-outline" : "eye-outline"} 
+                        size={20} 
+                        color="#6B7280" 
+                    />
                 </TouchableOpacity>
-        </Text>               
-     </View>                                                                            
+            </View>
+
+            {/* Forgot Password Link */}
+            <TouchableOpacity 
+                onPress={() => navigation.navigate('ForgotPassword')}
+                style={tw`self-end mt-4 mb-8`}
+            >
+                <Text style={[tw`text-blue-800 text-sm`, {fontFamily: 'Poppins-Medium'}]}>Forgot password?</Text>
+            </TouchableOpacity>
+
+            {/* Continue Button */}
+            <TouchableOpacity
+                onPress={handleSignIn}
+                disabled={loading || !email || !password}
+                style={tw`bg-blue-800 rounded-lg py-4 items-center justify-center ${loading || !email || !password ? 'opacity-50' : ''}`}
+            >
+                {loading ? (
+                    <View style={tw`py-2`}>
+                        <Text style={[tw`text-white text-base font-bold`, {fontFamily: 'Poppins-Bold'}]}>Loading...</Text>
+                    </View>
+                ) : (
+                    <Text style={[tw`text-white text-base font-bold`, {fontFamily: 'Poppins-Bold'}]}>Continue</Text>
+                )}
+            </TouchableOpacity>
+
+            {/* Sign Up Link */}
+            <View style={tw`absolute bottom-6 left-6 right-6 items-center`}>
+                <Text style={[tw`text-gray-600 text-sm`, {fontFamily: 'Poppins-Medium'}]}>
+                    Don't have an account? 
+                    <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+                        <Text style={[tw`text-blue-800 text-sm ml-1`, {fontFamily: 'Poppins-Medium'}]}>Sign Up</Text>
+                    </TouchableOpacity>
+                </Text>
+            </View>
+        </View>               
+     </SafeAreaView>                                                                            
  )                                                                                      
 }                                                                                          
                                                                                         

@@ -1,16 +1,21 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput, Button, Colors, Checkbox, TouchableOpacity, Modal } from 'react-native-ui-lib'
+import { View, Text, TextInput, Button, Colors, Checkbox, TouchableOpacity, Modal, Image } from 'react-native-ui-lib'
 import { KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator, Dimensions, TextInput as RNTextInput } from "react-native"
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
+const GmailIcon = require('../../assets/images/gmail.png');
+const FacebookIcon = require('../../assets/images/facebook.png');
+
 import tw from "../../tailwind"
 import { useNavigation } from '@react-navigation/native'
 
 import Toast from 'react-native-toast-message'
 import ButtonLoader from '../../components/general/ButtonLoader'
+import { db } from "../../firebaseConfig"
+import { collection, query, where, getDocs } from "firebase/firestore"
 
 
 
@@ -19,6 +24,7 @@ const SignUp = () => {
     const navigation = useNavigation()
 
     const [loading, setLoading] = useState(false)
+    const [skipValidation, setSkipValidation] = useState(false); // Dev mode flag
 
     const [email, setEmail] = useState('')
     const [name, setName] = useState('')
@@ -49,7 +55,12 @@ const SignUp = () => {
     // Gender options
     const genderOptions = ['Male', 'Female', 'Other', 'Prefer not to say']
 
-    const handleSignUp = () => {
+    const validateEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const handleSignUp = async () => {
         if (!email || !phoneNumber || !selectedGender || !name) {
           Toast.show({
             type: "error",
@@ -57,19 +68,124 @@ const SignUp = () => {
           });
           return;
         }
-        
 
-        console.log(email, phoneNumber, selectedGender, name )
+        // Validate email format
+        if (!validateEmail(email)) {
+          Toast.show({
+            type: "error",
+            text1: "Invalid email format!",
+          });
+          return;
+        }
 
-        navigation.navigate('PaymentDetails', {
-          pathname: "/auth/set_password",
-          params: {
+        // Validate phone number (should not be empty and should be digits)
+        const fullPhone = selectedCountryCode + phoneNumber;
+        if (phoneNumber.length < 8) {
+          Toast.show({
+            type: "error",
+            text1: "Phone number is too short!",
+          });
+          return;
+        }
+
+        if (!toggle) {
+          Toast.show({
+            type: "error",
+            text1: "Please accept the Terms of service and Privacy policy",
+          });
+          return;
+        }
+
+        try {
+          setLoading(true);
+
+          // Skip validation if network is too slow (dev mode)
+          if (!skipValidation) {
+            // Timeout wrapper to prevent hanging
+            const checkWithTimeout = Promise.race([
+              (async () => {
+                // Check if email already exists in Firestore
+                const usersRef = collection(db, "users");
+                const emailQuery = query(usersRef, where("email", "==", email));
+                const emailSnapshot = await getDocs(emailQuery);
+
+                if (!emailSnapshot.empty) {
+                  Toast.show({
+                    type: "error",
+                    text1: "Email already exists!",
+                    text2: "Please sign in instead"
+                  });
+                  setLoading(false);
+                  return;
+                }
+
+                // Check if phone number already exists
+                const phoneQuery = query(usersRef, where("phoneNumber", "==", fullPhone));
+                const phoneSnapshot = await getDocs(phoneQuery);
+
+                if (!phoneSnapshot.empty) {
+                  Toast.show({
+                    type: "error",
+                    text1: "Phone number already registered!",
+                    text2: "Please sign in instead"
+                  });
+                  setLoading(false);
+                  return;
+                }
+              })(),
+              new Promise((_, reject) => 
+                setTimeout(() => reject(new Error("Timeout")), 3000)
+              )
+            ]);
+
+            await checkWithTimeout;
+          }
+
+          setLoading(false);
+
+          // If validation passes, navigate to phone verification
+          navigation.navigate('PhoneVerify', {
             email,
-            phoneNumber,
+            phoneNumber: fullPhone,
             gender: selectedGender,
             full_name: name,
-          },
-        });
+          });
+
+        } catch (error: any) {
+          setLoading(false);
+          console.error("Error checking user:", error);
+          
+          // Check if it's a network error - allow user to proceed anyway
+          if (error.message?.includes("Could not reach Cloud Firestore") || 
+              error.message?.includes("Missing or insufficient permissions") ||
+              error.message?.includes("Timeout")) {
+            
+            // Auto-skip validation for future attempts
+            setSkipValidation(true);
+            
+            Toast.show({
+              type: "info",
+              text1: "Network slow - skipping validation",
+              text2: "Continuing to phone verification..."
+            });
+            
+            // Wait a moment then proceed
+            setTimeout(() => {
+              navigation.navigate('PhoneVerify', {
+                email,
+                phoneNumber: fullPhone,
+                gender: selectedGender,
+                full_name: name,
+              });
+            }, 500);
+          } else {
+            Toast.show({
+              type: "error",
+              text1: "Registration failed!",
+              text2: error.message || "Please try again"
+            });
+          }
+        }
       };
 
     // Handler functions for pickers
@@ -177,13 +293,19 @@ const SignUp = () => {
                     </View>
 
                     {/* Sign Up Button */}
-                    <Button 
-                        label="Sign Up"
-                        onPress={handleSignUp}
-                        disabled={!email || !phoneNumber || !name || !selectedGender || !toggle}
-                        style={[tw`${!email || !phoneNumber || !name || !selectedGender || !toggle ? 'bg-gray-300' : 'bg-blue-800'} rounded-lg py-4 mb-6`]}
-                        labelStyle={[tw`font-bold text-white`, {fontFamily: 'Poppins-Bold'}]}
-                    />
+                    {loading ? (
+                      <View style={tw`bg-blue-800 rounded-lg py-4 mb-6 items-center justify-center`}>
+                        <ActivityIndicator size="small" color="white" />
+                      </View>
+                    ) : (
+                      <Button 
+                          label="Sign Up"
+                          onPress={handleSignUp}
+                          disabled={!email || !phoneNumber || !name || !selectedGender || !toggle}
+                          style={[tw`${!email || !phoneNumber || !name || !selectedGender || !toggle ? 'bg-gray-300' : 'bg-blue-800'} rounded-lg py-4 mb-6`]}
+                          labelStyle={[tw`font-bold text-white`, {fontFamily: 'Poppins-Bold'}]}
+                      />
+                    )}
 
                     {/* Or Separator */}
                     <View style={tw`flex-row items-center mb-6`}>
@@ -197,7 +319,11 @@ const SignUp = () => {
                         style={tw`border border-gray-300 rounded-lg px-4 py-3 bg-white mb-4 flex-row items-center justify-center`}
                         onPress={() => {/* Handle Gmail signup */}}
                     >
-                        <FontAwesome name="google" size={20} color="#EA4335" style={tw`mr-3`} />
+                        <Image 
+                            source={GmailIcon} 
+                            style={tw`w-5 h-5 mr-3`} 
+                            resizeMode="contain"
+                        />
                         <Text style={[tw`text-gray-800 font-medium`, {fontFamily: 'Poppins-Medium'}]}>
                             Sign up with Gmail
                         </Text>
@@ -205,14 +331,41 @@ const SignUp = () => {
 
                     {/* Facebook Sign Up Button */}
                     <TouchableOpacity 
-                        style={tw`border border-gray-300 rounded-lg px-4 py-3 bg-white mb-6 flex-row items-center justify-center`}
+                        style={tw`border border-gray-300 rounded-lg px-4 py-3 bg-white mb-4 flex-row items-center justify-center`}
                         onPress={() => {/* Handle Facebook signup */}}
                     >
-                        <FontAwesome name="facebook" size={20} color="#1877F2" style={tw`mr-3`} />
+                        <Image 
+                            source={FacebookIcon} 
+                            style={tw`w-5 h-5 mr-3`} 
+                            resizeMode="contain"
+                        />
                         <Text style={[tw`text-gray-800 font-medium`, {fontFamily: 'Poppins-Medium'}]}>
                             Sign up with Facebook
                         </Text>
                     </TouchableOpacity>
+
+                    {/* Apple Sign Up Button */}
+                    <TouchableOpacity 
+                        style={tw`border border-gray-300 rounded-lg px-4 py-3 bg-white mb-6 flex-row items-center justify-center`}
+                        onPress={() => {/* Handle Apple signup */}}
+                    >
+                        <AntDesign name="apple1" size={20} color="#000000" style={tw`mr-3`} />
+                        <Text style={[tw`text-gray-800 font-medium`, {fontFamily: 'Poppins-Medium'}]}>
+                            Sign up with Apple
+                        </Text>
+                    </TouchableOpacity>
+
+                    {/* Already have account text */}
+                    <View style={tw`flex-row justify-center items-center mb-6`}>
+                        <Text style={[tw`text-gray-600`, {fontFamily: 'Poppins-Regular'}]}>
+                            Already have an account?{' '}
+                        </Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
+                            <Text style={[tw`text-blue-800`, {fontFamily: 'Poppins-Bold'}]}>
+                                Sign in
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
 
                 </ScrollView>
             </KeyboardAvoidingView>

@@ -5,8 +5,8 @@ import Text from 'react-native-ui-lib/text'
 import DocumentCard from "../../components/document/DocumentCard"
 
 import tw from "../../tailwind";
-import AntDesign from '@expo/vector-icons/AntDesign';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const Index = () => {
 	return (

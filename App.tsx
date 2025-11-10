@@ -19,8 +19,10 @@ import { baseColor } from './constants/Colors';
 import Toast from 'react-native-toast-message';
 
 // Import all screens
+import SplashScreen from './app/splash';
 import IndexScreen from './app/index';
 import OnboardingScreen from './app/onboarding';
+import LocationPermissionScreen from './app/location_permission';
 
 // Auth screens
 import SignInScreen from './app/auth/sign_in';
@@ -30,15 +32,39 @@ import ForgotPasswordScreen from './app/auth/forgot_password';
 import SetPasswordScreen from './app/auth/set_password';
 import AwaitEmailVerificationScreen from './app/auth/await_email_verification';
 import ProfileScreen from './app/auth/profile';
-import UploadCarDetailsScreen from './app/auth/upload_car_details';
-import PaymentDetailsScreen from './app/auth/payment_details';
 
 // Tab screens  
 import Bottomsheet2Screen from './app/(tabs)/bottomsheet2/index';
+import RentalScreen from './app/(tabs)/rental';
 import WalletScreen from './app/(tabs)/wallet';
 import HistoryScreen from './app/(tabs)/history';
 import NotificationsScreen from './app/(tabs)/notifications';
 import ProfileTabScreen from './app/(tabs)/profile';
+
+// Bottomsheet2 sub-screens (ride booking flow)
+import BookRideScreen from './app/(tabs)/bottomsheet2/book_ride';
+import BookForSelfScreen from './app/(tabs)/bottomsheet2/book_for_self';
+import SearchingDriverScreen from './app/(tabs)/bottomsheet2/searching_driver';
+import DriverArrivingScreen from './app/(tabs)/bottomsheet2/driver_arriving';
+import PaymentMethodScreen from './app/(tabs)/bottomsheet2/payment_method';
+import ReachedDestinationScreen from './app/(tabs)/bottomsheet2/reached_destination';
+
+// Wallet and Payment screens
+import WithdrawScreen from './app/wallet_aux/withdraw';
+import WithdrawSuccessScreen from './app/wallet_aux/withdraw_success';
+import PaymentIndexScreen from './app/payment/index';
+import AccountListScreen from './app/payment/account_list';
+
+// Riding flow utility screens
+import CancelRideScreen from './app/riding_flow/cancel_ride';
+import DownloadReceiptScreen from './app/riding_flow/download_receipt';
+
+// Rental screens
+import CarDetailScreen from './app/rental/car-details';
+import BookCarScreen from './app/rental/book-car';
+import SelfDriveRequirementScreen from './app/rental/self-drive-requirement';
+import BookingSummaryScreen from './app/rental/booking-summary';
+import ChoosePaymentMethodScreen from './app/rental/choose-payment-method';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -71,50 +97,11 @@ Typography.loadTypographies({
   poppinsMedium: { fontFamily: 'Poppins-Medium' }
 });
 
-// MainTabs component with custom header
+// MainTabs component - Rider only
 function MainTabs() {
   const insets = useSafeAreaInsets();
-  const [isOnline, setIsOnline] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const user = auth.currentUser;
   useDeviceContext(tw);
-
-  // Fetch user's current isOnline status when component mounts
-  useEffect(() => {
-    const fetchOnlineStatus = async () => {
-      try {
-        if (user) {
-          const userRef = doc(db, 'drivers', user.uid);
-          const docSnap = await getDoc(userRef);
-          if (docSnap.exists()) {
-            const userData = docSnap.data();
-            setIsOnline(userData.isOnline || false);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching document:', error);
-      }
-    };
-
-    fetchOnlineStatus();
-  }, [user]);
-
-  // Toggle isOnline status in Firestore and update UI state
-  const updateOnlineStatus = async () => {
-    try {
-      setIsLoading(true)
-      if (user) {
-        const userRef = doc(db, 'drivers', user.uid);
-        await updateDoc(userRef, { isOnline: !isOnline });
-        setIsOnline((prevStatus) => !prevStatus);
-        console.log('Toggled the isOnline State');
-      }
-      setIsLoading(false)
-    } catch (error) {
-      setIsLoading(false)
-      console.error('Error updating document:', error);
-    }
-  };
 
   return (
     <Tab.Navigator
@@ -124,83 +111,59 @@ function MainTabs() {
         tabBarLabelStyle: { fontFamily: "Poppins_400Regular", fontSize: 12 },
         tabBarStyle: tw`elevation-0 border-t-0 h-[70px] py-2 dark:bg-black`,
         headerTitleAlign: "center",
-        headerTitleStyle: { fontFamily: "Poppins_400Regular" },
         tabBarHideOnKeyboard: true
       }}>
       <Tab.Screen
         name="Home"
         component={Bottomsheet2Screen}
         options={{
-          headerShown: true,
+          headerShown: false,
           tabBarLabel: "Home",
           tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
-          header: () => {
-            return (
-              <View style={[
-                tw`h-[70px] bg-white items-center`,
-                { paddingTop: insets.top || 10 }
-              ]}>
-                <TouchableOpacity style={tw`${isOnline ? "bg-ollie-base" : "bg-gray-800 opacity-80"} w-30 rounded-full`}
-                  onPress={updateOnlineStatus}>
-                  {isLoading ?
-                    <ActivityIndicator size = "large" color = "white" />
-                    :
-                    <View style={tw`flex-row items-center justify-around`}>
-                      <Text style={tw`text-white p-2`} poppins center>
-                        {isOnline ? "Online" : "Offline"}
-                      </Text>
-                      <Ionicons name="car-sharp" size={24}  style={tw`text-ollie-base bg-white rounded-full`} />
-                    </View>
-                  }
-                </TouchableOpacity>
-              </View>
-            );
-          },
         }}
       />
 
-      <Tab.Screen
-        name="Wallet"
-        component={WalletScreen}
-        options={{
-          title: 'My Wallet',
-          headerShown: true,
-          tabBarIcon: ({ color }) => <MaterialIcons name="wallet" size={22} color={color} />,
-        }}
-      />
+        <Tab.Screen
+          name="Rental"
+          component={RentalScreen}
+          options={{
+            title: 'Car Rental',
+            headerShown: true,
+            headerTitleStyle: { fontFamily: 'Poppins-Regular', fontWeight: 'bold' },
+            tabBarLabel: "Rental",
+            tabBarIcon: ({ color }) => <MaterialIcons name="car-rental" size={24} color={color} />,
+          }}
+        />
       <Tab.Screen
         name="History"
         component={HistoryScreen}
         options={{
           title: 'History',
           headerShown: true,
-          tabBarIcon: ({ color }) => 
-            <View>
-              <MaterialIcons name="history" size={28} color={color} />
-            </View>
-          ,
+          headerTitleStyle: { fontFamily: 'Poppins-Regular' },
+          tabBarLabel: "History",
+          tabBarIcon: ({ color }) => <MaterialIcons name="history" size={24} color={color} />,
         }}
       />
       <Tab.Screen
-        name="Notifications"
-        component={NotificationsScreen}
+        name="Wallet"
+        component={WalletScreen}
         options={{
-          title: 'Notifications',
+          title: 'My Wallet',
           headerShown: true,
-          tabBarIcon: ({ color }) => 
-          <View>
-              <Badge backgroundColor='green' size={10}/>
-              <MaterialIcons name="notifications" size={24} color={color} />
-          </View>
-          ,
+          headerTitleStyle: { fontFamily: 'Poppins-Regular' },
+          tabBarLabel: "Wallet",
+          tabBarIcon: ({ color }) => <MaterialIcons name="wallet" size={22} color={color} />,
         }}
       />
       <Tab.Screen
-        name="ProfileTab"
+        name="Profile"
         component={ProfileTabScreen}
         options={{
           title: 'My Profile',
           headerShown: true,
+          headerTitleStyle: { fontFamily: 'Poppins-Regular' },
+          tabBarLabel: "Profile",
           tabBarIcon: ({ color }) => <FontAwesome name="user" size={24} color={color} />,
         }}
       />
@@ -215,12 +178,10 @@ function AuthStack() {
       <Stack.Screen name="SignIn" component={SignInScreen} />
       <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="PhoneVerify" component={PhoneVerifyScreen} />
-      <Stack.Screen name="PaymentDetails" component={PaymentDetailsScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       <Stack.Screen name="SetPassword" component={SetPasswordScreen} />
       <Stack.Screen name="AwaitEmailVerification" component={AwaitEmailVerificationScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="UploadCarDetails" component={UploadCarDetailsScreen} />
     </Stack.Navigator>
   );
 }
@@ -229,11 +190,49 @@ export default function App() {
   return (
     <>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Index">
-          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Splash">
+          <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="Index" component={IndexScreen} />
+          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
           <Stack.Screen name="Auth" component={AuthStack} />
+          <Stack.Screen name="LocationPermission" component={LocationPermissionScreen} />
           <Stack.Screen name="MainTabs" component={MainTabs} />
+          
+          {/* Ride booking flow screens */}
+          <Stack.Screen name="BookRide" component={BookRideScreen} />
+          <Stack.Screen name="BookForSelf" component={BookForSelfScreen} />
+          <Stack.Screen name="SearchingDriver" component={SearchingDriverScreen} />
+          <Stack.Screen name="DriverArriving" component={DriverArrivingScreen} />
+          <Stack.Screen name="PaymentMethod" component={PaymentMethodScreen} />
+          <Stack.Screen name="ReachedDestination" component={ReachedDestinationScreen} />
+
+          {/* Wallet and Payment screens */}
+          <Stack.Screen name="Withdraw" component={WithdrawScreen} />
+          <Stack.Screen name="WithdrawSuccess" component={WithdrawSuccessScreen} />
+          <Stack.Screen name="Payment" component={PaymentIndexScreen} />
+          <Stack.Screen name="AccountList" component={AccountListScreen} />
+
+          {/* Riding flow utility screens */}
+          <Stack.Screen name="CancelRide" component={CancelRideScreen} />
+          <Stack.Screen name="DownloadReceipt" component={DownloadReceiptScreen} />
+          
+          {/* Rental screens */}
+          <Stack.Screen name="CarDetail" component={CarDetailScreen} />
+          <Stack.Screen name="BookCar" component={BookCarScreen} />
+          <Stack.Screen name="SelfDriveRequirement" component={SelfDriveRequirementScreen} />
+          <Stack.Screen name="BookingSummary" component={BookingSummaryScreen} />
+          <Stack.Screen name="ChoosePaymentMethod" component={ChoosePaymentMethodScreen} />
+          
+          {/* Other screens */}
+          <Stack.Screen 
+            name="Notifications" 
+            component={NotificationsScreen} 
+            options={{ 
+              headerShown: true, 
+              title: 'Notifications',
+              headerTitleStyle: { fontFamily: 'Poppins-Regular' }
+            }} 
+          />
         </Stack.Navigator>
       </NavigationContainer>
       <Toast />

@@ -434,3 +434,202 @@ export const rideOptions = [
 
 
 export const IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
+
+
+export interface RecentPlace {
+  id: string;
+  name: string;
+  address: string;
+  distance: string;
+  latitude: number;
+  longitude: number;
+}
+
+export const recentPlaces: RecentPlace[] = [
+  {
+    id: '1',
+    name: 'Office',
+    address: '2972 Westheimer Rd. Santa Ana, Illinois 85486',
+    distance: '2.7km',
+    latitude: 4.8156,
+    longitude: 7.0498
+  },
+  {
+    id: '2',
+    name: 'Coffee shop',
+    address: '1901 Thornridge Cir. Shiloh, Hawaii 81063',
+    distance: '1.1km',
+    latitude: 4.8166,
+    longitude: 7.0508
+  },
+  {
+    id: '3',
+    name: 'Shopping center',
+    address: '4140 Parker Rd. Allentown, New Mexico 31134',
+    distance: '4.9km',
+    latitude: 4.8176,
+    longitude: 7.0518
+  },
+  {
+    id: '4',
+    name: 'Shopping mall',
+    address: '4140 Parker Rd. Allentown, New Mexico 31134',
+    distance: '4.0km',
+    latitude: 4.8186,
+    longitude: 7.0528
+  },
+];
+
+// Car Rental Data
+export interface RentalCar {
+  id: string;
+  name: string;
+  year: number;
+  brand: string;
+  location: string;
+  pricePerHour: string;
+  rating: number;
+  image: any;
+  isFavorite: boolean;
+  maxSpeed: string;
+  engineType: string;
+  passengers: number;
+  description: string;
+  carClass: string;
+  rentPartner: {
+    name: string;
+    avatar: any;
+    phone: string;
+  };
+}
+
+export const rentalCars: RentalCar[] = [
+  {
+    id: '1',
+    name: 'Toyota Prado',
+    year: 2020,
+    brand: 'Toyota',
+    location: 'Owerri, Imo state',
+    pricePerHour: '30,000',
+    rating: 4.4,
+    image: require('../assets/images/cars/prado.png'),
+    isFavorite: false,
+    maxSpeed: '180km/h',
+    engineType: 'V8',
+    passengers: 5,
+    description: 'The Toyota Prado 2020 is a premium SUV that combines luxury with performance. Perfect for both city driving and off-road adventures. Features advanced safety systems, comfortable seating for 5 passengers, and modern entertainment options.',
+    carClass: 'Premium',
+    rentPartner: {
+      name: 'Julia Roberts',
+      avatar: require('../assets/images/man.jpg'),
+      phone: '+234 808 123 4567'
+    }
+  },
+  {
+    id: '2',
+    name: 'Toyota Camry',
+    year: 2018,
+    brand: 'Toyota',
+    location: 'Owerri, Imo state',
+    pricePerHour: '30,000',
+    rating: 4.4,
+    image: require('../assets/images/cars/corolla.png'),
+    isFavorite: false,
+    maxSpeed: '180km/h',
+    engineType: 'V6',
+    passengers: 5,
+    description: 'The Toyota Camry 2018 offers a smooth and comfortable ride with excellent fuel efficiency. Perfect for business trips or family outings. Equipped with modern safety features and spacious interior.',
+    carClass: 'Economy',
+    rentPartner: {
+      name: 'Julia Roberts',
+      avatar: require('../assets/images/man.jpg'),
+      phone: '+234 808 123 4567'
+    }
+  },
+  {
+    id: '3',
+    name: 'Lexus Rx350',
+    year: 2020,
+    brand: 'Lexus',
+    location: 'Owerri, Imo state',
+    pricePerHour: '30,000',
+    rating: 4.4,
+    image: require('../assets/images/cars/lexus.png'),
+    isFavorite: false,
+    maxSpeed: '200km/h',
+    engineType: 'V8',
+    passengers: 5,
+    description: 'Experience luxury at its finest with the Lexus RX350 2020. This premium SUV features cutting-edge technology, superior comfort, and exceptional performance. Ideal for special occasions and executive travel.',
+    carClass: 'Luxury',
+    rentPartner: {
+      name: 'Julia Roberts',
+      avatar: require('../assets/images/man.jpg'),
+      phone: '+234 808 123 4567'
+    }
+  },
+  {
+    id: '4',
+    name: 'Mercedes Benz C300',
+    year: 2024,
+    brand: 'Mercedes Benz',
+    location: 'Trans Ekulu, Enugu State',
+    pricePerHour: '30,000',
+    rating: 4.4,
+    image: require('../assets/images/cars/benz.png'),
+    isFavorite: false,
+    maxSpeed: '240km/h',
+    engineType: 'Electric',
+    passengers: 5,
+    description: 'The Mercedes Benz C300 2024 represents the pinnacle of automotive engineering. With its sleek design, powerful electric engine, and state-of-the-art features, this vehicle delivers an unforgettable driving experience.',
+    carClass: 'Luxury',
+    rentPartner: {
+      name: 'Julia Roberts',
+      avatar: require('../assets/images/man.jpg'),
+      phone: '+234 808 123 4567'
+    }
+  },
+  {
+    id: '5',
+    name: 'Toyota Camry',
+    year: 2018,
+    brand: 'Toyota',
+    location: 'Owerri, Imo state',
+    pricePerHour: '30,000',
+    rating: 4.4,
+    image: require('../assets/images/cars/corolla.png'),
+    isFavorite: false,
+    maxSpeed: '180km/h',
+    engineType: 'V6',
+    passengers: 5,
+    description: 'The Toyota Camry 2018 offers a smooth and comfortable ride with excellent fuel efficiency. Perfect for business trips or family outings. Equipped with modern safety features and spacious interior.',
+    carClass: 'Economy',
+    rentPartner: {
+      name: 'Julia Roberts',
+      avatar: require('../assets/images/man.jpg'),
+      phone: '+234 808 123 4567'
+    }
+  },
+  {
+    id: '6',
+    name: 'Toyota Prado',
+    year: 2020,
+    brand: 'Toyota',
+    location: 'Owerri, Imo state',
+    pricePerHour: '30,000',
+    rating: 4.4,
+    image: require('../assets/images/cars/prado.png'),
+    isFavorite: false,
+    maxSpeed: '180km/h',
+    engineType: 'V8',
+    passengers: 5,
+    description: 'The Toyota Prado 2020 is a premium SUV that combines luxury with performance. Perfect for both city driving and off-road adventures. Features advanced safety systems, comfortable seating for 5 passengers, and modern entertainment options.',
+    carClass: 'Premium',
+    rentPartner: {
+      name: 'Julia Roberts',
+      avatar: require('../assets/images/man.jpg'),
+      phone: '+234 808 123 4567'
+    }
+  },
+];
+
+export const carBrands = ['All', 'Toyota', 'Honda', 'BMW', 'Mercedes Benz', 'Lexus'];

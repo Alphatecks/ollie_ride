@@ -8,7 +8,6 @@ import tw from "../tailwind"
 import Onboarding1 from "../assets/01.svg"
 import Onboarding2 from "../assets/02.svg"
 import Onboarding3 from "../assets/03.svg"
-import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -26,19 +25,8 @@ const OnboardingScreen = () => {
 
   const handleFinishOnboarding = async () => {
     await AsyncStorage.setItem('onboarding_seen', 'true');
-    navigation.navigate('Auth'); // Navigate to auth after finishing onboarding
+    navigation.navigate('Index'); // Navigate to Index after finishing onboarding
   };
-  
-  useEffect(() => {
-    const checkOnboardingStatus = async () => {
-      const onboardingSeen = await AsyncStorage.getItem('onboarding_seen');
-      if (onboardingSeen) {
-        navigation.navigate('Auth'); // If already seen, skip onboarding
-      }
-    };
-  
-    checkOnboardingStatus();
-  }, []);
 
 
   const onboardingData = [

@@ -2,8 +2,8 @@ import React from "react";
 import { View, Text } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import tw from "../../../tailwind";
-import MasterCardSVG from "../../../assets/mastercard.svg"
+import tw from "../../tailwind";
+import MasterCardSVG from "../../assets/mastercard.svg"
 import { Image } from "react-native-ui-lib";
 import { TouchableOpacity } from "react-native-gesture-handler";
 

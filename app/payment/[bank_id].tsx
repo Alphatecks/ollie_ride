@@ -3,16 +3,17 @@ import { View, TextInput, Alert } from 'react-native';
 import Text from "react-native-ui-lib/text";
 import Button from "react-native-ui-lib/button";
 import tw from "../../tailwind";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore'; // Firestore methods
 import { db, auth } from '../../firebaseConfig'; // Firestore config
 
 const AccountList = () => {
-  const params = useLocalSearchParams();
-  const { bank_id } = params; // Get the bank_id from the routed params
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { bank_id } = (route.params as any) || {};
   const [bankDetails, setBankDetails] = useState({ bankName: '', bankAccount: '', accountHolder: '' });
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  
 
   useEffect(() => {
     // Fetch bank account details from Firestore when the screen loads
@@ -47,7 +48,7 @@ const AccountList = () => {
         accountHolder: bankDetails.accountHolder
       });
       Alert.alert('Success', 'Bank details updated successfully');
-      router.back(); // Navigate back after update
+      navigation.goBack(); // Navigate back after update
     } catch (error) {
       console.error('Error updating bank details:', error);
       Alert.alert('Error', 'Failed to update bank details');
@@ -71,7 +72,7 @@ const AccountList = () => {
               const docRef = doc(db, 'drivers', auth.currentUser.uid, 'bankAccounts', bank_id);
               await deleteDoc(docRef);
               Alert.alert('Success', 'Bank account deleted successfully');
-              router.back(); // Navigate back after deletion
+              navigation.goBack(); // Navigate back after deletion
             } catch (error) {
               console.error('Error deleting bank details:', error);
               Alert.alert('Error', 'Failed to delete bank account');

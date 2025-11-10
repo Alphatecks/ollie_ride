@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
+import { View, Text, TouchableOpacity, ViewStyle, TextStyle, FlatList } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import tw from "../../../tailwind";
-import { FlatList } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import tw from "../../tailwind";
+// FlatList already imported above
 
 
 interface RideOption {
@@ -47,15 +46,22 @@ const RideOptionCard: React.FC<RideOption> = ({
   iconColor = '#002D62',
 }) => {
   const renderVehicleIcon = () => {
+    // Keep the card box size stable by constraining the icon container height
+    // and rendering a larger icon absolutely within it.
+    const IconWrap: React.FC<{ name: string }> = ({ name }) => (
+      <View style={{ height: 28, width: 40, alignItems: 'center', justifyContent: 'center' }}>
+        <MaterialCommunityIcons name={name as any} size={36} color={iconColor} style={{ position: 'absolute' }} />
+      </View>
+    );
     switch (id) {
       case 'economy':
-        return <MaterialCommunityIcons name="car-hatchback" size={28} color={iconColor} />;
+        return <IconWrap name="car-hatchback" />;
       case 'premium':
-        return <MaterialCommunityIcons name="car-limousine" size={28} color={iconColor} />;
+        return <IconWrap name="car-limousine" />;
       case 'van':
-        return <MaterialCommunityIcons name="van-passenger" size={28} color={iconColor} />;
+        return <IconWrap name="van-passenger" />;
       default:
-        return <MaterialCommunityIcons name="car" size={28} color={iconColor} />;
+        return <IconWrap name="car" />;
     }
   };
 
@@ -80,7 +86,7 @@ const RideOptionCard: React.FC<RideOption> = ({
       )}
       <View style={tw`items-center mt-2`}>
         <View style={tw`mb-1`}>{renderVehicleIcon()}</View>
-        <Text style={[tw`text-sm font-medium mb-2`, { color: textColor }]}>{duration}</Text>
+        <Text style={[tw`text-sm font-medium`, { color: textColor, marginBottom: 6 }]}>{duration}</Text>
       </View>
       <View style={tw`h-px bg-gray-200 my-2`} />
       <View style={tw`flex-row justify-between gap-10 items-center`}>
@@ -107,23 +113,28 @@ interface RideOptionsRowProps {
 
 const RideOptionsRow: React.FC<RideOptionsRowProps> = ({ options, selectedRide, onSelectRide }) => {
   return (
-    <ScrollView
-        contentContainerStyle={tw`p-2 flex-grow gap-x-4`} 
-        keyboardShouldPersistTaps="handled"
-        horizontal // Enables horizontal scrolling
-        showsHorizontalScrollIndicator={false} // Hides the scrollbar (optional)
-        
-    >
-      {options.map((option) => (
+    <FlatList
+      data={options}
+      horizontal
+      keyExtractor={(item) => item.id}
+      showsHorizontalScrollIndicator={false}
+      nestedScrollEnabled
+      scrollEnabled
+      scrollEventThrottle={16}
+      initialNumToRender={3}
+      windowSize={5}
+      overScrollMode="always"
+      contentContainerStyle={tw`p-2`}
+      ItemSeparatorComponent={() => <View style={tw`w-4`} />}
+      renderItem={({ item }) => (
         <RideOptionCard
-          key={option.id}
-          {...option}
-          selected={selectedRide === option.id}
-          onPress={() => onSelectRide(option.id)}
+          {...item}
+          selected={selectedRide === item.id}
+          onPress={() => onSelectRide(item.id)}
           containerStyle={tw`flex-1`}
         />
-      ))}
-    </ScrollView>
+      )}
+    />
   );
 };
 // const RideOptionsRow: React.FC<RideOptionsRowProps> = ({ options, selectedRide, onSelectRide }) => {
@@ -146,3 +157,35 @@ const RideOptionsRow: React.FC<RideOptionsRowProps> = ({ options, selectedRide, 
 
 
 export { RideOptionCard, RideOptionsRow };
+
+// Vertical list for ride options
+interface RideOptionsListProps {
+  options: RideOption[];
+  selectedRide: string;
+  onSelectRide: (id: string) => void;
+}
+
+const RideOptionsList: React.FC<RideOptionsListProps> = ({ options, selectedRide, onSelectRide }) => {
+  return (
+    <FlatList
+      data={options}
+      keyExtractor={(item) => item.id}
+      showsVerticalScrollIndicator={false}
+      nestedScrollEnabled
+      scrollEventThrottle={16}
+      initialNumToRender={6}
+      windowSize={10}
+      contentContainerStyle={tw`px-4 pb-12`}
+      ItemSeparatorComponent={() => <View style={tw`h-3`} />}
+      renderItem={({ item }) => (
+        <RideOptionCard
+          {...item}
+          selected={selectedRide === item.id}
+          onPress={() => onSelectRide(item.id)}
+        />
+      )}
+    />
+  );
+};
+
+export { RideOptionsList };

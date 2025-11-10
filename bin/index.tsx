@@ -1,6 +1,6 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {ActivityIndicator, Alert, TouchableOpacity} from "react-native"
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
@@ -19,7 +19,7 @@ import DoubleLocationCard from "@/components/home/DoubleLocationCard";
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'; // Importing Gorhom Bottom Sheet for the drawer
 
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'; // MapView and Marker from react-native-maps for showing the map and rider markers
-import * as Location from 'expo-location'; // Importing expo-location for handling location permissions and fetching user location
+import Geolocation from '@react-native-community/geolocation';
 import tw from "../tailwind"; // TailwindCSS for styling
 
 import { getNearbyPlaces } from "@/utils/googleAPI"
@@ -27,7 +27,6 @@ import {createTrip, fetchAvailableTrips} from "@/utils/booking"
 
 import Toast from "react-native-toast-message"
 
-import { Slot } from "expo-router"
 
 // Rider avatar URL
 const url = "https://firebasestorage.googleapis.com/v0/b/ollie-ride-7abb8.appspot.com/o/man.jpg?alt=media&token=de524b5c-ef1b-482b-ad53-1b0cc0c6decd";
@@ -67,40 +66,35 @@ export default function Index() {
   const [selectedTrip, setSelectedTrip] = useState({}); // List of riders with distances
 
   useEffect(() => {
-    const fetchLocation = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-      } else {
-        let userLocation = await Location.getCurrentPositionAsync({});
-        setLocation(userLocation);
-        setRegion({
-          latitude: userLocation.coords.latitude,
-          longitude: userLocation.coords.longitude,
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005,
-        });
-        // Get nearby Places of the users current location
-
-        console.log("Getting nearby places...")
-        // const allNearbyPlaces = await getNearbyPlaces(userLocation.coords.latitude, userLocation.coords.longitude)
-
-        // console.log("From Index: ", allNearbyPlaces)
-        // setRiders(allNearbyPlaces.slice(0, 5))
-        // Test create a trip
-        try {
-          const trips = await fetchAvailableTrips();
-          console.log('Fetched trips:', trips);
-          setTrips(trips)
-        } catch (error) {
-          console.error('Failed to fetch trips:', error);
-        }
-
-      }
+    const fetchLocation = () => {
+      Geolocation.getCurrentPosition(
+        async (position) => {
+          setLocation(position);
+          setRegion({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+          });
+          console.log("Getting nearby places...")
+          try {
+            const trips = await fetchAvailableTrips();
+            console.log('Fetched trips:', trips);
+            setTrips(trips)
+          } catch (error) {
+            console.error('Failed to fetch trips:', error);
+          }
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          setErrorMsg('Permission to access location was denied');
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
+      );
     };
 
-    fetchLocation(); // Call the async function inside useEffect
-  }, []); // Ensure it's an empty dependency array
+    fetchLocation();
+  }, []);
 
 
 

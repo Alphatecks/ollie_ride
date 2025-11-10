@@ -1,7 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { View, Text, Button, TextField, Colors, TouchableOpacity } from 'react-native-ui-lib';
+import { SafeAreaView, Platform } from 'react-native';
 import tw from '../../tailwind';
-import Ionicons from 'react-native-vector-icons/Ionicons'; // Importing icons from react-native-vector-icons
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useNavigation, useRoute } from '@react-navigation/native'
 import ButtonLoader from "../../components/general/ButtonLoader"
 import Toast from 'react-native-toast-message';
@@ -61,17 +63,23 @@ const SetPassword = () => {
         full_name: route.params?.full_name
       })
 
+      // Create user document in Firestore with all collected data
       await setDoc(doc(db, "users", user.uid), {
+        email: route.params?.email,
         gender: route.params?.gender,
         phoneNumber: route.params?.phoneNumber,
         full_name: route.params?.full_name,
+        isPhoneVerified: route.params?.isPhoneVerified || false,
         role: "rider",
         isApproved: false,
+        isEmailVerified: false,
         totalBalance: 0,
         totalTrips: 0,
         totalTimeOnline: 0,
         totalDistanceCovered: 0,
-        totalTimeSpentOnTrip: 0
+        totalTimeSpentOnTrip: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       })
       console.log("Set up a users collection!!")
 
@@ -82,7 +90,12 @@ const SetPassword = () => {
 
       console.log(route.params)
 
-      navigation.navigate('AwaitEmailVerification')
+      Toast.show({
+        type: "success",
+        text1: "Account created successfully!"
+      });
+
+      navigation.navigate('Profile')
      
     }
     catch(error){
@@ -107,57 +120,104 @@ const SetPassword = () => {
   }
 
   return (
-    <View style={tw`bg-white flex-1 p-4 pb-20 justify-between`}>
-      <View>
-        {/* <Text center style={tw`mb-6`} poppinsMedium h2  >
-          Set Password
-        </Text> */}
-        <Text center style={tw`mb-6`} poppins>
-          Set your password
-        </Text>
-        <View style={tw``}>
-          <TextField
-            value={password}
-            onChangeText={setPassword}
-            labelColor="#3C2F3D"
-            placeholder="Enter Your Password"
-            enableErrors
-            validate={['required', (value) => value.length > 6]}
-            validationMessage={['Field is required', 'Password is too short']}
-            hint="Enter Your Password"
-            secureTextEntry={!isPasswordVisible}
-            poppins
-            rounded
-  
-          />
-          <TextField
-            value={c_password}
-            onChangeText={setCPassword}
-            labelColor="#3C2F3D"
-            placeholder="Confirm Password"
-            enableErrors
-            validate={['required', (value) => value.length > 6]}
-            validationMessage={['Field is required', 'Password is too short']}
-            hint="Confirm Your Password"
-            secureTextEntry={!isPasswordVisible}
-            poppins
-            rounded
-          />
+    <SafeAreaView style={tw`bg-white flex-1`}>
+      <View style={tw`flex-1 justify-between`}>
+        {/* Back Button Header */}
+        <View style={tw`px-6 pt-4`}>
+          <TouchableOpacity 
+            onPress={() => navigation.goBack()}
+            style={tw`flex-row items-center mb-8`}
+          >
+            <AntDesign name="left" size={20} color="#374151" />
+            <Text style={[tw`ml-2 text-gray-700`, {fontFamily: 'Poppins-Regular'}]}>Back</Text>
+          </TouchableOpacity>
+
+          {/* Title */}
+          <Text style={[tw`text-center text-2xl font-bold text-gray-800 mb-2`, {fontFamily: 'Poppins-Bold'}]}>
+            Set password
+          </Text>
+
+          {/* Subtitle */}
+          <Text style={[tw`text-center text-base text-gray-600 mb-8`, {fontFamily: 'Poppins-Regular'}]}>
+            Set your password
+          </Text>
+
+          {/* Password Input Fields */}
+          <View style={tw`mb-4`}>
+            <View style={tw`relative`}>
+              <TextField
+                value={password}
+                onChangeText={setPassword}
+                labelColor="#3C2F3D"
+                placeholder="Enter Your Password"
+                enableErrors
+                validate={['required', (value) => value.length > 6]}
+                validationMessage={['Field is required', 'Password is too short']}
+                hint="Enter Your Password"
+                secureTextEntry={!isPasswordVisible}
+                poppins
+                style={tw`border border-gray-300 rounded-lg px-4 py-3 mb-4`}
+              />
+              <TouchableOpacity 
+                onPress={togglePasswordVisibility}
+                style={tw`absolute right-4 top-3`}
+              >
+                <Ionicons 
+                  name={isPasswordVisible ? "eye-off-outline" : "eye-outline"} 
+                  size={24} 
+                  color="#9CA3AF" 
+                />
+              </TouchableOpacity>
+            </View>
+
+            <View style={tw`relative`}>
+              <TextField
+                value={c_password}
+                onChangeText={setCPassword}
+                labelColor="#3C2F3D"
+                placeholder="Confirm Password"
+                enableErrors
+                validate={['required', (value) => value.length > 6]}
+                validationMessage={['Field is required', 'Password is too short']}
+                hint="Confirm Your Password"
+                secureTextEntry={!isPasswordVisible}
+                poppins
+                style={tw`border border-gray-300 rounded-lg px-4 py-3`}
+              />
+              <TouchableOpacity 
+                onPress={togglePasswordVisibility}
+                style={tw`absolute right-4 top-3`}
+              >
+                <Ionicons 
+                  name={isPasswordVisible ? "eye-off-outline" : "eye-outline"} 
+                  size={24} 
+                  color="#9CA3AF" 
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Password Requirement Text */}
+          <Text style={[tw`text-gray-600 text-sm`, {fontFamily: 'Poppins-Regular'}]}>
+            Atleast 1 number or a special character
+          </Text>
         </View>
-        <Text poppinsMedium style={tw`text-gray-400`}>
-          At least 1 number or a special character
-        </Text>
+
+        {/* Register Button */}
+        <View style={tw`px-6 pb-8`}>
+          <TouchableOpacity
+            onPress={submitData}
+            disabled={!password || !c_password}
+            style={[
+              tw`rounded-lg py-4 items-center justify-center`,
+              { backgroundColor: (!password || !c_password) ? '#D1D5DB' : Colors.primaryColor }
+            ]}
+          >
+            <Text style={[tw`text-white text-base font-bold`, {fontFamily: 'Poppins-Bold'}]}>Register</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <Button
-        label="Register"
-        backgroundColor={Colors.primaryColor}
-        style={tw`btn p-4 mt-4`}
-        
-        poppins
-        onPress={submitData}
-        disabled={!password || !c_password}
-      />
-    </View>
+    </SafeAreaView>
   );
 };
 

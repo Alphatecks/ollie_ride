@@ -2,6 +2,8 @@ package com.alphatecks.ollierider
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
@@ -10,6 +12,8 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate
 
 class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
+    // Set the splash screen theme first
+    setTheme(R.style.AppTheme)
     super.onCreate(savedInstanceState)
   }
 

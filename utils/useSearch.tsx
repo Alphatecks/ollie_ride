@@ -188,6 +188,51 @@ const search = debounce(async (query) => {
       result.loading = false; // Stop loading
     }
   
-    return result; // Return the result object
+  return result; // Return the result object
+};
+
+
+// Reverse Geocoding - Convert coordinates to address
+export const reverseGeocode = async (latitude, longitude) => {
+  const apiKey = "AIzaSyCwiyu1HxfDQFf5A9U4g_m4YLI21EzVuLg"; // Google API key
+  const result = {
+    loading: true,
+    data: null,
+    error: null,
   };
+
+  // Validate coordinates
+  if (!latitude || !longitude) {
+    result.loading = false;
+    result.error = 'Invalid coordinates';
+    return result;
+  }
+
+  const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
+
+  try {
+    const response = await axios.get(apiUrl);
+
+    // Check if the response is valid
+    if (response.status === 200 && response.data.results && response.data.results.length > 0) {
+      const address = response.data.results[0].formatted_address;
+      result.data = address; // Store the formatted address
+    } else {
+      result.error = 'No address found for these coordinates';
+    }
+  } catch (error) {
+    // Handle errors
+    if (error.response) {
+      result.error = `Server error: ${error.response.status}`;
+    } else if (error.request) {
+      result.error = 'No response from server';
+    } else {
+      result.error = `Error: ${error.message}`;
+    }
+  } finally {
+    result.loading = false;
+  }
+
+  return result;
+};
   

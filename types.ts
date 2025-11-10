@@ -71,6 +71,10 @@ export interface Trip {
     bookingFor: "self" | "others";
     driverProfileImage: string;
     driverDisplayName: string;
+    otherContactName?: string;
+    otherContactPhoneNumber?: string;
+    bookedByName?: string;
+    bookedByPhoneNumber?: string;
   }
   
 

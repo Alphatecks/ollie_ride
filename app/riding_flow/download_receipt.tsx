@@ -6,7 +6,7 @@ import tw from "../../tailwind"
 import { Button, TextField } from 'react-native-ui-lib';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import Car from "../../../assets/car.svg"
+import Car from "../../assets/car.svg"
 import NotificationCardBase from '../../components/notification/NotificationCardBase';
 import { auth, db } from '../../firebaseConfig';
 import AntDesign from 'react-native-vector-icons/AntDesign';

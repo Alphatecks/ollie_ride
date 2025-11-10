@@ -41,3 +41,6 @@ yarn-error.*
 expo-env.d.ts
 # @end expo-cli
 .aider*
+
+# Firebase service account keys (don't commit secrets)
+*firebase-adminsdk*.json
