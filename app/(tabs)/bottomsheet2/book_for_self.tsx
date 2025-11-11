@@ -186,6 +186,9 @@ const Index = () => {
             bookingFor: currentContact,
             selectedRide: rideCategory,
             matchingStatus: 'PENDING',
+            // Ensure latitude/longitude fields exist for server matching
+            latitude: params.riderLatitude,
+            longitude: params.riderLongitude,
             otherContactName: currentContact === "others" ? selectedContact?.name : undefined,
             otherContactPhoneNumber: currentContact === "others" ? selectedContact?.phoneNumber : undefined,
             bookedByName: userProfile?.full_name || currentUser?.displayName || '',

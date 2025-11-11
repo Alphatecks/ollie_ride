@@ -191,6 +191,9 @@ const BookRide = () => {
           bookingFor: bookFor,
           selectedRide,
           matchingStatus: 'PENDING',
+          // Ensure latitude/longitude fields exist for server matching
+          latitude: params.riderLatitude,
+          longitude: params.riderLongitude,
           otherContactName: bookFor === 'others' ? selectedContact?.name : undefined,
           otherContactPhoneNumber: bookFor === 'others' ? selectedContact?.phoneNumber : undefined,
           bookedByName: userProfile?.full_name || currentUser?.displayName || '',
