@@ -9,7 +9,7 @@ const DRIVER_RESULT_LIMIT = Number(process.env.MATCHING_DRIVER_LIMIT || 25);
 const MAX_MATCH_ATTEMPTS = Number(process.env.MATCHING_MAX_ATTEMPTS || 4);
 const SERVICE_INSTANCE_ID =
   process.env.RENDER_INSTANCE_ID || `local-${Math.random().toString(36).slice(2, 8)}`;
-const MATCHING_DEBUG = process.env.MATCHING_DEBUG === 'true';
+const MATCHING_DEBUG = process.env.MATCHING_DEBUG !== 'false'; // Default to true for debugging
 
 app.use(express.json());
 
@@ -226,6 +226,7 @@ const findBestDriver = async (trip, excludedDriverIds = new Set()) => {
   let snapshot;
   try {
     snapshot = await queryRef.limit(DRIVER_RESULT_LIMIT * 2).get();
+    console.log(`🔍 Found ${snapshot.size} drivers from query (isApproved=true${trip.selectedRide ? `, serviceCategories contains ${trip.selectedRide}` : ''})`);
   } catch (error) {
     console.error('❌ Failed to query drivers:', error);
     return null;
@@ -242,14 +243,18 @@ const findBestDriver = async (trip, excludedDriverIds = new Set()) => {
     const data = doc.data() || {};
 
     if (data.isAvailable === false || data.status === 'UNAVAILABLE') {
+      console.log(`⏭️ Skipping driver ${driverId} – isAvailable=${data.isAvailable}, status=${data.status || 'N/A'}`);
       return;
     }
 
     const location = extractLocation(data);
     if (!location) {
-      logDebug(`Skipping driver ${driverId} – no location data`);
+      console.log(`⚠️ Skipping driver ${driverId} – no location data found. Available fields:`, Object.keys(data));
+      console.log(`   Driver data sample:`, JSON.stringify(data, null, 2).substring(0, 500));
       return;
     }
+
+    console.log(`✅ Driver ${driverId} has location:`, location);
 
     const distanceKm = calculateDistanceKm(riderLocation, location);
     if (distanceKm === null) {
@@ -260,13 +265,19 @@ const findBestDriver = async (trip, excludedDriverIds = new Set()) => {
   });
 
   if (!candidates.length) {
+    console.log(`🚫 No valid candidates found after filtering. Query returned ${snapshot.size} drivers but none passed filters.`);
     return null;
   }
 
+  console.log(`📊 Found ${candidates.length} valid candidate drivers`);
   candidates.sort((a, b) => a.distanceKm - b.distanceKm);
 
   const withinRadius = candidates.filter((candidate) => candidate.distanceKm <= MATCHING_RADIUS_KM);
-  return withinRadius.length > 0 ? withinRadius[0] : candidates[0];
+  console.log(`📍 ${withinRadius.length} drivers within ${MATCHING_RADIUS_KM}km radius, ${candidates.length - withinRadius.length} outside radius`);
+  
+  const selected = withinRadius.length > 0 ? withinRadius[0] : candidates[0];
+  console.log(`✅ Selected driver: ${selected.driverId} at ${selected.distanceKm}km`);
+  return selected;
 };
 
 const assignDriverToTrip = async (tripId, attempt = 0, excludedDriverIds = new Set()) => {
