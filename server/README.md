@@ -25,6 +25,11 @@ server/
      ```
      FIREBASE_SERVICE_ACCOUNT_JSON={"type":"service_account","project_id":"..."}
      ```
+   - Optional tuning knobs (all optional):
+     - `MATCHING_RADIUS_KM` – default `8`
+     - `MATCHING_DRIVER_LIMIT` – number of drivers fetched per lookup (default `25`)
+     - `MATCHING_MAX_ATTEMPTS` – retries if a driver becomes busy mid-transaction (default `4`)
+     - `MATCHING_DEBUG=true` – emit verbose matching logs
 
 3. **Install dependencies**
    ```bash
@@ -48,8 +53,12 @@ server/
 3. Point it at this repository.
 4. Build command: `cd server && npm install`
 5. Start command: `cd server && npm start`
-6. Add the environment variable `FIREBASE_SERVICE_ACCOUNT_JSON` under the “Environment” tab.
+6. Configure environment variables:
+   - `FIREBASE_SERVICE_ACCOUNT_JSON` – **required**
+   - Optional knobs from the list above if you want to tweak behaviour.
 
-Once deployed, the `/health` route will reply with a simple JSON message.  
-The `/match-trip` POST route logs incoming trip requests; later you’ll add the real matching logic there.
+Once deployed:
+- `/health` returns JSON with service status + instance id.
+- `/match-trip` POST `{ tripId }` queues an immediate matching pass.
+- The service also watches Firestore for `trips` documents with `status === "TRIP_AVAILABLE"` and automatically assigns the nearest available driver.
 

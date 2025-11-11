@@ -178,25 +178,23 @@ const BookRide = () => {
         }
 
         const newTrip: Trip = {
+          ...params,
           createdAt: Timestamp.now(),
           driverId: null,
-          fromLocation: params.fromLocation as string,
-          latitude: params.riderLatitude as number,
-          longitude: params.riderLongitude as number,
           riderId: currentUser?.uid as string,
           riderName,
           status: TripStatus.TRIP_AVAILABLE,
-          toLocation: params.toLocation as string,
           tripAmount: tripFare,
           riderPhoneNumber,
           riderProfileImage: userProfile?.profileImage,
           tripAccessCode: generateAccessCode(),
           bookingFor: bookFor,
+          selectedRide,
+          matchingStatus: 'PENDING',
           otherContactName: bookFor === 'others' ? selectedContact?.name : undefined,
           otherContactPhoneNumber: bookFor === 'others' ? selectedContact?.phoneNumber : undefined,
           bookedByName: userProfile?.full_name || currentUser?.displayName || '',
           bookedByPhoneNumber: userProfile?.phoneNumber || '',
-          ...params
         };
 
         const docRef = await addDoc(collection(db, 'trips'), newTrip)

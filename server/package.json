@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend companion service for Ollie Ride that runs on Render to match riders with nearby drivers using Firebase.",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js"

@@ -138,7 +138,12 @@ const Index = () => {
 
         console.log("PARAMS: ", params)
 
-        const tripFare = calculateTripFare(params.distance, params.selectedRide)
+        const rideCategory =
+            typeof params?.selectedRide === 'string' && params.selectedRide
+                ? params.selectedRide
+                : 'economy';
+
+        const tripFare = calculateTripFare(params.distance, params.selectedRide ?? rideCategory)
     
         if (currentContact === "others" && !selectedContact) {
             Toast.show({
@@ -168,25 +173,23 @@ const Index = () => {
 
 
         const newTrip: Trip = {
+            ...params,
             createdAt: Timestamp.now(),
             driverId: null, // No driver assigned initially
-            fromLocation: params.fromLocation as string,
-            latitude: params.riderLatitude as number,
-            longitude: params.riderLongitude as number,
             riderId: currentUser?.uid as string,
             riderName,
             status: TripStatus.TRIP_AVAILABLE, // Initially available for drivers
-            toLocation: params.toLocation as string,
             tripAmount: tripFare,
             riderPhoneNumber,
             riderProfileImage: userProfile?.profileImage,
             tripAccessCode: generateAccessCode(),
             bookingFor: currentContact,
+            selectedRide: rideCategory,
+            matchingStatus: 'PENDING',
             otherContactName: currentContact === "others" ? selectedContact?.name : undefined,
             otherContactPhoneNumber: currentContact === "others" ? selectedContact?.phoneNumber : undefined,
             bookedByName: userProfile?.full_name || currentUser?.displayName || '',
             bookedByPhoneNumber: userProfile?.phoneNumber || '',
-            ...params
         };
 
     

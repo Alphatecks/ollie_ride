@@ -75,6 +75,12 @@ export interface Trip {
     otherContactPhoneNumber?: string;
     bookedByName?: string;
     bookedByPhoneNumber?: string;
+    selectedRide?: string;
+    matchingStatus?: 'PENDING' | 'PROCESSING' | 'MATCHED' | 'NO_DRIVER_FOUND' | 'ERROR';
+    matchingInfo?: Record<string, unknown>;
+    carBrand?: string;
+    carColor?: string;
+    licenseNumber?: string;
   }
   
 
