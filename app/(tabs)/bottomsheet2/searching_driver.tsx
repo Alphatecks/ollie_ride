@@ -6,7 +6,7 @@ import { Bar } from 'react-native-progress';
 import { baseColor } from '../../../constants/Colors';
 import { Button } from 'react-native-ui-lib';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { doc, updateDoc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig'; // Ensure your Firebase config is imported
 import Toast from 'react-native-toast-message';
 
@@ -72,16 +72,27 @@ const Searching = () => {
 
     try {
       const tripRef = doc(db, "trips", tripId);
+      
+      // Get trip data first to check if driver was assigned
+      const tripSnap = await getDoc(tripRef);
+      const tripData = tripSnap.data();
+      
+      // Update trip status
       await updateDoc(tripRef, {
-        riderId: null,
-        riderName: null,
-        riderPhoneNumber: null,
-        riderCurrentLocation: null,
-        riderProfileImage: null,
-        riderLongitude: null,
-        riderLatitude: null,
-        isCanceled: true, // Optionally mark the trip as canceled
+        status: 'TRIP_CANCELED',
+        isCanceled: true,
       });
+
+      // Free the driver if one was assigned
+      if (tripData?.driverId) {
+        const driverRef = doc(db, "drivers", tripData.driverId);
+        await updateDoc(driverRef, {
+          isAvailable: true,
+          status: 'AVAILABLE',
+          currentTripId: null,
+        });
+        console.log(`Freed driver ${tripData.driverId} from canceled trip`);
+      }
 
       console.log("Ride canceled successfully");
       Toast.show({

@@ -6,6 +6,9 @@ import tw from '../../../tailwind'
 import { Button, TouchableOpacity } from 'react-native-ui-lib'
 import DriverProfile from '../../../components/bottomsheet-ui/DriverProfile'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { db } from '../../../firebaseConfig'
+import Toast from 'react-native-toast-message'
 
 
 // Handle both driver arriving and also ride in progress.
@@ -18,6 +21,8 @@ const Index = () => {
     // Get trip data from route params
     const tripData = route.params || {}
     const {
+      tripId,
+      driverId,
       driverDisplayName = 'Driver',
       driverPhoneNumber = '',
       tripAccessCode = '',
@@ -25,6 +30,47 @@ const Index = () => {
       carColor = 'N/A',
       licenseNumber = 'N/A',
     } = tripData
+
+  const handleCancelRide = async () => {
+    if (!tripId) return;
+
+    try {
+      const tripRef = doc(db, "trips", tripId);
+      
+      // Update trip status
+      await updateDoc(tripRef, {
+        status: 'TRIP_CANCELED',
+        isCanceled: true,
+      });
+
+      // Free the driver if one was assigned
+      if (driverId) {
+        const driverRef = doc(db, "drivers", driverId);
+        await updateDoc(driverRef, {
+          isAvailable: true,
+          status: 'AVAILABLE',
+          currentTripId: null,
+        });
+        console.log(`Freed driver ${driverId} from canceled trip`);
+      }
+
+      Toast.show({
+        type: "success",
+        text1: "Ride canceled successfully!!"
+      });
+      
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'MainTabs' }],
+      });
+    } catch (error) {
+      console.error("Error canceling ride:", error);
+      Toast.show({
+        type: "error",
+        text1: "Error canceling ride."
+      });
+    }
+  };
 
   return (
     <View style={styles.overlay}>
@@ -68,7 +114,7 @@ const Index = () => {
             outline 
             style={tw`outline rounded-md mt-6`}
             label="Cancel Ride"
-            onPress={() => navigation.navigate('ReachedDestination')}
+            onPress={handleCancelRide}
             poppins
           />
         </ScrollView>
