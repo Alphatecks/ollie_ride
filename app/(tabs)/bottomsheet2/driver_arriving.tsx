@@ -5,15 +5,26 @@ import EmergencySVG from "../../../assets/emergency.svg"
 import tw from '../../../tailwind'
 import { Button, TouchableOpacity } from 'react-native-ui-lib'
 import DriverProfile from '../../../components/bottomsheet-ui/DriverProfile'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 
 
 // Handle both driver arriving and also ride in progress.
 
 const Index = () => {
-
     const navigation = useNavigation()
+    const route = useRoute()
     const [inProgress, setInProgress] = useState<boolean>(false)
+    
+    // Get trip data from route params
+    const tripData = route.params || {}
+    const {
+      driverDisplayName = 'Driver',
+      driverPhoneNumber = '',
+      tripAccessCode = '',
+      carBrand = 'N/A',
+      carColor = 'N/A',
+      licenseNumber = 'N/A',
+    } = tripData
 
   return (
     <View style={tw`gap-2`}>
@@ -37,13 +48,14 @@ const Index = () => {
       }
 
       <DriverProfile
-          name="Fabrizio Romano"
-          phoneNumber="09087764374"
+          name={driverDisplayName}
+          phoneNumber={driverPhoneNumber}
           rating={4.4}
-          accessCode="33829"
-          carBrand="Toyota Corolla"
-          carColor="Blue"
-          licenseNumber="HH567FFA"
+          accessCode={String(tripAccessCode)}
+          carBrand={carBrand}
+          carColor={carColor}
+          licenseNumber={licenseNumber}
+          profileImage={tripData.driverProfileImage}
         />
 
         <Button outline 

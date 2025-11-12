@@ -6,7 +6,7 @@ import { Bar } from 'react-native-progress';
 import { baseColor } from '../../../constants/Colors';
 import { Button } from 'react-native-ui-lib';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig'; // Ensure your Firebase config is imported
 import Toast from 'react-native-toast-message';
 
@@ -20,33 +20,47 @@ const Searching = () => {
   const { tripId } = params;
 
   useEffect(() => {
-    const fetchTripData = async () => {
-      if (!tripId) return;
+    if (!tripId) return;
 
-      try {
-        const tripRef = doc(db, "trips", tripId);
-        const tripSnap = await getDoc(tripRef);
+    const tripRef = doc(db, "trips", tripId);
 
-        if (tripSnap.exists()) {
-          setTripData(tripSnap.data());
-        } else {
+    // Listen for real-time updates to the trip
+    const unsubscribe = onSnapshot(
+      tripRef,
+      (tripSnap) => {
+        if (!tripSnap.exists()) {
           console.log("Trip not found.");
           Toast.show({
             type: "error",
             text1: "Trip not found."
           });
+          return;
         }
-      } catch (error) {
-        console.error("Error fetching trip:", error);
+
+        const data = tripSnap.data();
+        setTripData(data);
+
+        // Navigate to driver arriving screen when driver is assigned
+        if (data.driverId && data.status === 'TRIP_ACCEPTED') {
+          console.log('Driver assigned! Navigating to DriverArriving screen');
+          navigation.navigate('DriverArriving', {
+            tripId,
+            ...params,
+            ...data,
+          });
+        }
+      },
+      (error) => {
+        console.error("Error listening to trip:", error);
         Toast.show({
           type: "error",
           text1: "Error fetching trip"
         });
       }
-    };
+    );
 
-    fetchTripData();
-  }, [tripId]);
+    return () => unsubscribe();
+  }, [tripId, navigation, params]);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowProgress(true), 300);
