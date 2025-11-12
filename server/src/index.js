@@ -17,6 +17,7 @@ let firebaseApp;
 let firestore;
 let stopTripWatcher;
 const processingTrips = new Set();
+let tripProcessingDelay = 0; // Delay counter to space out trip processing
 
 const initFirebase = () => {
   if (firebaseApp) {
@@ -432,7 +433,7 @@ const assignDriverToTrip = async (tripId, attempt = 0, excludedDriverIds = new S
   }
 };
 
-const queueTripMatching = (tripId, trigger = 'listener') => {
+const queueTripMatching = (tripId, trigger = 'listener', delay = 0) => {
   if (!tripId) return;
   if (processingTrips.has(tripId)) {
     logDebug(`Trip ${tripId} already processing, skipping duplicate trigger (${trigger})`);
@@ -440,15 +441,35 @@ const queueTripMatching = (tripId, trigger = 'listener') => {
   }
 
   processingTrips.add(tripId);
-  logDebug(`Queued trip ${tripId} for matching (trigger: ${trigger})`);
+  logDebug(`Queued trip ${tripId} for matching (trigger: ${trigger}, delay: ${delay}ms)`);
 
-  assignDriverToTrip(tripId)
-    .catch((error) => {
-      console.error(`❌ Matching failed for trip ${tripId}:`, error.message);
-    })
-    .finally(() => {
-      processingTrips.delete(tripId);
-    });
+  setTimeout(() => {
+    assignDriverToTrip(tripId)
+      .catch((error) => {
+        // Handle quota exceeded errors gracefully
+        if (error.message && error.message.includes('RESOURCE_EXHAUSTED')) {
+          console.error(`⚠️ Quota exceeded for trip ${tripId}. Skipping to avoid further quota usage.`);
+          // Mark trip with error status but don't retry immediately
+          if (firestore) {
+            const tripRef = firestore.collection('trips').doc(tripId);
+            tripRef.update({
+              matchingStatus: 'ERROR',
+              matchingInfo: {
+                lastError: 'Quota exceeded - will retry later',
+                lastAttemptAt: admin.firestore.FieldValue.serverTimestamp(),
+              },
+            }).catch(() => {
+              // Ignore errors updating error status
+            });
+          }
+        } else {
+          console.error(`❌ Matching failed for trip ${tripId}:`, error.message);
+        }
+      })
+      .finally(() => {
+        processingTrips.delete(tripId);
+      });
+  }, delay);
 };
 
 const startTripWatcher = () => {
@@ -493,7 +514,15 @@ const startTripWatcher = () => {
             return;
           }
 
-          queueTripMatching(tripId, change.type);
+          // Add small delay between trips to avoid rate limiting (500ms per trip)
+          const delay = tripProcessingDelay * 500;
+          tripProcessingDelay++;
+          queueTripMatching(tripId, change.type, delay);
+          
+          // Reset delay counter after 10 trips to prevent infinite delay
+          if (tripProcessingDelay > 10) {
+            tripProcessingDelay = 0;
+          }
         });
       },
       (error) => {
